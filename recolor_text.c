@@ -1,5 +1,5 @@
 /**
- * Author: Arthur BLONDEAU, Charles GOEDEFROIT
+ * Author: Arthur BLONDEAU, Charles GOEDEFROIT, Victor ANDRAULT
  */
 
 #include <stdio.h>
