@@ -1,4 +1,6 @@
-/* Author : Arthur BLONDEAU */
+/**
+ * Author: Arthur BLONDEAU, Charles GOEDEFROIT
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
