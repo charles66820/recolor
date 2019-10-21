@@ -17,6 +17,9 @@ libgame.a : game.o game_io.o
 recolor_text : recolor_text.o libgame.a
 	$(CC) $< $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@
 
+test_game_cgoedefroit : test_game_cgoedefroit.o libgame.a
+	$(CC) $< $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@
+
 # crée les fichier obj
 include depends.txt
 
@@ -24,6 +27,13 @@ include depends.txt
 .PHONY : clean
 clean :
 	rm -f $(OBJETS) *.a $(EXEC) depends.txt
+
+.PHONY : test_game_cgoedefroit
+test_cgoedefroit : test_game_cgoedefroit
+	./test_game_cgoedefroit copy
+	./test_game_cgoedefroit delete
+	./test_game_cgoedefroit is_over
+	./test_game_cgoedefroit restart
 
 # défini les dépendance pour les fichier obj
 depends.txt : $(SOURCES)
