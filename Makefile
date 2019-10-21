@@ -28,7 +28,7 @@ include depends.txt
 clean :
 	rm -f $(OBJETS) *.a $(EXEC) depends.txt
 	
-.PHONY : test_game_vandrault
+.PHONY : test_vandrault
 test_vandrault : test_game_vandrault
 	./test_game_vandrault new
 	./test_game_vandrault new_empty
