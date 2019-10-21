@@ -30,23 +30,21 @@ include depends.txt
 .PHONY : clean
 clean :
 	rm -f $(OBJETS) *.a $(EXEC) depends.txt
-	
-.PHONY : test_vandrault
+
+.PHONY : test test_arblondeau test_vandrault test_cgoedefroit test_azeraouli
+test : test_arblondeau test_vandrault test_cgoedefroit test_azeraouli
+
 test_vandrault : test_game_vandrault
 	./test_game_vandrault new
 	./test_game_vandrault new_empty
 	./test_game_vandrault set_cell_init
 	./test_game_vandrault set_max_move
 
-
-.PHONY : test test_arblondeau test_vandrault test_cgoedefroit test_azeraouli
-test : test_arblondeau test_vandrault test_cgoedefroit test_azeraouli
-
 test_arblondeau : test_game_arblondeau
-		./test_game_arblondeau game_nb_moves_max
-		./test_game_arblondeau game_nb_moves_cur
-		./test_game_arblondeau game_cell_current_color
-		./test_game_arblondeau game_play_one_move
+	./test_game_arblondeau game_nb_moves_max
+	./test_game_arblondeau game_nb_moves_cur
+	./test_game_arblondeau game_cell_current_color
+	./test_game_arblondeau game_play_one_move
 
 test_cgoedefroit : test_game_cgoedefroit
 	./test_game_cgoedefroit copy
