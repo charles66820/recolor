@@ -27,6 +27,13 @@ include depends.txt
 .PHONY : clean
 clean :
 	rm -f $(OBJETS) *.a $(EXEC) depends.txt
+	
+.PHONY : test_game_vandrault
+test_vandrault : test_game_vandrault
+	./test_game_vandrault new
+	./test_game_vandrault new_empty
+	./test_game_vandrault set_cell_init
+	./test_game_vandrault set_max_move
 
 .PHONY : test_game_cgoedefroit
 test_cgoedefroit : test_game_cgoedefroit
