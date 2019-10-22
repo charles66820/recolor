@@ -224,6 +224,17 @@ bool test_game_restart() {
           return false;
         }
 
+    // test if current moves is reset
+    if (game_nb_moves_cur(g) != 0) {
+        return false;
+    }
+
+    // test if max moves is not change
+    if (game_nb_moves_max(g) != nbMaxHit) {
+        fprintf(stderr, "Error: invalid game nb max moves!\n");
+        return false;
+    }
+
     game_delete(g);
 
     return true;
