@@ -248,7 +248,7 @@ int main(int argc, char const *argv[])
 {
     if (argc == 1) {
         fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
-        exit(EXIT_FAILURE);
+        exit(EXIT_SUCCESS);
     }
 
     bool ok = false;
