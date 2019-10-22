@@ -107,7 +107,11 @@ bool test_game_delete() {
 
     // TODO : test if game perameter is null
     /*g = NULL;
-    game_delete(g);*/
+    if (atexit(game_delete) != 0) {
+        printf("non\n");
+    } else {
+        printf("oui\n");
+    }*/
 
     return true;
 }
