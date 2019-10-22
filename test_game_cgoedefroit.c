@@ -263,7 +263,7 @@ int main(int argc, char const *argv[])
         ok = test_game_restart();
     else {
         fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
-        exit(EXIT_SUCCESS);
+        exit(EXIT_FAILURE);
     }
 
     // print test result
