@@ -83,7 +83,7 @@ bool test_game_cell_current_color(){
         2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
     game g = game_new(cells, nbMax);
     if (g==NULL){
-        fprintf (stderr, "Error : invalid new game \n");
+        fprintf (stderr, "Error : invalid new game\n");
         game_delete(g);
         return false;
     }
@@ -119,8 +119,9 @@ bool test_game_play_one_move(){
         1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2,
         2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
     game g = game_new(cells, nbMax);
-    if (g==NULL){
-        fprintf (stderr, "Error : invalid new game \n");
+    game gc = game_new(cells, nbMax);
+    if (g==NULL || gc == NULL){
+        fprintf (stderr, "Error : invalid new game or invalid new game copy \n");
         game_delete(g);
         return false;
     }
@@ -130,8 +131,14 @@ bool test_game_play_one_move(){
     if (charToInt(choice) >= 0 && charToInt(choice) < NB_COLORS) {
             game_play_one_move(g, (color)charToInt(choice));
         }
-        game_delete(g);
-        return true;
+    
+    if (g == gc){
+        fprintf (stderr, "Error : game_play_one_move does not change the game");
+        return false;
+    }
+
+    game_delete(g);
+    return true;
 }
 
 
