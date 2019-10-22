@@ -149,7 +149,7 @@ bool test_game_set_max_moves(){
     if (g1==NULL){
         return false;
     }
-    gurceame_play_one_move(g1, 3 );
+    game_play_one_move(g1, 3 );
     game_set_max_moves(g1,11);
     if (game_nb_moves_max(g1)!=11){
         return false;
