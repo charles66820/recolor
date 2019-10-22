@@ -22,7 +22,6 @@ bool test_game_new(){
         2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
 
     game g1 = game_new(cells, 12); // test of game_new on valid parameters
-    fprintf(stderr,"1\n");
     if (g1==NULL){
         return false;
     }
@@ -35,7 +34,7 @@ bool test_game_new(){
             return false;
         }
     }
-    game g2 = game_new(cells, 0); // test of game_new on unvalid parameters
+    /*game g2 = game_new(cells, 0); // test of game_new on unvalid parameters
     if (g2==NULL){
         return false;
     }
@@ -47,7 +46,7 @@ bool test_game_new(){
         if (game_cell_current_color(g2,i%12,i/12)!=cells[i]){
             return false;
         }
-    }
+    }*/
     game_delete(g1);
     // game_delete(g2);
     return true;    
@@ -150,7 +149,7 @@ bool test_game_set_max_moves(){
     if (g1==NULL){
         return false;
     }
-    game_play_one_move(g1, 3 );
+    gurceame_play_one_move(g1, 3 );
     game_set_max_moves(g1,11);
     if (game_nb_moves_max(g1)!=11){
         return false;
