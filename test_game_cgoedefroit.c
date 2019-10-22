@@ -181,6 +181,51 @@ bool test_game_is_over() {
 }
 
 bool test_game_restart() {
+    int nbMaxHit = 12;
+
+    color cells[SIZE * SIZE] = {
+        0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0,
+        0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
+        1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2,
+        2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
+        2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0,
+        0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
+        1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2,
+        1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
+        0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0,
+        1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
+        1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2,
+        2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
+
+    // create new game
+    game g = game_new(cells, nbMaxHit);
+
+    // test if game has been create
+    if (g == NULL) {
+        fprintf(stderr, "Error: invalid new game!\n");
+        return false;
+    }
+
+    // change cells
+
+    // play 1
+    game_play_one_move(g, GREEN);
+    // play 2
+    game_play_one_move(g, BLUE);
+
+    // test restart
+    game_restart(g);
+
+    // test if game cells is equal to initial game cells
+    for (int y = 0; y < SIZE; y++)
+      for (int x = 0; x < SIZE; x++)
+        if (game_cell_current_color(g, x, y) != cells[x + SIZE * y]) {
+          fprintf(stderr, "Error: game cells are not equal to initial game cells!\n");
+          return false;
+        }
+
+    game_delete(g);
+
     return true;
 }
 
