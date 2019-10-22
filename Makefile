@@ -17,6 +17,9 @@ libgame.a : game.o game_io.o
 recolor_text : recolor_text.o libgame.a
 	$(CC) $< $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@
 
+test_game_vandrault : test_game_vandrault.o libgame.a
+	$(CC) $< $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@
+
 test_game_arblondeau : test_game_arblondeau.o libgame.a
 	$(CC) $< $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@
 
