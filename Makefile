@@ -32,7 +32,7 @@ include depends.txt
 # nettoie le dossier des fichiers créés
 .PHONY : clean
 clean :
-	rm -f $(OBJETS) *.a $(EXEC) depends.txt
+	rm -f $(OBJETS) *.a $(EXEC) depends.txt test_vandrault test_arblondeau test_cgoedefroit
 
 .PHONY : test test_arblondeau test_vandrault test_cgoedefroit test_azeraouli
 test : test_arblondeau test_vandrault test_cgoedefroit test_azeraouli
