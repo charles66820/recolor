@@ -38,7 +38,7 @@ test_vandrault : test_game_vandrault
 	./test_game_vandrault new
 	./test_game_vandrault new_empty
 	./test_game_vandrault set_cell_init
-	./test_game_vandrault set_max_move
+	./test_game_vandrault set_max_moves
 
 test_arblondeau : test_game_arblondeau
 	./test_game_arblondeau game_nb_moves_max
