@@ -248,7 +248,7 @@ int main(int argc, char const *argv[])
 {
     if (argc == 1) {
         fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
-        exit(EXIT_SUCCESS);
+        exit(EXIT_FAILURE);
     }
 
     bool ok = false;
@@ -263,7 +263,7 @@ int main(int argc, char const *argv[])
         ok = test_game_restart();
     else {
         fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
-        exit(EXIT_FAILURE);
+        exit(EXIT_SUCCESS);
     }
 
     // print test result
