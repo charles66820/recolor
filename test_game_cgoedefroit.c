@@ -113,7 +113,70 @@ bool test_game_delete() {
 }
 
 bool test_game_is_over() {
-    
+    int nbMaxHit = 12;
+
+    color cells[SIZE * SIZE] = {
+        0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0,
+        1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+        0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0,
+        1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0,
+        0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0,
+        1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+        1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1};
+
+    // create new game
+    game g = game_new(cells, nbMaxHit);
+
+    // test if game has been create
+    if (g == NULL) {
+        fprintf(stderr, "Error: invalid new game!\n");
+        return false;
+    }
+
+    // test if nb max hit has been initialised
+    if (game_nb_moves_max(g) != nbMaxHit) {
+        fprintf(stderr, "Error: invalid game nb max moves!\n");
+        return false;
+    }
+
+    // change one cells of game
+    game_play_one_move(g, GREEN);
+
+    if (game_cell_current_color(g, 0, 0) != GREEN) {
+        fprintf(stderr, "Error: invalid game play one move!\n");
+        return false;
+    }
+
+    // test if current move has change
+    if (game_nb_moves_cur(g) != 1) {
+        fprintf(stderr, "Error: invalid game nb curent move!\n");
+        return false;
+    }
+
+    // test game is over if game is not over
+    if (game_is_over(g) == true) {
+      fprintf(stderr, "Error: game is over when shouldn't be!\n");
+      return false;
+    }
+
+    // play 0
+    game_play_one_move(g, RED);
+    // play 1
+    game_play_one_move(g, GREEN);
+
+    // test game is not over if game is over
+    if (game_is_over(g) == false) {
+      fprintf(stderr, "Error: game is not over when it should be!\n");
+      return false;
+    }
+
+    game_delete(g);
+
     return true;
 }
 
