@@ -25,6 +25,10 @@ bool test_game_new(){
     if (g1==NULL){
         return false;
     }
+    if (sizeof(cells)!=SIZE*SIZE*sizeof(int)){
+        return false;
+    }
+
     game_play_one_move(g1, 0);
     if (game_nb_moves_max(g1)!=12){
         return false;
@@ -34,11 +38,15 @@ bool test_game_new(){
             return false;
         }
     }
-    /*game g2 = game_new(cells, 0); // test of game_new on unvalid parameters
+     // test of game_new on unvalid parameters
+     game g2 = game_new(cells, 0);
     if (g2==NULL){
         return false;
     }
-    game_play_one_move(g2, 0);
+    /*else{
+        return false;
+    }*/
+    /*game_play_one_move(g2, 0);
     if (game_nb_moves_max(g2)==0){
         return false;
     }
@@ -90,13 +98,19 @@ bool test_game_set_cell_init(){
     if (game_cell_current_color(g1,0,0)!=1){
         return false;
     }
-    /*game g2 = game_new(cells, 12); //test of game_set_cell_init on unvalid x parameter
+    game g2 = game_new(cells, 12); //test of game_set_cell_init on unvalid x parameter
     if (g2==NULL){
         return false;
     }
     game_play_one_move(g2, 2);
     game_set_cell_init(g2,SIZE,0,1);
-    for (int i=0;i<SIZE*SIZE;i++){
+    if (g2!=NULL){
+        return true;
+    }
+    else {
+        return false;
+    }
+    /*for (int i=0;i<SIZE*SIZE;i++){
         if (cells[i]!=game_cell_current_color(g2,i%12,i/12)){
             return false;
         }
