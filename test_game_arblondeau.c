@@ -27,7 +27,7 @@ bool test_game_nb_moves_max() {
     }
 
     if (game_nb_moves_max(g) != nbMax){
-        fprintf (stderr, "Error : nbMaxMoves is not equal to nbMax");
+        fprintf (stderr, "Error : nbMaxMoves is not equal to nbMax.\n");
         game_delete(g);
         return false;
     }
@@ -57,8 +57,22 @@ bool test_game_nb_moves_cur(){
         return false;
     }
 
-    if (game_nb_moves_cur(g) > nbMax){
-        fprintf (stderr, "Error : nbCurrentMoves is over to nbMax");
+    if (game_nb_moves_cur(g) != 0){
+        fprintf(stderr, "Error :  nbCurrentMoves did not start at 0.\n");
+        game_delete(g);
+        return false;
+    }
+    
+    game_play_one_move(g, BLUE);
+    if (game_nb_moves_cur(g) != 1){
+        fprintf(stderr, "Error : NbCurrentMoves does not increment properly.\n");
+        game_delete(g);
+        return false;
+    }
+
+    if (game_nb_moves_cur(g) > nbMax)
+    {
+        fprintf(stderr, "Error : nbCurrentMoves is over to nbMax.\n");
         game_delete(g);
         return false;
     }
@@ -91,17 +105,26 @@ bool test_game_cell_current_color(){
     for (int y = 0; y < SIZE; y++)
     {
         for (int x = 0; x < SIZE; x++)
-            printf("%d", game_cell_current_color(g, x, y));
-        printf("\n");
+        {
+            if (game_cell_current_color(g, x, y) != cells[x + SIZE * y])
+            {
+                fprintf(stderr, "Error: game cells are not equal to initial game cells.\n");
+                game_delete(g);
+                return false;
+            }
+        }
     }
+
+    game_play_one_move(g, BLUE);
+    if (game_cell_current_color(g, 0, 0) != BLUE){
+        fprintf (stderr, "Error : The game does not change the color.\n");
+        game_delete(g);
+        return false;
+    }
+
     game_delete(g);
     return true;
 }
-
-int charToInt(char c) {
-    return c - '0';
-}
-
 
 bool test_game_play_one_move(){
     uint nbMax = 12;
@@ -119,19 +142,42 @@ bool test_game_play_one_move(){
         1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2,
         2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
     game g = game_new(cells, nbMax);
-    if (g==NULL){
+    game gc = game_copy(g);
+    if (g==NULL || gc == NULL){
         fprintf (stderr, "Error : invalid new game \n");
         game_delete(g);
+        game_delete(gc);
         return false;
     }
 
-    int input = getchar();
+    for (int y = 0; y < SIZE; y++){
+        for (int x = 0; x < SIZE; x++){
+            if (game_cell_current_color(gc, x, y) != game_cell_current_color(g, x, y))
+            {
+                fprintf(stderr, "Error: game and copy game cells are not equal!\n");
+                game_delete(g);
+                game_delete(gc);
+                return false;
+            }
+        }
+    }
+
+    game_play_one_move(g, BLUE);
+    if (game_cell_current_color(g, 0, 0) != BLUE){
+        fprintf(stderr, "Error : game_play_one_move does not change the game.\n");
+        game_delete(g);
+        game_delete(gc);
+        return false;
+    }
+
+    /*int input = getchar();
     char choice = (char)input;
     if (charToInt(choice) >= 0 && charToInt(choice) < NB_COLORS) {
             game_play_one_move(g, (color)charToInt(choice));
-        }
-        game_delete(g);
-        return true;
+    }*/
+    game_delete(g);
+    game_delete(gc);
+    return true;
 }
 
 
