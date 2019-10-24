@@ -21,16 +21,11 @@ bool test_game_new(){
         1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2,
         2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
 
-    game g1 = game_new(cells, (unsigned int)12); // test of game_new on valid parameters
+    game g1 = game_new(cells, (int)12); // test of game_new on valid parameters
     if (g1==NULL){
         return false;
     }
-    if (game_nb_moves_max(g1)!=(unsigned int)12){
-        return false;
-    }
-
-    game_play_one_move(g1, 0);
-    if (game_nb_moves_max(g1)!=12){
+    if (game_nb_moves_max(g1)!=(int)12){
         return false;
     }
     for (int i=0; i<SIZE*SIZE; i+=1){
