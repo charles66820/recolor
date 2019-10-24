@@ -25,12 +25,10 @@ bool test_game_new(){
     if (g1==NULL){
         return false;
     }
-    if (sizeof(cells)!=SIZE*SIZE*sizeof(int)){
+    if (game_nb_moves_max(g1)!=12){
         return false;
     }
-
-    game_play_one_move(g1, 0);
-    if (game_nb_moves_max(g1)!=12){
+    if (sizeof(cells)!=SIZE*SIZE*sizeof(int)){
         return false;
     }
     for (int i=0; i<SIZE*SIZE; i+=1){
