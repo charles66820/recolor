@@ -7,7 +7,7 @@
 
 
 bool test_game_copy() {
-    int nbMaxHit = 12;
+    int nbMaxHit = 13;
 
     color cells[SIZE * SIZE] = {
         0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0,
@@ -39,8 +39,8 @@ bool test_game_copy() {
     }
 
     // test if set nb max move work
-    game_set_max_moves(g, 14);
-    if (game_nb_moves_max(g) != 14) {
+    game_set_max_moves(g, 15);
+    if (game_nb_moves_max(g) != 15) {
       fprintf(stderr, "Error: invalid game nb max moves!\n");
       return false;
     }
