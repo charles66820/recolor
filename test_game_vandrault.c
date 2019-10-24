@@ -161,6 +161,9 @@ bool test_game_set_max_moves(){
         return false;
     }
     game_set_max_moves(g1,14);
+    if (g1==NULL){
+        return false;
+    }
     if (game_nb_moves_max(g1)!=14){
         return false;
     }
