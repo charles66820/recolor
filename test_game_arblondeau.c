@@ -58,14 +58,14 @@ bool test_game_nb_moves_cur(){
     }
 
     if (game_nb_moves_cur(g) != 0){
-        fprintf(stderr, "Error :  nbCurrentMoves did not start at 0.\n")
+        fprintf(stderr, "Error :  nbCurrentMoves did not start at 0.\n");
         game_delete(g);
         return false;
     }
     
     game_play_one_move(g, BLUE);
     if (game_nb_moves_cur(g) != 1){
-        fprintf(stderr, "Error : NbCurrentMoves does not increment properly.\n")
+        fprintf(stderr, "Error : NbCurrentMoves does not increment properly.\n");
         game_delete(g);
         return false;
     }
@@ -117,7 +117,7 @@ bool test_game_cell_current_color(){
 
     game_play_one_move(g, BLUE);
     if (game_cell_current_color(g, 0, 0) != BLUE){
-        fprintf (stderr, "Error : The game does not change the color.\n")
+        fprintf (stderr, "Error : The game does not change the color.\n");
         game_delete(g);
         return false;
     }
@@ -146,6 +146,7 @@ bool test_game_play_one_move(){
     if (g==NULL || gc == NULL){
         fprintf (stderr, "Error : invalid new game \n");
         game_delete(g);
+        game_delete(gc);
         return false;
     }
 
@@ -154,7 +155,8 @@ bool test_game_play_one_move(){
             if (game_cell_current_color(gc, x, y) != game_cell_current_color(g, x, y))
             {
                 fprintf(stderr, "Error: game and copy game cells are not equal!\n");
-                delete_game(g);
+                game_delete(g);
+                game_delete(gc);
                 return false;
             }
         }
@@ -162,8 +164,9 @@ bool test_game_play_one_move(){
 
     game_play_one_move(g, BLUE);
     if (game_cell_current_color(g, 0, 0) != BLUE){
-        fprintf(stderr, "Error : game_play_one_move does not change the game.\n")
-        delete_game(g);
+        fprintf(stderr, "Error : game_play_one_move does not change the game.\n");
+        game_delete(g);
+        game_delete(gc);
         return false;
     }
 
@@ -173,6 +176,7 @@ bool test_game_play_one_move(){
             game_play_one_move(g, (color)charToInt(choice));
     }*/
     game_delete(g);
+    game_delete(gc);
     return true;
 }
 
