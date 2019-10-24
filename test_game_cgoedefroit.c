@@ -32,16 +32,17 @@ bool test_game_copy() {
         return false;
     }
 
-    // test if nb max hit is not lower than 0
-    if (game_nb_moves_max(g) <= 0) {
-        fprintf(stderr, "Error: invalid game nb max moves!\n");
-        return false;
-    }
-
     // test if nb max hit has been initialised
     if (game_nb_moves_max(g) != nbMaxHit) {
         fprintf(stderr, "Error: invalid game nb max moves!\n");
         return false;
+    }
+
+    // test if set nb max move work
+    game_set_max_moves(g, 14);
+    if (game_nb_moves_max(g) != 14) {
+      fprintf(stderr, "Error: invalid game nb max moves!\n");
+      return false;
     }
 
     // test of change table cell
