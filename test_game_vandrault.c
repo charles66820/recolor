@@ -62,6 +62,9 @@ bool test_game_new_empty(){
     if (g==NULL){
         return false;
     }
+    if (game_nb_moves_max(g)!=0){
+        return false;
+    }
     game_play_one_move(g, 0);
     for (int i=0; i<SIZE*SIZE; i++){
         if (game_cell_current_color(g,i%12,i/12)!=0){
