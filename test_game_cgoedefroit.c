@@ -45,14 +45,6 @@ bool test_game_copy() {
       return false;
     }
 
-    // test of change table cell
-    game_set_cell_init(g, 4, 4, BLUE);
-
-    if (game_cell_current_color(g, 4, 4) != BLUE) {
-      fprintf(stderr, "Error: invalid game set cell init!\n");
-      return false;
-    }
-
     // test if current move has initilised to 0
     if (game_nb_moves_cur(g) != 0) {
       fprintf(stderr, "Error: invalid game nb curent move!\n");
@@ -101,6 +93,21 @@ bool test_game_copy() {
           fprintf(stderr, "Error: game and copy game cells are not equal!\n");
           return false;
         }
+
+    // test of change table cell
+    game_set_cell_init(g, 4, 4, BLUE);
+
+    if (game_cell_current_color(g, 4, 4) != BLUE) {
+      fprintf(stderr, "Error: invalid game set cell init!\n");
+      return false;
+    }
+
+    // test if cells has been copyed
+    if (game_cell_current_color(gc, 4, 4) == game_cell_current_color(g, 4, 4)) {
+      fprintf(stderr, "Error: game and copy game cells are not equal!\n");
+      return false;
+    }
+
 
     // TODO : test if game parameter is null
     /*g = NULL;
