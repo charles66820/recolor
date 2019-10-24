@@ -7,7 +7,7 @@
 //tests//
 
 bool test_game_new(){
-    /*color cells[SIZE*SIZE] = {
+    color cells[SIZE*SIZE] = {
         0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0,
         0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
         1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2,
@@ -32,7 +32,7 @@ bool test_game_new(){
         if (game_cell_current_color(g1,i%12,i/12)!=cells[i]){
             return false;
         }
-    }*/
+    }
      // test of game_new on unvalid parameters
     /*game g2 = game_new(cells, 0);
     if (g2==NULL){
@@ -47,7 +47,7 @@ bool test_game_new(){
             return false;
         }
     }*/
-    //game_delete(g1);
+    game_delete(g1);
     // game_delete(g2);
     return true;    
 }
@@ -164,6 +164,9 @@ bool test_game_set_max_moves(){
 
     game g1 = game_new(cells, 12); //test of game_set_max_moves on valid parameters
     if (g1==NULL){
+        return false;
+    }
+    if (game_nb_moves_max(g1)!=12){
         return false;
     }
     game_set_max_moves(g1,14);
