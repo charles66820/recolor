@@ -7,7 +7,7 @@
 
 
 bool test_game_copy() {
-    int nbMaxHit = 12;
+    uint nbMaxHit = 12;
 
     color cells[SIZE * SIZE] = {
         0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0,
@@ -145,7 +145,7 @@ bool test_game_delete() {
 }
 
 bool test_game_is_over() {
-    int nbMaxHit = 12;
+    uint nbMaxHit = 12;
 
     color cells[SIZE * SIZE] = {
         0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0,
@@ -219,7 +219,7 @@ bool test_game_is_over() {
 }
 
 bool test_game_restart() {
-    int nbMaxHit = 12;
+    uint nbMaxHit = 12;
 
     color cells[SIZE * SIZE] = {
         0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0,
