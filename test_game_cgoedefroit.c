@@ -38,7 +38,21 @@ bool test_game_copy() {
         return false;
     }
 
-    // change one cells of game
+    // test of change table cell
+    game_set_cell_init(g, 4, 4, BLUE);
+
+    if (game_cell_current_color(g, 4, 4) != BLUE) {
+      fprintf(stderr, "Error: invalid game set cell init!\n");
+      return false;
+    }
+
+    // test if current move has initilised to 0
+    if (game_nb_moves_cur(g) != 0) {
+      fprintf(stderr, "Error: invalid game nb curent move!\n");
+      return false;
+    }
+
+    // change one cell of game
     game_play_one_move(g, GREEN);
 
     if (game_cell_current_color(g, 0, 0) != GREEN) {
@@ -146,6 +160,12 @@ bool test_game_is_over() {
     if (game_nb_moves_max(g) != nbMaxHit) {
         fprintf(stderr, "Error: invalid game nb max moves!\n");
         return false;
+    }
+
+    // test if current move has initilised to 0
+    if (game_nb_moves_cur(g) != 0) {
+      fprintf(stderr, "Error: invalid game nb curent move!\n");
+      return false;
     }
 
     // change one cells of game
