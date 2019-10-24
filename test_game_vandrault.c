@@ -68,7 +68,9 @@ bool test_game_new_empty(){
             return false;
         }
     }
+    game_delete(g);
     return true;
+
 }
 
 bool test_game_set_cell_init(){
