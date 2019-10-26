@@ -5,6 +5,71 @@
 #include <string.h>
 #include <game.h>
 
+game createGame(color *cells, uint nbMaxHit) {
+    // create new game
+    game g = game_new(cells, nbMaxHit);
+
+    // test if game has been create
+    if (g == NULL) {
+        fprintf(stderr, "Error: invalid new game!\n");
+
+        game_delete(g);
+
+        return false;
+    }
+
+    // test if nb max hit has been initialised
+    if (game_nb_moves_max(g) != nbMaxHit) {
+        fprintf(stderr, "Error: invalid game nb max moves!\n");
+
+        game_delete(g);
+
+        return false;
+    }
+
+    // test if set nb max move work
+    game_set_max_moves(g, 15);
+    if (game_nb_moves_max(g) != 15) {
+        fprintf(stderr, "Error: invalid game nb max moves!\n");
+
+        game_delete(g);
+
+        return false;
+    }
+
+    game_set_max_moves(g, nbMaxHit);
+
+    // test if current move has initilised to 0
+    if (game_nb_moves_cur(g) != 0) {
+        fprintf(stderr, "Error: invalid game nb curent move!\n");
+
+        game_delete(g);
+
+        return false;
+    }
+
+    // change one cell of game
+    game_play_one_move(g, GREEN);
+
+    if (game_cell_current_color(g, 0, 0) != GREEN) {
+        fprintf(stderr, "Error: invalid game play one move!\n");
+
+        game_delete(g);
+
+        return false;
+    }
+
+    // test if current move has change
+    if (game_nb_moves_cur(g) != 1) {
+        fprintf(stderr, "Error: invalid game nb curent move!\n");
+
+        game_delete(g);
+
+        return false;
+    }
+
+    return g;
+}
 
 bool test_game_copy() {
     uint nbMaxHit = 13;
@@ -24,96 +89,75 @@ bool test_game_copy() {
         2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
 
     // create new game
-    game g = game_new(cells, nbMaxHit);
-
-    // test if game has been create
-    if (g == NULL) {
-        fprintf(stderr, "Error: invalid new game!\n");
-        return false;
-    }
-
-    // test if nb max hit has been initialised
-    if (game_nb_moves_max(g) != nbMaxHit) {
-        fprintf(stderr, "Error: invalid game nb max moves!\n");
-        return false;
-    }
-
-    // test if set nb max move work
-    game_set_max_moves(g, 15);
-    if (game_nb_moves_max(g) != 15) {
-      fprintf(stderr, "Error: invalid game nb max moves!\n");
-      return false;
-    }
-
-    // test if current move has initilised to 0
-    if (game_nb_moves_cur(g) != 0) {
-      fprintf(stderr, "Error: invalid game nb curent move!\n");
-      return false;
-    }
-
-    // change one cell of game
-    game_play_one_move(g, GREEN);
-
-    if (game_cell_current_color(g, 0, 0) != GREEN) {
-      fprintf(stderr, "Error: invalid game play one move!\n");
-      return false;
-    }
-
-    // test if current move has change
-    if (game_nb_moves_cur(g) != 1) {
-      fprintf(stderr, "Error: invalid game nb curent move!\n");
-      return false;
-    }
+    game g = createGame(cells, nbMaxHit);
 
     // test of game_copy()
     game gc = game_copy(g);
 
     // copy test
     if (gc == NULL) {
-      fprintf(stderr, "Error: invalid copy game!\n");
-      return false;
+        fprintf(stderr, "Error: invalid copy game!\n");
+
+        game_delete(g);
+        game_delete(gc);
+
+        return false;
     }
 
     // copy of max move test
     if (game_nb_moves_max(gc) != game_nb_moves_max(g)) {
-      fprintf(stderr, "Error: game and copy game max moves are not equal!\n");
-      return false;
+        fprintf(stderr, "Error: game and copy game max moves are not equal!\n");
+
+        game_delete(g);
+        game_delete(gc);
+
+        return false;
     }
 
     // copy of nb current move test
     if (game_nb_moves_cur(gc) != game_nb_moves_cur(g)) {
-      fprintf(stderr, "Error: game and copy game nb curent move are not equal!\n");
-      return false;
+        fprintf(stderr,
+                "Error: game and copy game nb curent move are not equal!\n");
+
+        game_delete(g);
+        game_delete(gc);
+
+        return false;
     }
 
     // copy of cells test
     for (int y = 0; y < SIZE; y++)
       for (int x = 0; x < SIZE; x++)
         if (game_cell_current_color(gc, x, y) != game_cell_current_color(g, x, y)) {
-          fprintf(stderr, "Error: game and copy game cells are not equal!\n");
-          return false;
+            fprintf(stderr, "Error: game and copy game cells are not equal!\n");
+
+            game_delete(g);
+            game_delete(gc);
+
+            return false;
         }
 
     // test of change table cell
     game_set_cell_init(g, 4, 4, BLUE);
 
     if (game_cell_current_color(g, 4, 4) != BLUE) {
-      fprintf(stderr, "Error: invalid game set cell init!\n");
-      return false;
+        fprintf(stderr, "Error: invalid game set cell init!\n");
+
+        game_delete(g);
+        game_delete(gc);
+
+        return false;
     }
 
     // test if cells has been copyed
     if (game_cell_current_color(gc, 4, 4) == game_cell_current_color(g, 4, 4)) {
-      fprintf(stderr, "Error: game and copy game cells are not equal!\n");
-      return false;
+        fprintf(stderr, "Error: game and copy game cells are not equal!\n");
+
+        game_delete(g);
+        game_delete(gc);
+
+        return false;
     }
-
-
-    // TODO : test if game parameter is null
-    /*g = NULL;
-    game gN = game_copy(g);
-    game_delete(gN);
-    */
 
     game_delete(g);
     game_delete(gc);
@@ -132,14 +176,6 @@ bool test_game_delete() {
 
     // delete game
     game_delete(g);
-
-    // TODO : test if game perameter is null
-    /*g = NULL;
-    if (atexit(game_delete) != 0) {
-        printf("non\n");
-    } else {
-        printf("oui\n");
-    }*/
 
     return true;
 }
@@ -162,39 +198,7 @@ bool test_game_is_over() {
         0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1};
 
     // create new game
-    game g = game_new(cells, nbMaxHit);
-
-    // test if game has been create
-    if (g == NULL) {
-        fprintf(stderr, "Error: invalid new game!\n");
-        return false;
-    }
-
-    // test if nb max hit has been initialised
-    if (game_nb_moves_max(g) != nbMaxHit) {
-        fprintf(stderr, "Error: invalid game nb max moves!\n");
-        return false;
-    }
-
-    // test if current move has initilised to 0
-    if (game_nb_moves_cur(g) != 0) {
-      fprintf(stderr, "Error: invalid game nb curent move!\n");
-      return false;
-    }
-
-    // change one cells of game
-    game_play_one_move(g, GREEN);
-
-    if (game_cell_current_color(g, 0, 0) != GREEN) {
-        fprintf(stderr, "Error: invalid game play one move!\n");
-        return false;
-    }
-
-    // test if current move has change
-    if (game_nb_moves_cur(g) != 1) {
-        fprintf(stderr, "Error: invalid game nb curent move!\n");
-        return false;
-    }
+    game g = createGame(cells, nbMaxHit);
 
     // test game is over if game is not over
     if (game_is_over(g) == true) {
@@ -236,13 +240,7 @@ bool test_game_restart() {
         2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
 
     // create new game
-    game g = game_new(cells, nbMaxHit);
-
-    // test if game has been create
-    if (g == NULL) {
-        fprintf(stderr, "Error: invalid new game!\n");
-        return false;
-    }
+    game g = createGame(cells, nbMaxHit);
 
     // change cells
 
