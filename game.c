@@ -5,16 +5,20 @@
 #define SIZE 12 //TODO: voire pour le suppriemer
 
 struct game_s{
-    color *tab; //le tableau contenant les cases du jeux (2D ?)
+    color *tab; //le tableau contenant les cases du jeux
     uint nb_moves_max; // nombre de coups max
     uint current_moves; //nombre de coups actuels
     color *tab_init;
     uint size;
 };
 
-
-enum color_e {RED, GREEN, BLUE, YELLOW, NB_COLORS};
-
+enum color_e {
+  RED,
+  GREEN,
+  BLUE,
+  YELLOW,
+  NB_COLORS
+};  // TODO: voire pour le suppriemer
 
 game game_new(color *cells, uint nb_moves_max) {
     if (cells == NULL) {
@@ -87,4 +91,14 @@ void game_delete(game g){
 
 bool game_is_over(cgame g){return true;}
 
-void game_restart(game g){}
+void game_restart(game g) {
+    if (g == NULL) {
+        fprintf(stderr, "Bad parameter");
+        exit(EXIT_FAILURE);
+    }
+
+    g->current_moves = 0;
+    for (uint i = 0; i < g->size * g->size; i++) {
+        g->tab[i] = g->tab_init[i];
+    }
+}
