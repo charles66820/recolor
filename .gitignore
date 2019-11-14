@@ -12,3 +12,5 @@ test_game_vandrault.o
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+Testing/
+CTestTestfile.cmake
