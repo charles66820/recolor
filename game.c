@@ -6,17 +6,17 @@
 
 struct game_s{
     color *tab; //le tableau contenant les cases du jeux (2D ?)
-    unsigned int nb_moves_max; // nombre de coups max
-    int current_moves; //nombre de coups actuels
+    uint nb_moves_max; // nombre de coups max
+    uint current_moves; //nombre de coups actuels
     color *tab_init;
-    unsigned int size;
+    uint size;
 };
 
 
 enum color_e {RED, GREEN, BLUE, YELLOW, NB_COLORS};
 
 
-game game_new(color *cells, unsigned int nb_moves_max) {
+game game_new(color *cells, uint nb_moves_max) {
     if (cells == NULL) {
         fprintf(stderr, "Bad parameter");
         exit(EXIT_FAILURE);
@@ -54,20 +54,24 @@ game game_new(color *cells, unsigned int nb_moves_max) {
 
 game game_new_empty(){return;}
 
-void game_set_cell_init(game g, unsigned int x, unsigned int y, color c){}
+void game_set_cell_init(game g, uint x, uint y, color c){}
 
-void game_set_max_moves(game g, unsigned int nb_max_moves){}
+void game_set_max_moves(game g, uint nb_max_moves){
+    if (g == NULL || nb_max_moves <= 0) exit(EXIT_FAILURE);
+    g->nb_moves_max = nb_max_moves;
+    return;
+}
 
-unsigned int game_nb_moves_max(cgame g){
+uint game_nb_moves_max(cgame g){
     if (g == NULL) exit(EXIT_FAILURE);
     return g->nb_moves_max;
 }
 
-color game_cell_current_color(cgame g, unsigned int x, unsigned int y){return BLUE;}
+color game_cell_current_color(cgame g, uint x, uint y){return BLUE;}
 
-unsigned int game_nb_moves_cur(cgame g){
+uint game_nb_moves_cur(cgame g){
     if (g == NULL) exit(EXIT_FAILURE);
-
+    return g->current_moves;
 }
 
 void game_play_one_move(game g, color c){} //flood fill algo
@@ -76,6 +80,8 @@ game game_copy(cgame g){return;}
 
 void game_delete(game g){
     if (g == NULL) exit(EXIT_FAILURE);
+    free(g->tab);
+    free(g->tab_init);
     free(g);
 }
 
