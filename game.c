@@ -46,6 +46,8 @@ game game_copy(cgame g){return;}
 
 void game_delete(game g){
     if (g == NULL) exit(EXIT_FAILURE);
+    free(g->tab);
+    free(g->tab_init);
     free(g);
 }
 
