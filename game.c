@@ -71,7 +71,7 @@ void game_set_cell_init(game g, uint x, uint y, color c) {
         exit(EXIT_FAILURE);
     }
 
-    g->tab[(y*g->size)+x] = c;
+    g->tab[(y * g->size) + x] = c;
     g->tab_init[(y * g->size) + x] = c;
 }
 
@@ -98,7 +98,39 @@ uint game_nb_moves_cur(cgame g){
     return g->current_moves;
 }
 
-void game_play_one_move(game g, color c){} //flood fill algo
+/**
+ * @brief spread color by flood fill algo
+ *
+ * @param g game object
+ * @param x abscissa
+ * @param y ordinate
+ * @param tc target color
+ * @param c color
+ */
+void ff(game g, uint x, uint y, color tc, color c) {
+    if (g == NULL || tc >= NB_COLORS || c >= NB_COLORS) {
+        fprintf(stderr, "Bad parameter");
+        exit(EXIT_FAILURE);
+    }
+
+    if (x >= g->size || y >= g->size || g->tab[(y * g->size) + x] == c) return;
+    if (g->tab[(y * g->size) + x] != tc) return;
+
+    g->tab[(y * g->size) + x] = c; // replace target color by color
+
+    ff(g, x + 1, y, tc, c); // spread to right
+    ff(g, x + 1, y + 1, tc, c); // spread to right-down
+    ff(g, x, y + 1, tc, c); // spread to down
+}
+
+void game_play_one_move(game g, color c) {
+    if (g == NULL || c >= NB_COLORS) {
+        fprintf(stderr, "Bad parameter");
+        exit(EXIT_FAILURE);
+    }
+
+    ff(g, 0, 0, g->tab[0], c);
+}
 
 game game_copy(cgame g){
     if (g == NULL || g->tab==NULL || g->tab_init==NULL){
