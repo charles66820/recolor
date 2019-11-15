@@ -26,7 +26,7 @@ game game_new(color *cells, uint nb_moves_max) {
         exit(EXIT_FAILURE);
     }
 
-    game_s *g = malloc(sizeof(game_s));
+    game g = malloc(sizeof(game));
     if (g == NULL) {
         fprintf(stderr, "Not enough memory");
         exit(EXIT_FAILURE);
@@ -57,7 +57,7 @@ game game_new(color *cells, uint nb_moves_max) {
 }
 
 game game_new_empty(){
-    color* tab= (color*) malloc(SIZE*SIZE*sizeof(color)); 
+    color* tab= (color*) malloc(SIZE*SIZE*sizeof(color));
     for (int i=0; i<SIZE*SIZE; i++){
         tab[i]=0;
     }
@@ -65,7 +65,15 @@ game game_new_empty(){
     return game_empty;
 }
 
-void game_set_cell_init(game g, uint x, uint y, color c){}
+void game_set_cell_init(game g, uint x, uint y, color c) {
+    if (g == NULL || c >= NB_COLORS || x >= g->size || y >= g->size) {
+        fprintf(stderr, "Bad parameter");
+        exit(EXIT_FAILURE);
+    }
+
+    g->tab[(y*g->size)+x] = c;
+    g->tab_init[(y * g->size) + x] = c;
+}
 
 void game_set_max_moves(game g, uint nb_max_moves){
     if (g == NULL || nb_max_moves <= 0) exit(EXIT_FAILURE);
@@ -117,7 +125,7 @@ bool game_is_over(cgame g){
     if (g == NULL){
         exit(EXIT_FAILURE);
     }
-    
+
     color ref = g->tab[0];
     bool over = true;
     for (int i=0 ; i<(g->size)*(g->size) ; i++){
