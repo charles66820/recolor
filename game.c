@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "game.h"
-#define SIZE 12 //TODO: voire pour le suppriemer
+//#define SIZE 12 //TODO: voire pour le suppriemer
 
 struct game_s{
     color *tab; //le tableau contenant les cases du jeux
@@ -12,13 +12,13 @@ struct game_s{
     uint size;
 };
 
-enum color_e {
-  RED,
-  GREEN,
-  BLUE,
-  YELLOW,
-  NB_COLORS
-};  // TODO: voire pour le suppriemer
+// enum color_e {
+//   RED,
+//   GREEN,
+//   BLUE,
+//   YELLOW,
+//   NB_COLORS
+// };  // TODO: voire pour le suppriemer
 
 game game_new(color *cells, uint nb_moves_max) {
     if (cells == NULL) {
@@ -36,7 +36,7 @@ game game_new(color *cells, uint nb_moves_max) {
     g->current_moves = 0;
     g->size = SIZE;
 
-    g->tab = malloc((SIZE*SIZE)*sizeof(color));
+    g->tab = malloc((SIZE * SIZE) * sizeof(color));
     if (g->tab == NULL) {
         fprintf(stderr, "Not enough memory");
         exit(EXIT_FAILURE);
@@ -48,7 +48,7 @@ game game_new(color *cells, uint nb_moves_max) {
         exit(EXIT_FAILURE);
     }
 
-    for (uint i = 0; i < SIZE*SIZE; i++) {
+    for (uint i = 0; i < SIZE * SIZE; i++) {
         g->tab[i] = cells[i];
         g->tab_init[i] = cells[i];
     }
@@ -87,7 +87,7 @@ uint game_nb_moves_max(cgame g){
 }
 
 color game_cell_current_color(cgame g, uint x, uint y){
-    if (g == NULL || x=>(g->size) || y=>g->size){
+    if (g == NULL || x>=(g->size) || y>=g->size){
         exit(EXIT_FAILURE);
     }
     return g->tab[x+y*(g->size)];
