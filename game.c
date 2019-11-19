@@ -140,8 +140,16 @@ game game_copy(cgame g){
     if (g == NULL || g->tab==NULL || g->tab_init==NULL){
         exit(EXIT_FAILURE);
     }
-    game game_copy;
-    for (int i=0; i<g->size*(g->size); i++){
+    game game_copy = (game) malloc (sizeof(game));
+    if (game_copy == NULL){
+        exit(EXIT_FAILURE);
+    }
+    game_copy->tab = malloc (SIZE*SIZE*sizeof(color));
+    game_copy->tab_init = malloc (SIZE*SIZE*sizeof(color));
+    if (game_copy->tab == NULL || game_copy->tab_init == NULL){
+        exit(EXIT_FAILURE);
+    }
+    for (int i=0; i<(g->size)*(g->size); i++){
         game_copy->tab[i]=g->tab[i];
         game_copy->tab_init[i]=g->tab_init[i];
     }
