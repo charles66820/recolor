@@ -18,7 +18,7 @@ enable_testing()
 
 # Implémentation des executables
 #   Création de la librairie game
-add_library (game game.c game_io.c) 
+add_library (game game.c game_io.c)
 target_link_libraries(game m)
 
 #   executable du jeu
@@ -41,7 +41,10 @@ add_test(test_vandrault test_game_vandrault new_empty)
 add_test(test_vandrault test_game_vandrault set_cell_init)
 add_test(test_vandrault test_game_vandrault set_max_moves)
 
-add_test(test_vandrault test_game_vandrault)
+add_test(test_arblondeau test_game_arblondeau game_nb_moves_max)
+add_test(test_arblondeau test_game_arblondeau game_nb_moves_cur)
+add_test(test_arblondeau test_game_arblondeau game_cell_current_color)
+add_test(test_arblondeau test_game_arblondeau game_play_one_move)
 
 add_test(test_cgoedefroit test_game_cgoedefroit copy)
 add_test(test_cgoedefroit test_game_cgoedefroit delete)
