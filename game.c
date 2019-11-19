@@ -149,6 +149,7 @@ game game_copy(cgame g){
     game_copy->nb_moves_max = g->nb_moves_max;
     game_copy->current_moves = g->current_moves;
     game_copy->size = g->size;
+    return game_copy;
 }
 
 void game_delete(game g){
@@ -162,9 +163,11 @@ bool game_is_over(cgame g){
     if (g == NULL){
         exit(EXIT_FAILURE);
     }
-
     color ref = g->tab[0];
     bool over = true;
+    if (g->current_moves>g->nb_moves_max){
+        over=false;
+    }
     for (int i=0 ; i<(g->size)*(g->size) ; i++){
         if (g->tab[i]!=ref){
             over = false;
