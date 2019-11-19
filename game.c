@@ -61,7 +61,12 @@ game game_new_empty(){
     for (int i=0; i<SIZE*SIZE; i++){
         tab[i]=0;
     }
-    game game_empty = {tab, 0, 0, tab, SIZE};
+    game game_empty = (game) malloc (sizeof(game));
+    game_empty->tab = tab;
+    game_empty->nb_moves_max = 0;
+    game_empty->current_moves = 0;
+    game_empty->tab_init = tab;
+    game_empty->size = SIZE;
     return game_empty;
 }
 
