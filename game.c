@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "game.h"
-//#define SIZE 12 //TODO: voire pour le suppriemer
 
 struct game_s{
     color *tab; //le tableau contenant les cases du jeux
@@ -12,21 +11,13 @@ struct game_s{
     uint size;
 };
 
-// enum color_e {
-//   RED,
-//   GREEN,
-//   BLUE,
-//   YELLOW,
-//   NB_COLORS
-// };  // TODO: voire pour le suppriemer
-
 game game_new(color *cells, uint nb_moves_max) {
     if (cells == NULL) {
         fprintf(stderr, "Bad parameter");
         exit(EXIT_FAILURE);
     }
 
-    game g = malloc(sizeof(game));
+    game g = malloc(sizeof(struct game_s));
     if (g == NULL) {
         fprintf(stderr, "Not enough memory");
         exit(EXIT_FAILURE);
