@@ -143,9 +143,13 @@ bool test_game_play_one_move(){
         2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
     game g = game_new(cells, nbMax);
     game gc = game_copy(g);
-    if (g==NULL || gc == NULL){
+    if (g==NULL){
         fprintf (stderr, "Error : invalid new game \n");
         game_delete(g);
+        return false;
+    }
+    if (gc == NULL){
+        fprintf(stderr, "Error : invalid new game copy \n");
         game_delete(gc);
         return false;
     }
@@ -169,12 +173,6 @@ bool test_game_play_one_move(){
         game_delete(gc);
         return false;
     }
-
-    /*int input = getchar();
-    char choice = (char)input;
-    if (charToInt(choice) >= 0 && charToInt(choice) < NB_COLORS) {
-            game_play_one_move(g, (color)charToInt(choice));
-    }*/
     game_delete(g);
     game_delete(gc);
     return true;
@@ -202,8 +200,6 @@ int main (int argc, char const *argv[]){
         fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
         exit(EXIT_FAILURE);
     }
-
-    // print test result
     if (ok) {
         fprintf(stderr, "Test \"%s\" finished: SUCCESS\n", argv[1]);
         return EXIT_SUCCESS;
