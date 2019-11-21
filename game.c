@@ -140,7 +140,7 @@ game game_copy(cgame g){
     if (g == NULL || g->tab==NULL || g->tab_init==NULL){
         exit(EXIT_FAILURE);
     }
-    game game_copy = (game) malloc (sizeof(game));
+    game game_copy = (game) malloc (sizeof(struct game_s));
     if (game_copy == NULL){
         exit(EXIT_FAILURE);
     }
