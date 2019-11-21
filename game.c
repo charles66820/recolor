@@ -117,6 +117,11 @@ void ff(game g, uint x, uint y, color tc, color c) {
     ff(g, x + 1, y, tc, c); // spread to right
     ff(g, x + 1, y + 1, tc, c); // spread to right-down
     ff(g, x, y + 1, tc, c); // spread to down
+    if (x != 0) ff(g, x - 1, y + 1, tc, c);      // spread to left-down
+    if (x != 0) ff(g, x - 1, y, tc, c);          // spread to left
+    if (x != 0 && y != 0) ff(g, x - 1, y - 1, tc, c);      // spread to left-up
+    if (y != 0) ff(g, x, y - 1, tc, c);                    // spread to up
+    if (y != 0) ff(g, x + 1, y - 1, tc, c);                // spread to up-right
 }
 
 void game_play_one_move(game g, color c) {
@@ -125,7 +130,10 @@ void game_play_one_move(game g, color c) {
         exit(EXIT_FAILURE);
     }
 
-    ff(g, 0, 0, g->tab[0], c);
+    if (g->current_moves < g->nb_moves_max) {
+        ff(g, 0, 0, g->tab[0], c);
+        g->current_moves++;
+    }
 }
 
 game game_copy(cgame g){
