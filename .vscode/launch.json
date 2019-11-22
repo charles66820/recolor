@@ -1,0 +1,90 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Recolor text",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/recolor_text",
+            // "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+          "name": "(gdb) Tests charles",
+          "type": "cppdbg",
+          "request": "launch",
+          "program": "${workspaceFolder}/test_game_cgoedefroit",
+          "args": [
+            "restart"
+          ],
+          "stopAtEntry": false,
+          "cwd": "${workspaceFolder}",
+          "environment": [],
+          "setupCommands": [
+            {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+            }
+          ],
+          "externalConsole": false,
+          "MIMode": "gdb",
+          "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+          "name": "(gdb) Launch test_game_arblondeau",
+          "type": "cppdbg",
+          "request": "launch",
+          "program": "${workspaceFolder}/test_game_arblondeau",
+          "args": [
+            "game_play_one_move"
+          ],
+          "stopAtEntry": true,
+          "cwd": "${workspaceFolder}",
+          "environment": [],
+          "externalConsole": false,
+          "MIMode": "gdb",
+          "setupCommands": [
+            {
+              "description": "enable Pretty printing mode for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+            }
+          ]
+        },
+        {
+          "name": "(gdb) Launch test_game_vandrault",
+          "type": "cppdbg",
+          "request": "launch",
+          "program": "${workspaceFolder}/test_game_vandrault",
+          "args": [
+            "new"
+          ],
+          "stopAtEntry": true,
+          "cwd": "${workspaceFolder}",
+          "environment": [],
+          "externalConsole": false,
+          "MIMode": "gdb",
+          "setupCommands": [
+            {
+              "description": "enable Pretty printing mode for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+            }
+          ]
+        }
+    ]
+}
