@@ -171,7 +171,7 @@ void game_play_one_move(game g, color c) {
 
 game game_copy(cgame g) {
   if (g == NULL || g->tab == NULL || g->tab_init == NULL) {
-    game_delete(g);
+    if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
   game game_copy = (game)malloc(sizeof(struct game_s));
