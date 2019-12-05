@@ -37,12 +37,14 @@ game game_new(color *cells, uint nb_moves_max) {
   g->tab = malloc((SIZE * SIZE) * sizeof(color));
   if (g->tab == NULL) {
     fprintf(stderr, "Not enough memory");
+    game_delete(g);
     exit(EXIT_FAILURE);
   }
 
   g->tab_init = malloc((SIZE * SIZE) * sizeof(color));
   if (g->tab_init == NULL) {
     fprintf(stderr, "Not enough memory");
+    game_delete(g);
     exit(EXIT_FAILURE);
   }
 
@@ -79,6 +81,7 @@ game game_new_empty() {
 void game_set_cell_init(game g, uint x, uint y, color c) {
   if (g == NULL || c >= NB_COLORS || x >= g->size || y >= g->size) {
     fprintf(stderr, "Bad parameter");
+    if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
 
@@ -121,6 +124,7 @@ uint game_nb_moves_cur(cgame g) {
 void ff(game g, uint x, uint y, color tc, color c) {
   if (g == NULL || tc >= NB_COLORS || c >= NB_COLORS) {
     fprintf(stderr, "Bad parameter");
+    if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
 
@@ -148,6 +152,7 @@ void ff(game g, uint x, uint y, color tc, color c) {
 void game_play_one_move(game g, color c) {
   if (g == NULL || c >= NB_COLORS) {
     fprintf(stderr, "Bad parameter");
+    if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
 
