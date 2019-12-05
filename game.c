@@ -171,7 +171,6 @@ void game_play_one_move(game g, color c) {
 
 game game_copy(cgame g) {
   if (g == NULL || g->tab == NULL || g->tab_init == NULL) {
-    if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
   game game_copy = (game)malloc(sizeof(struct game_s));
@@ -181,6 +180,7 @@ game game_copy(cgame g) {
   game_copy->tab = malloc(SIZE * SIZE * sizeof(color));
   game_copy->tab_init = malloc(SIZE * SIZE * sizeof(color));
   if (game_copy->tab == NULL || game_copy->tab_init == NULL) {
+    game_delete(game_copy);
     exit(EXIT_FAILURE);
   }
   for (int i = 0; i < (g->size) * (g->size); i++) {
