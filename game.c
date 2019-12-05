@@ -87,19 +87,13 @@ void game_set_cell_init(game g, uint x, uint y, color c) {
 }
 
 void game_set_max_moves(game g, uint nb_max_moves) {
-  if (g == NULL || nb_max_moves <= 0){
-    game_delete(g);
-    exit(EXIT_FAILURE);
-  }
+  if (g == NULL || nb_max_moves <= 0) exit(EXIT_FAILURE);
   g->nb_moves_max = nb_max_moves;
   return;
 }
 
 uint game_nb_moves_max(cgame g) {
-  if (g == NULL){
-    game_delete(g);
-    exit(EXIT_FAILURE);
-  }
+  if (g == NULL) exit(EXIT_FAILURE);
   return g->nb_moves_max;
 }
 
@@ -111,10 +105,7 @@ color game_cell_current_color(cgame g, uint x, uint y) {
 }
 
 uint game_nb_moves_cur(cgame g) {
-  if (g == NULL){
-    game_delete(g);
-    exit(EXIT_FAILURE);
-  }
+  if (g == NULL) exit(EXIT_FAILURE);
   return g->current_moves;
 }
 
