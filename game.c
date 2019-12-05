@@ -56,10 +56,16 @@ game game_new(color *cells, uint nb_moves_max) {
 
 game game_new_empty() {
   color *tab = (color *)malloc(SIZE * SIZE * sizeof(color));
+  if (tab == NULL){
+    exit(EXIT_FAILURE);
+  }
   for (int i = 0; i < SIZE * SIZE; i++) {
     tab[i] = 0;
   }
   game game_empty = (game)malloc(sizeof(game));
+  if (game_empty == NULL){
+    exit(EXIT_FAILURE);
+  }
   game_empty->tab = tab;
   game_empty->nb_moves_max = 0;
   game_empty->current_moves = 0;
@@ -169,6 +175,7 @@ void game_play_one_move(game g, color c) {
 
 game game_copy(cgame g) {
   if (g == NULL || g->tab == NULL || g->tab_init == NULL) {
+    game_delete(g);
     exit(EXIT_FAILURE);
   }
   game game_copy = (game)malloc(sizeof(struct game_s));
