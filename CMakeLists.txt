@@ -6,14 +6,14 @@ option(ENABLE_DEBUG ON)
 # C'est le nom du projet et le langage de programmation utilisé
 project (recolor_text C)
 
-# Pour la compilation, -std=c99 pour compiler sous la norme c99, -g pour le debuggage, -Wall pour afficher les erreurs de compilation
+# Pour la compilation, -std=c99 pour compiler sous la norme c99, -g pour le debuggage, -Wall pour afficher les erreurs de compilation, --coverage pour vérifier que les test passent bien partout dans le code
 if(ENABLE_DEBUG)
-    set(CMAKE_C_FLAGS "-g -Wall -std=c99")
+    set(CMAKE_C_FLAGS "-g -Wall -std=c99 --coverage")
 else()
-    set(CMAKE_C_FLAGS "-O3 -std=c99") # -03 pour optimier la compilation
+    set(CMAKE_C_FLAGS "-O3 -std=c99 -Wall --coverage") # -03 pour optimiser la compilation
 endif()
 
-
+include(CTest)
 enable_testing()
 
 # Implémentation des executables
