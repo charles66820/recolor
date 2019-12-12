@@ -102,9 +102,8 @@ void game_set_cell_init(game g, uint x, uint y, color c) {
  * @param nb_moves_max number of max hit
  */
 void game_set_max_moves(game g, uint nb_max_moves) {
-  if (g == NULL || nb_max_moves <= 0) exit(EXIT_FAILURE);
+  if (g == NULL || nb_max_moves <= 0) exit(EXIT_FAILURE); // Check in case of bug
   g->nb_moves_max = nb_max_moves;
-  return;
 }
 
 /**
@@ -114,7 +113,7 @@ void game_set_max_moves(game g, uint nb_max_moves) {
  * @return nb_moves_max of g
  */
 uint game_nb_moves_max(cgame g) {
-  if (g == NULL) exit(EXIT_FAILURE);
+  if (g == NULL) exit(EXIT_FAILURE); //Check in case of bug
   return g->nb_moves_max;
 }
 
@@ -132,7 +131,7 @@ color game_cell_current_color(cgame g, uint x, uint y) {
  * @return current_moves of g
  */
 uint game_nb_moves_cur(cgame g) {
-  if (g == NULL) exit(EXIT_FAILURE);
+  if (g == NULL) exit(EXIT_FAILURE); // Check in case of bug
   return g->current_moves;
 }
 
@@ -212,12 +211,12 @@ game game_copy(cgame g) {
 }
 
 /**
- * @brief delete the game from the memory
+ * @brief delete, by using free(), the game from the memory
  *
- * @param g The data of the game
+ * @param g The all the data of the game
  */
 void game_delete(game g) {
-  if (g == NULL) exit(EXIT_FAILURE);
+  if (g == NULL) exit(EXIT_FAILURE); // Check in case of bug
   free(g->tab);
   free(g->tab_init);
   free(g);
