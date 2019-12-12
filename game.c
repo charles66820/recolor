@@ -4,11 +4,11 @@
 #include <stdlib.h>
 
 struct game_s {
-  color *tab;          // le tableau contenant les cases du jeux
-  uint nb_moves_max;   // nombre de coups max
-  uint current_moves;  // nombre de coups actuels
+  color *tab;          // The tab that contains the game cells
+  uint nb_moves_max;   // The Maximum amount of move
+  uint current_moves;  // The actual amount of move
   color *tab_init;
-  uint size;
+  uint size;           // The size of the tab (i.e the number of games cells)
 };
 
 /**
@@ -95,12 +95,24 @@ void game_set_cell_init(game g, uint x, uint y, color c) {
   g->tab_init[(y * g->size) + x] = c;
 }
 
+/**
+ * @brief Set the maximum amount of move
+ *
+ * @param g The data of the game 
+ * @param nb_moves_max number of max hit
+ */
 void game_set_max_moves(game g, uint nb_max_moves) {
   if (g == NULL || nb_max_moves <= 0) exit(EXIT_FAILURE);
   g->nb_moves_max = nb_max_moves;
   return;
 }
 
+/**
+ * @brief give the max amount of moves
+ *
+ * @param g The data of the game
+ * @return nb_moves_max of g
+ */
 uint game_nb_moves_max(cgame g) {
   if (g == NULL) exit(EXIT_FAILURE);
   return g->nb_moves_max;
@@ -113,6 +125,12 @@ color game_cell_current_color(cgame g, uint x, uint y) {
   return g->tab[x + y * (g->size)];
 }
 
+/**
+ * @brief give the number of the actual moves
+ *
+ * @param g The data of the game
+ * @return current_moves of g
+ */
 uint game_nb_moves_cur(cgame g) {
   if (g == NULL) exit(EXIT_FAILURE);
   return g->current_moves;
@@ -193,6 +211,11 @@ game game_copy(cgame g) {
   return game_copy;
 }
 
+/**
+ * @brief delete the game from the memory
+ *
+ * @param g The data of the game
+ */
 void game_delete(game g) {
   if (g == NULL) exit(EXIT_FAILURE);
   free(g->tab);
@@ -200,6 +223,12 @@ void game_delete(game g) {
   free(g);
 }
 
+/**
+ * @brief test if the game is over or not
+ *
+ * @param g The data of the game
+ * @return a boolean, false if game is over, true otherwise
+ */
 bool game_is_over(cgame g) {
   if (g == NULL) {
     exit(EXIT_FAILURE);
