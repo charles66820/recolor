@@ -8,7 +8,7 @@ struct game_s {
   uint nb_moves_max;   // The Maximum amount of move
   uint current_moves;  // The actual amount of move
   color *tab_init;
-  uint size;           // The size of the tab (i.e the number of games cells)
+  uint size;  // The size of the tab (i.e the number of games cells)
 };
 
 /**
@@ -58,14 +58,14 @@ game game_new(color *cells, uint nb_moves_max) {
 
 game game_new_empty() {
   color *tab = (color *)malloc(SIZE * SIZE * sizeof(color));
-  if (tab == NULL){
+  if (tab == NULL) {
     exit(EXIT_FAILURE);
   }
   for (int i = 0; i < SIZE * SIZE; i++) {
     tab[i] = 0;
   }
   game game_empty = (game)malloc(sizeof(game));
-  if (game_empty == NULL){
+  if (game_empty == NULL) {
     exit(EXIT_FAILURE);
   }
   game_empty->tab = tab;
@@ -98,14 +98,16 @@ void game_set_cell_init(game g, uint x, uint y, color c) {
 /**
  * @brief Set the maximum amount of move
  *
- * @param g The data of the game 
+ * @param g The data of the game
  * @param nb_moves_max number of max hit
  * @pre @p g != NULL
  * @pre @p nb_moves_max > 0
  */
 void game_set_max_moves(game g, uint nb_max_moves) {
   if (g == NULL || nb_max_moves <= 0) {  // Check in case of bug
-    fprintf (stderr, " g is NULL or nb_max_moves is set at a number less or equal to 0 : in the function game_set_max_moves");
+    fprintf(stderr,
+            " g is NULL or nb_max_moves is set at a number less or equal to 0 "
+            ": in the function game_set_max_moves");
     exit(EXIT_FAILURE);
   }
   g->nb_moves_max = nb_max_moves;
@@ -120,7 +122,7 @@ void game_set_max_moves(game g, uint nb_max_moves) {
  */
 uint game_nb_moves_max(cgame g) {
   if (g == NULL) {  // Check in case of bug
-    fprintf (stderr, "g is NULL : in the function game_nb_moves_max");
+    fprintf(stderr, "g is NULL : in the function game_nb_moves_max");
     exit(EXIT_FAILURE);
   }
   return g->nb_moves_max;
@@ -142,7 +144,7 @@ color game_cell_current_color(cgame g, uint x, uint y) {
  */
 uint game_nb_moves_cur(cgame g) {
   if (g == NULL) {  // Check in case of bug
-    fprintf (stderr, "g is NULL : in the function game_nb_moves_cur");
+    fprintf(stderr, "g is NULL : in the function game_nb_moves_cur");
     exit(EXIT_FAILURE);
   }
   return g->current_moves;
