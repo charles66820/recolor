@@ -16,16 +16,16 @@ endif()
 include(CTest)
 enable_testing()
 
-# Implémentation des executables
+# Implémentation des exécutables
 #   Création de la librairie game
 add_library (game game.c game_io.c)
 target_link_libraries(game m)
 
-#   executable du jeu
+#   exécutable du jeu
 add_executable (recolor_text recolor_text.c)
 target_link_libraries (recolor_text game)
 
-#   executable des tests de bug
+#   exécutable des tests de bug
 add_executable (test_game_arblondeau test_game_arblondeau.c)
 target_link_libraries (test_game_arblondeau game)
 
