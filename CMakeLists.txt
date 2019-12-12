@@ -8,9 +8,9 @@ project (recolor_text C)
 
 # Pour la compilation, -std=c99 pour compiler sous la norme c99, -g pour le debuggage, -Wall pour afficher les erreurs de compilation, --coverage pour vérifier que les test passent bien partout dans le code
 if(ENABLE_DEBUG)
-    set(CMAKE_C_FLAGS "-g -Wall -std=c99 --coverage")
+    set(CMAKE_C_FLAGS "-g -Wall -std=c99 --coverage") # mode debug
 else()
-    set(CMAKE_C_FLAGS "-O3 -std=c99 -Wall --coverage") # -03 pour optimiser la compilation
+    set(CMAKE_C_FLAGS "-O3 -std=c99") # mode production -03 pour optimiser la compilation
 endif()
 
 include(CTest)
