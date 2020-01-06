@@ -229,9 +229,10 @@ game game_copy(cgame g) {
  * @brief delete, by using free(), the game from the memory
  *
  * @param g The all the data of the game
- * @pre @p stderr, "g is NULL : in the function game_delete");
-    exit(EXIT_FAILURE);
-  }
+ * @pre @p stderr, "g is NULL : in the function game_delete"
+**/
+void game_delete(game g) {
+  if (g == NULL) exit(EXIT_FAILURE);
   free(g->tab);
   free(g->tab_init);
   free(g);
