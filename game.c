@@ -172,13 +172,13 @@ void ff(game g, uint x, uint y, color tc, color c) {
   g->tab[(y * g->size) + x] = c;  // replace target color by color
 
   ff(g, x + 1, y, tc, c);                            // spread to right
-  ff(g, x + 1, y + 1, tc, c);                        // spread to right-down
+  //ff(g, x + 1, y + 1, tc, c);                        // spread to right-down
   ff(g, x, y + 1, tc, c);                            // spread to down
-  if (x != 0) ff(g, x - 1, y + 1, tc, c);            // spread to left-down
+  //if (x != 0) ff(g, x - 1, y + 1, tc, c);            // spread to left-down
   if (x != 0) ff(g, x - 1, y, tc, c);                // spread to left
-  if (x != 0 && y != 0) ff(g, x - 1, y - 1, tc, c);  // spread to left-up
+  //if (x != 0 && y != 0) ff(g, x - 1, y - 1, tc, c);  // spread to left-up
   if (y != 0) ff(g, x, y - 1, tc, c);                // spread to up
-  if (y != 0) ff(g, x + 1, y - 1, tc, c);            // spread to up-right
+  //if (y != 0) ff(g, x + 1, y - 1, tc, c);            // spread to up-right
 }
 
 /**
