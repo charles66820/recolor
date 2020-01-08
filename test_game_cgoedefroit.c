@@ -19,9 +19,7 @@ game createGame(color *cells, uint nbMaxHit) {
   if (g == NULL) {
     fprintf(stderr, "Error: invalid new game!\n");
 
-    game_delete(g);
-
-    return false;
+    return NULL;
   }
 
   // test if nb max hit has been initialised
@@ -30,7 +28,7 @@ game createGame(color *cells, uint nbMaxHit) {
 
     game_delete(g);
 
-    return false;
+    return NULL;
   }
 
   // test if set nb max move work
@@ -40,7 +38,7 @@ game createGame(color *cells, uint nbMaxHit) {
 
     game_delete(g);
 
-    return false;
+    return NULL;
   }
 
   game_set_max_moves(g, nbMaxHit);
@@ -51,7 +49,7 @@ game createGame(color *cells, uint nbMaxHit) {
 
     game_delete(g);
 
-    return false;
+    return NULL;
   }
 
   // change one cell of game
@@ -62,7 +60,7 @@ game createGame(color *cells, uint nbMaxHit) {
 
     game_delete(g);
 
-    return false;
+    return NULL;
   }
 
   // test if current move has change
@@ -71,7 +69,7 @@ game createGame(color *cells, uint nbMaxHit) {
 
     game_delete(g);
 
-    return false;
+    return NULL;
   }
 
   // reset game
@@ -98,6 +96,7 @@ bool test_game_copy() {
 
   // create new game
   game g = createGame(cells, nbMaxHit);
+  if (g == NULL) return false;
 
   // test of game_copy()
   game gc = game_copy(g);
@@ -107,7 +106,6 @@ bool test_game_copy() {
     fprintf(stderr, "Error: invalid copy game!\n");
 
     game_delete(g);
-    game_delete(gc);
 
     return false;
   }
@@ -211,6 +209,7 @@ bool test_game_is_over() {
 
   // create new game
   game g = createGame(cells, nbMaxHit);
+  if (g == NULL) return false;
 
   // test game is over if game is not over
   if (game_is_over(g) == true) {
@@ -258,6 +257,7 @@ bool test_game_restart() {
 
   // create new game
   game g = createGame(cells, nbMaxHit);
+  if (g == NULL) return false;
 
   // change cells
 
