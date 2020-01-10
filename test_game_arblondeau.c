@@ -290,6 +290,10 @@ int main(int argc, char const *argv[]) {
     ok = test_game_cell_current_color();
   else if (!strcmp(argv[1], "game_play_one_move"))
     ok = test_game_play_one_move();
+  else if (!strcmp(argv[1], "game_width"))
+    ok = test_game_width();
+  else if (!strcmp(argv[1], "game_new_empty_ext"))
+    ok = test_game_new_empty_ext();
   else {
     fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
     exit(EXIT_FAILURE);
