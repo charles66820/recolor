@@ -297,9 +297,24 @@ game game_new_empty_ext(uint width, uint height, bool wrapping){
     exit(EXIT_FAILURE);
   }
   game game = (game) malloc(sizeof(struct game_s));
-  if (game == NULL) {
+  if (game == NULL){
     exit(EXIT_FAILURE);
   }
+  game->width = witdh;
+  game->height = height;
+  game->wrapping = wrapping;
+  return game;
 }
 
-uint game_width(cgame game);
+/**
+ * @brief Returns the number of columns on the game
+ * @param game the game
+ * @return the width of the game
+ * @pre @p g is a valid pointer toward a cgame structure
+ **/
+uint game_width(cgame game){
+  if (game == NULL){
+    exit(EXIT_FAILURE);
+  }
+  return game->width;
+}
