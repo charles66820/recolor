@@ -218,7 +218,7 @@ bool test_game_width(){
     game_delete(g);
     return false;
   }
-  if (g->width < 1 || g->width == NULL){
+  if (game_width(g) < 1 || game_width(g) == NULL){
     fprintf(stderr, "g->width is an invalid parameter.\n");
     game_delete(g);
     return false;
@@ -254,12 +254,12 @@ bool test_game_new_empty_ext(){
     return false;
   }
   test_game_width();
-  if (g->height < 1 || g->height == NULL){
+  if (game_height(g) < 1 || game_height(g) == NULL){
     fprintf(stderr, "g->height is an invalid parameter.\n");
     game_delete(g);
     return false;
   }
-  if (g->wrapping == NULL){
+  if (game_is_wrapping(g) == NULL){
     fprintf(stderr, "g->wrapping is an invalid parameter.\n");
     game_delete(g);
     return false;
