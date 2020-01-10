@@ -279,3 +279,27 @@ void game_restart(game g) {
     g->tab[i] = g->tab_init[i];
   }
 }
+
+/**
+ * @brief Creates a new empty game having height rows and width
+ * columns. All the cells will have the default color (whose value is
+ * 0). The maximum number of moves is set to 0
+ * @param width the width of the grid
+ * @param height the height of the grid
+ * @param wrapping whether or not the game is wrapping
+ * @return the created game
+ * @pre @p width > 0
+ * @pre @p height > 0
+ **/
+game game_new_empty_ext(uint width, uint height, bool wrapping){
+  if (width < 1 || height < 1){
+    fprintf (stderr, "Invalid parameter on the function 'game_new_empty_ext");
+    exit(EXIT_FAILURE);
+  }
+  game game = (game) malloc(sizeof(struct game_s));
+  if (game == NULL) {
+    exit(EXIT_FAILURE);
+  }
+}
+
+uint game_width(cgame game);
