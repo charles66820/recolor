@@ -9,6 +9,9 @@ struct game_s {
   uint current_moves;  // The actual amount of move
   color *tab_init;
   uint size;  // The size of the tab (i.e the number of games cells)
+  uint width; //The number of columns on the grid
+  uint height; //The number of rows on the grid
+  bool wrapping; //true the game is wrapping, false if the game not wrapping
 };
 
 /**
@@ -296,14 +299,15 @@ game game_new_empty_ext(uint width, uint height, bool wrapping){
     fprintf (stderr, "Invalid parameter on the function 'game_new_empty_ext");
     exit(EXIT_FAILURE);
   }
-  game game = (game) malloc(sizeof(struct game_s));
-  if (game == NULL){
+  
+  game new_game = (game) malloc(sizeof(struct game_s));
+  if (new_game == NULL){
     exit(EXIT_FAILURE);
   }
-  game->width = witdh;
-  game->height = height;
-  game->wrapping = wrapping;
-  return game;
+  new_game->width = width;
+  new_game->height = height;
+  new_game->wrapping = wrapping;
+  return new_game;
 }
 
 /**
