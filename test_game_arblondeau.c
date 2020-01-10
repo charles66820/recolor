@@ -194,6 +194,80 @@ bool test_game_play_one_move() {
 }
 
 /**
+ * @brief test if the play change the game properly
+ *
+ * @param cells tab of colors
+ * @param nb_moves_max number of max hit
+ * @param g is test if NULL
+ * @param width is test if NULL or less than 1
+ * @return false + an error message in case of error
+ * @return true if no bug was found
+ */
+bool test_game_width(){
+  uint nbMax = 12;
+  color cells[SIZE * SIZE] = {
+      0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
+      1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
+      2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
+      1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
+      0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
+      1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
+  game g = game_new(cells, nbMax);
+  if (g == NULL){
+    fprintf(stderr, "Error : invalid new game \n");
+    game_delete(g);
+    return false;
+  }
+  if (g->width < 1 || g->width == NULL){
+    fprintf(stderr, "g->width is an invalid parameter.\n");
+    game_delete(g);
+    return false;
+  }
+  return true;
+}
+
+/**
+ * @brief test if the play change the game properly
+ *
+ * @param cells tab of colors
+ * @param nb_moves_max number of max hit
+ * @param g is test if NULL
+ * @param width is test if NULL or less than 1
+ * @param height is test if NULL or less than 1
+ * @param wrapping is test if NULL
+ * @return false + an error message in case of error
+ * @return true if no bug was found
+ */
+bool test_game_new_empty_ext(){
+  uint nbMax = 12;
+  color cells[SIZE * SIZE] = {
+      0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
+      1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
+      2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
+      1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
+      0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
+      1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
+  game g = game_new(cells, nbMax);
+  if (g == NULL){
+    fprintf(stderr, "Error : invalid new game \n");
+    game_delete(g);
+    return false;
+  }
+  test_game_width();
+  if (g->height < 1 || g->height == NULL){
+    fprintf(stderr, "g->height is an invalid parameter.\n");
+    game_delete(g);
+    return false;
+  }
+  if (g->wrapping == NULL){
+    fprintf(stderr, "g->wrapping is an invalid parameter.\n");
+    game_delete(g);
+    return false;
+  }
+  return true;
+}
+
+/**
  * @brief main fuction will call other functions to test bugs
  *
  * @param argv[1] wait for one of the fourth good parameter
