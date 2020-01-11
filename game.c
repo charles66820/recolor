@@ -8,7 +8,6 @@ struct game_s {
   uint nb_moves_max;   // The Maximum amount of move
   uint current_moves;  // The actual amount of move
   color *tab_init;
-  uint size;  // The size of the tab (i.e the number of games cells)
   uint width; //The number of columns on the grid
   uint height; //The number of rows on the grid
   bool wrapping; //true the game is wrapping, false if the game not wrapping
@@ -35,23 +34,24 @@ game game_new(color *cells, uint nb_moves_max) {
 
   g->nb_moves_max = nb_moves_max;
   g->current_moves = 0;
-  g->size = SIZE;
+  g->width = SIZE;
+  g->height = SIZE;
 
-  g->tab = malloc((SIZE * SIZE) * sizeof(color));
+  g->tab = malloc((g->width * g->height) * sizeof(color));
   if (g->tab == NULL) {
     fprintf(stderr, "Not enough memory");
     game_delete(g);
     exit(EXIT_FAILURE);
   }
 
-  g->tab_init = malloc((SIZE * SIZE) * sizeof(color));
+  g->tab_init = malloc((g->width * g->height) * sizeof(color));
   if (g->tab_init == NULL) {
     fprintf(stderr, "Not enough memory");
     game_delete(g);
     exit(EXIT_FAILURE);
   }
 
-  for (uint i = 0; i < SIZE * SIZE; i++) {
+  for (uint i = 0; i < g->width * g->height; i++) {
     g->tab[i] = cells[i];
     g->tab_init[i] = cells[i];
   }
@@ -60,22 +60,26 @@ game game_new(color *cells, uint nb_moves_max) {
 }
 
 game game_new_empty() {
-  color *tab = (color *)malloc(SIZE * SIZE * sizeof(color));
-  if (tab == NULL) {
-    exit(EXIT_FAILURE);
-  }
-  for (int i = 0; i < SIZE * SIZE; i++) {
-    tab[i] = 0;
-  }
   game game_empty = (game)malloc(sizeof(game));
   if (game_empty == NULL) {
     exit(EXIT_FAILURE);
   }
+  game_empty->width = SIZE;
+  game_empty->height = SIZE;
+
+  color *tab =
+      (color *)malloc(game_empty->width * game_empty->height * sizeof(color));
+  if (tab == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  for (int i = 0; i < game_empty->width * game_empty->height; i++) {
+    tab[i] = 0;
+  }
+
   game_empty->tab = tab;
   game_empty->nb_moves_max = 0;
   game_empty->current_moves = 0;
   game_empty->tab_init = tab;
-  game_empty->size = SIZE;
   return game_empty;
 }
 
@@ -88,17 +92,17 @@ game game_new_empty() {
  * @param c new color
  */
 void game_set_cell_init(game g, uint x, uint y, color c) {
-  if (g == NULL || c >= NB_COLORS || x >= g->size || y >= g->size) {
+  if (g == NULL || c >= NB_COLORS || x >= g->width || y >= g->height) {
     fprintf(stderr, "Bad parameter");
     if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
 
-  g->tab[(y * g->size) + x] = c;
-  g->tab_init[(y * g->size) + x] = c;
+  g->tab[(y * g->width) + x] = c;
+  g->tab_init[(y * g->width) + x] = c;
 }
 
-/**
+/**heigwidthht
  * @brief Set the maximum amount of move
  *
  * @param g The data of the game
@@ -132,10 +136,10 @@ uint game_nb_moves_max(cgame g) {
 }
 
 color game_cell_current_color(cgame g, uint x, uint y) {
-  if (g == NULL || x >= (g->size) || y >= g->size) {
+  if (g == NULL || x >= (g->width) || y >= g->height) {
     exit(EXIT_FAILURE);
   }
-  return g->tab[x + y * (g->size)];
+  return g->tab[x + y * (g->width)];
 }
 
 /**
@@ -169,10 +173,10 @@ void ff(game g, uint x, uint y, color tc, color c) {
     exit(EXIT_FAILURE);
   }
 
-  if (x >= g->size || y >= g->size || g->tab[(y * g->size) + x] == c) return;
-  if (g->tab[(y * g->size) + x] != tc) return;
+  if (x >= g->width || y >= g->height || g->tab[(y * g->width) + x] == c) return;
+  if (g->tab[(y * g->width) + x] != tc) return;
 
-  g->tab[(y * g->size) + x] = c;  // replace target color by color
+  g->tab[(y * g->width) + x] = c;  // replace target color by color
 
   ff(g, x + 1, y, tc, c);                            // spread to right
   //ff(g, x + 1, y + 1, tc, c);                        // spread to right-down
@@ -212,19 +216,20 @@ game game_copy(cgame g) {
   if (game_copy == NULL) {
     exit(EXIT_FAILURE);
   }
-  game_copy->tab = malloc(SIZE * SIZE * sizeof(color));
-  game_copy->tab_init = malloc(SIZE * SIZE * sizeof(color));
+  game_copy->tab = malloc(g->width * g->height * sizeof(color));
+  game_copy->tab_init = malloc(g->width * g->height * sizeof(color));
   if (game_copy->tab == NULL || game_copy->tab_init == NULL) {
     game_delete(game_copy);
     exit(EXIT_FAILURE);
   }
-  for (int i = 0; i < (g->size) * (g->size); i++) {
+  for (int i = 0; i < g->width * g->height; i++) {
     game_copy->tab[i] = g->tab[i];
     game_copy->tab_init[i] = g->tab_init[i];
   }
   game_copy->nb_moves_max = g->nb_moves_max;
   game_copy->current_moves = g->current_moves;
-  game_copy->size = g->size;
+  game_copy->width = g->width;
+  game_copy->height = g->height;
   return game_copy;
 }
 
@@ -256,7 +261,7 @@ bool game_is_over(cgame g) {
   if (g->current_moves > g->nb_moves_max) {
     over = false;
   }
-  for (int i = 0; i < (g->size) * (g->size); i++) {
+  for (int i = 0; i < (g->width) * (g->height); i++) {
     if (g->tab[i] != ref) {
       over = false;
     }
@@ -278,7 +283,7 @@ void game_restart(game g) {
   g->current_moves = 0;
 
   // Copy initial color cells to game cells
-  for (uint i = 0; i < g->size * g->size; i++) {
+  for (uint i = 0; i < g->width * g->height; i++) {
     g->tab[i] = g->tab_init[i];
   }
 }
@@ -299,7 +304,7 @@ game game_new_empty_ext(uint width, uint height, bool wrapping){
     fprintf (stderr, "Invalid parameter on the function 'game_new_empty_ext");
     exit(EXIT_FAILURE);
   }
-  
+
   game new_game = (game) malloc(sizeof(struct game_s));
   if (new_game == NULL){
     exit(EXIT_FAILURE);
