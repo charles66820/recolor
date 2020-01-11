@@ -183,6 +183,14 @@ bool test_game_play_one_move() {
     game_delete(gc);
     return false;
   }
+
+  // test if current move has change
+  if (game_nb_moves_cur(g) != 1) {
+    fprintf(stderr, "Error: invalid game nb curent move!\n");
+    game_delete(g);
+    return false;
+  }
+
   game_delete(g);
   game_delete(gc);
   return true;
