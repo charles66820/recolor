@@ -26,7 +26,6 @@ bool test_game_nb_moves_max() {
   game g = game_new(cells, nbMax);
   if (g == NULL) {
     fprintf(stderr, "Error : invalid new game \n");
-    game_delete(g);
     return false;
   }
 
@@ -61,7 +60,6 @@ bool test_game_nb_moves_cur() {
   game g = game_new(cells, nbMax);
   if (g == NULL) {
     fprintf(stderr, "Error : invalid new game \n");
-    game_delete(g);
     return false;
   }
 
@@ -109,7 +107,6 @@ bool test_game_cell_current_color() {
   game g = game_new(cells, nbMax);
   if (g == NULL) {
     fprintf(stderr, "Error : invalid new game \n");
-    game_delete(g);
     return false;
   }
 
@@ -158,13 +155,11 @@ bool test_game_play_one_move() {
   game gc = game_copy(g);
   if (g == NULL) {
     fprintf(stderr, "Error : invalid new game \n");
-    game_delete(g);
     game_delete(gc);
     return false;
   }
   if (gc == NULL) {
     fprintf(stderr, "Error : invalid new game copy \n");
-    game_delete(gc);
     game_delete(g);
     return false;
   }
@@ -215,7 +210,6 @@ bool test_game_width(){
   game g = game_new(cells, nbMax);
   if (g == NULL){
     fprintf(stderr, "Error : invalid new game \n");
-    game_delete(g);
     return false;
   }
   if (game_width(g) < 1){
@@ -250,7 +244,6 @@ bool test_game_new_empty_ext(){
   game g = game_new(cells, nbMax);
   if (g == NULL){
     fprintf(stderr, "Error : invalid new game \n");
-    game_delete(g);
     return false;
   }
   test_game_width();
