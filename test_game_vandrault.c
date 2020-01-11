@@ -118,6 +118,15 @@ bool test_game_set_max_moves() {
     game_delete(g1);
     return false;
   }
+
+  // test if set nb max move work
+  game_set_max_moves(g1, 15);
+  if (game_nb_moves_max(g1) != 15) {
+    fprintf(stderr, "Error: invalid game nb max moves!\n");
+    game_delete(g1);
+    return false;
+  }
+
   game_delete(g1);  // deleting g1 to free the memory
   return true;
 }
