@@ -306,7 +306,9 @@ game game_new_empty_ext(uint width, uint height, bool wrapping){
   }
 
   game new_game = (game) malloc(sizeof(struct game_s));
-  if (new_game == NULL){
+  new_game->tab = malloc(new_game->width * new_game->height * sizeof(color));
+  new_game->tab_init = malloc(new_game->width * new_game->height * sizeof(color));
+  if (new_game == NULL || new_game->tab == NULL || new_game->tab_init == NULL){
     exit(EXIT_FAILURE);
   }
   new_game->width = width;
