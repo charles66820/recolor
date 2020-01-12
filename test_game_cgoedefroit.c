@@ -248,8 +248,99 @@ bool test_game_restart() {
   return true;
 }
 
-int main(int argc, char const *argv[]) {
+/**
+ * @brief Unite test for game_new_ext
+ *
+ * @return bool
+ */
+bool test_game_new_ext() {
+  color cells[4 * 8] = {0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1,
+                        1, 1, 1, 3, 2, 0, 1, 0, 1, 0, 1, 2, 3, 2, 3, 2};
+  color cellsw[5 * 7] = {0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1,
+                         1, 3, 2, 0, 1, 0, 1, 0, 1, 2, 3, 2, 3, 2, 1, 0, 2};
 
+  game g = game_new_ext(4, 8, cells, 11, false);
+
+  game gw = game_new_ext(5, 7, cellsw, 6, true);
+
+  // check if game are not create
+  if (gw == NULL) {
+    fprintf(stderr, "Error: invalid new game!\n");
+    return false;
+  }
+
+  // check if game are not create
+  if (g == NULL) {
+    fprintf(stderr, "Error: invalid new game!\n");
+    return false;
+  }
+
+  // check if the number of max moves is correctly define
+  if (game_nb_moves_max(g) != 11) {
+    fprintf(stderr,
+            "Error: new game number of max moves is not correctly define!\n");
+    game_delete(g);
+    return false;
+  }
+
+  // check if game width is correctly define
+  if (game_width(g) != 4) {
+    fprintf(stderr, "Error: new game width is not correctly define!\n");
+    game_delete(g);
+    return false;
+  }
+
+  // check if game height is correctly define
+  if (game_height(g) != 8) {
+    fprintf(stderr, "Error: new game height is not correctly define!\n");
+    game_delete(g);
+    return false;
+  }
+
+  // check if game wrapping is correctly define
+  if (game_is_wrapping(g)) {
+    fprintf(stderr, "Error: new game wrapping is not correctly define!\n");
+    game_delete(g);
+    return false;
+  }
+
+  // check if game wrapping is correctly define
+  if (!game_is_wrapping(gw)) {
+    fprintf(stderr, "Error: new game wrapping is not correctly define!\n");
+    game_delete(g);
+    return false;
+  }
+
+  // check if game nb current moves is correctly define
+  if (!game_nb_moves_cur(g)) {
+    fprintf(stderr,
+            "Error: new game nb current moves is not correctly define!\n");
+    game_delete(g);
+    return false;
+  }
+
+  // check if cells is correctly define
+  for (uint y = 0; y < 8; y++)
+    for (uint x = 0; x < 4; x++)
+      if (game_cell_current_color(g, x, y) != cells[x + 4 * y]) {
+        fprintf(stderr, "Error: cells of new game is not correctly define!\n");
+        game_delete(g);
+        return false;
+      }
+
+  for (uint y = 0; y < 8; y++)
+    for (uint x = 0; x < 4; x++)
+      if (game_cell_current_color(gw, x, y) != cellsw[x + 4 * y]) {
+        fprintf(stderr, "Error: cells of new game is not correctly define!\n");
+        game_delete(g);
+        return false;
+      }
+
+  game_delete(g);
+  return true;
+}
+
+int main(int argc, char const *argv[]) {
   // in case if program is run without args
   if (argc == 1) {
     fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
@@ -265,6 +356,8 @@ int main(int argc, char const *argv[]) {
   else if (!strcmp(argv[1], "is_over"))
     ok = test_game_is_over();
   else if (!strcmp(argv[1], "restart"))
+    ok = test_game_restart();
+  else if (!strcmp(argv[1], "new_ext"))
     ok = test_game_restart();
   else {
     fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
