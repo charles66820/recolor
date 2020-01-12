@@ -345,12 +345,27 @@ uint game_height(cgame game){
  *@pre @p g != NULL
  **/
 
-bool game_wrapping(cgame game){
+bool game_is_wrapping(cgame game){
   if (game == NULL){
     exit(EXIT_FAILURE);
   }
   return game->wrapping;
 }
+
+/**
+ *@brief Tests if the game is wrapping or not
+ *@param game the game
+ *@return a boolean, true is the game is wrapping, false otherwise
+ *@pre @p g != NULL
+ **/
+
+void game_set_wrapping (cgame game, bool new_wrap){
+  if (game == NULL){
+    exit(EXIT_FAILURE);
+  }
+  game->wrapping = new_wrap;
+}
+
 /**
  * @brief Creates a new game
  * @param width the width of the grid
