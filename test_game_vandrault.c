@@ -38,12 +38,12 @@ bool test_game_new() {
       return false;
     }
   }
-  if (game_nb_moves_cur(g1) =! 0){
+  if (g1->current_moves =! 0){
     game_delete(g1);
     return false;
   }
   game_play_one_move(g1,2);
-  if (game_nb_moves_cur(g1) =! 1){
+  if (g1->current_moves =! 1){
     game_delete(g1);
     return false;
   }
@@ -169,19 +169,19 @@ bool test_game_wrapping(){
   if (g == NULL) {  // testing if g1 is a valid pointer
     return false;
   }
-  if (game_wrapping(g) != false){
+  if (g->wrapping != false){
     fprintf(stderr,"invalid wrapping in g\n");
     game_delete(g);
     return false;
   }
   game_set_wrapping(g, false);
-  if (game_wrapping(g) != false){
+  if (g->wrapping != false){
     fprintf(stderr,"ERROR: the wrapping parameter is not the one expected\n");
     game_delete(g);
     return false;
   }
   game_set_wrapping(g, true);
-  if (game_wrapping(g) != true){
+  if (g->wrapping != true){
     fprintf(stderr,"ERROR: the wrapping parameter is not the one expected\n");
     game_delete(g);
     return false;
