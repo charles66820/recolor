@@ -325,6 +325,33 @@ uint game_width(cgame game) {
 }
 
 /**
+ * @brief Returns the number of lignes on the game
+ * @param game the game
+ * @return the height of the game
+ * @pre @p g is a valid pointer toward a cgame structure
+ **/
+
+uint game_height(cgame game){
+  if (game == NULL){
+   exit(EXIT_FAILURE);
+  }
+  return game->height;
+}
+
+/**
+ *@brief Tests if the game is wrapping or not
+ *@param game the game
+ *@return a boolean, true is the game is wrapping, false otherwise
+ *@pre @p g != NULL
+ **/
+
+bool game_wrapping(cgame game){
+  if (game == NULL){
+    exit(EXIT_FAILURE);
+  }
+  return game->wrapping;
+}
+/**
  * @brief Creates a new game
  * @param width the width of the grid
  * @param height the height of the grid
