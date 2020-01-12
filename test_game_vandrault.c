@@ -18,7 +18,6 @@ bool test_game_new() {
 
   game g1 = game_new(cells, 12);
   if (g1 == NULL) {  // testing if g1 is a valid pointer
-    game_delete(g1);
     return false;
   }
   if (game_nb_moves_max(g1) != 12) {  // testing if the number of max moves is
@@ -47,7 +46,6 @@ bool test_game_new() {
 bool test_game_new_empty() {
   game g = game_new_empty();
   if (g == NULL) {  // testing if g1 is a valid pointer
-    game_delete(g);
     return false;
   }
   if (game_nb_moves_max(g) != 0) {  // testing if the number of max moves is 0
@@ -78,7 +76,6 @@ bool test_game_set_cell_init() {
 
   game g1 = game_new(cells, 12);
   if (g1 == NULL) {  // testing if g1 is a valid pointer
-    game_delete(g1);
     return false;
   }
   game_play_one_move(g1, 2);
@@ -104,13 +101,11 @@ bool test_game_set_max_moves() {
 
   game g1 = game_new(cells, 12);
   if (g1 == NULL) {  // testing if g1 is a valid pointer
-    game_delete(g1);
     return false;
   }
   game_set_max_moves(g1, 14);
   if (g1 == NULL) {  // testing if g1 is still a valid pointer after changing
                      // the number of max moves
-    game_delete(g1);
     return false;
   }
   if (game_nb_moves_max(g1) !=
@@ -131,6 +126,60 @@ bool test_game_set_max_moves() {
   return true;
 }
 
+bool test_game_height(){
+  uint nbMax = 12;
+  color cells[SIZE * SIZE] = {
+      0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
+      1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
+      2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
+      1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
+      0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
+      1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
+  game g = game_new(cells, 12);
+  if (g == NULL) {  // testing if g1 is a valid pointer
+    return false;
+  }
+  if (game_height(g)<1){
+    fprintf(stderr,'invalid height in g');
+    game_delete(g);
+    return false;
+  }
+  return true;
+}
+
+bool test_game_wrapping(){
+  uint nbMax = 12;
+  color cells[SIZE * SIZE] = {
+      0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
+      1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
+      2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
+      1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
+      0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
+      1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
+  game g = game_new(cells, 12);
+  if (g == NULL) {  // testing if g1 is a valid pointer
+    return false;
+  }
+  if (game_wrapping(g) != false){
+    fprintf(stderr,'invalid wrapping in g');
+    game_delete(g);
+    return false;
+  }
+  game_set_wrapping(g, false);
+  if (game_wrapping(g) != false){
+    fprintf(stderr,'ERROR: the wrapping parameter is not the one expected');
+    game_delete(g);
+    return false;
+  }
+  game_set_wrapping(g, true);
+  if (game_wrapping(g) != true){
+    fprintf(stderr,'ERROR: the wrapping parameter is not the one expected');
+    game_delete(g);
+    return false;
+  }
+  game_delete(g);
+  return true;
+}
 // main//
 
 int main(int argc, char *argv[]) {
@@ -149,6 +198,10 @@ int main(int argc, char *argv[]) {
     ok = test_game_set_cell_init();
   else if (!strcmp(argv[1], "set_max_moves"))
     ok = test_game_set_max_moves();
+  else if (!strcmp(argv[1], "height"))
+    ok = test_game_height();
+  else if (!strcmp(argv[1], "wrapping"))
+    ok = test_game_wrapping();
   else {
     fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
     exit(EXIT_FAILURE);
