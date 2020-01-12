@@ -212,6 +212,15 @@ void game_restart(game g);
 bool game_is_wrapping(cgame g);
 
 /**
+ *@brief set the wrapping parameter of the game
+ *@param game the game
+ *@param new_wrap the new wrapping parameter of game
+ *@pre @p g is a valid pointer toward a cgame structure
+ **/
+
+void game_set_wrapping (game game, bool new_wrap)
+
+/**
  * @brief Creates a new empty game having height rows and width
  * columns. All the cells will have the default color (whose value is
  * 0). The maximum number of moves is set to 0
