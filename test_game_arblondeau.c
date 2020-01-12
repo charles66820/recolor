@@ -7,10 +7,6 @@
 /**
  * @brief test if nb_moves_max is properly created
  *
- * @param cells tab of colors
- * @param nb_moves_max number of max hit
- * @param g is test if NULL
- * @param nbMax is test if equal to nb_moves_max
  * @return false + an error message in case of error
  * @return true if no bug was found
  */
@@ -41,10 +37,6 @@ bool test_game_nb_moves_max() {
 /**
  * @brief test if nb_moves_cur start at 0 and increment 1 by 1
  *
- * @param cells tab of colors
- * @param nb_moves_max number of max hit
- * @param g is test if NULL
- * @param nb_moves_cur is test if it start at 0 or not, and test if it increment properly
  * @return false + an error message in case of error
  * @return true if no bug was found
  */
@@ -88,10 +80,6 @@ bool test_game_nb_moves_cur() {
 /**
  * @brief test if the cells are properly created, and change properly
  *
- * @param cells tab of colors
- * @param nb_moves_max number of max hit
- * @param g is test if NULL
- * @param cell_current_color is test if it was properly created and change properly
  * @return false + an error message in case of error
  * @return true if no bug was found
  */
@@ -135,10 +123,6 @@ bool test_game_cell_current_color() {
 /**
  * @brief test if the play change the game properly
  *
- * @param cells tab of colors
- * @param nb_moves_max number of max hit
- * @param g is test if NULL
- * @param gc is test if NULL
  * @return false + an error message in case of error
  * @return true if no bug was found
  */
@@ -199,10 +183,6 @@ bool test_game_play_one_move() {
 /**
  * @brief test if the play change the game properly
  *
- * @param cells tab of colors
- * @param nb_moves_max number of max hit
- * @param g is test if NULL
- * @param width is test if NULL or less than 1
  * @return false + an error message in case of error
  * @return true if no bug was found
  */
@@ -231,12 +211,6 @@ bool test_game_width(){
 /**
  * @brief test if the play change the game properly
  *
- * @param cells tab of colors
- * @param nb_moves_max number of max hit
- * @param g is test if NULL
- * @param width is test if NULL or less than 1
- * @param height is test if NULL or less than 1
- * @param wrapping is test if NULL
  * @return false + an error message in case of error
  * @return true if no bug was found
  */
