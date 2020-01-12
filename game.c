@@ -45,7 +45,8 @@ game game_new_empty() {
  * @pre @p g != NULL
  * @pre @p x >= 0
  * @pre @p y >= 0
- * @pre @p c > 0 && c < NB_COLORS
+ * @pre @p c > 0
+ * @pre @p c < NB_COLORS
  */
 void game_set_cell_init(game g, uint x, uint y, color c) {
   if (g == NULL || c >= NB_COLORS || x >= g->width || y >= g->height) {
@@ -133,8 +134,10 @@ uint game_nb_moves_cur(cgame g) {
  * @pre @p g != NULL
  * @pre @p x >= 0
  * @pre @p y >= 0
- * @pre @p tc > 0 && tc < NB_COLORS
- * @pre @p c > 0 && c < NB_COLORS
+ * @pre @p tc > 0
+ * @pre @p tc < NB_COLORS
+ * @pre @p c > 0
+ * @pre @p c < NB_COLORS
  */
 void ff(game g, uint x, uint y, color tc, color c) {
   if (g == NULL || tc >= NB_COLORS || c >= NB_COLORS) {
@@ -174,7 +177,8 @@ void ff(game g, uint x, uint y, color tc, color c) {
  * @param g game to play one move
  * @param c color played
  * @pre @p g != NULL
- * @pre @p c > 0 && c < NB_COLORS
+ * @pre @p c > 0
+ * @pre @p c < NB_COLORS
  */
 void game_play_one_move(game g, color c) {
   if (g == NULL || c >= NB_COLORS) {
@@ -227,12 +231,15 @@ game game_copy(cgame g) {
  * @brief delete, by using free(), the game from the memory
  *
  * @param g The all the data of the game
- * @pre @p stderr, "g is NULL : in the function game_delete"
+ * @pre @p g != NULL
  **/
 void game_delete(game g) {
-  if (g == NULL) exit(EXIT_FAILURE);
-  free(g->tab);
-  free(g->tab_init);
+  if (g == NULL) {
+    fprintf(stderr, "g is NULL : in the function game_delete");
+    exit(EXIT_FAILURE);
+  }
+  if (g->tab != NULL) free(g->tab);
+  if (g->tab_init != NULL) free(g->tab_init);
   free(g);
 }
 
@@ -290,7 +297,8 @@ void game_restart(game g) {
  * @return the created game
  * @pre @p width > 0
  * @pre @p height > 0
- * @pre @p wrapping == false || true
+ * @pre @p wrapping == true
+ * @pre @p wrapping == false
  **/
 game game_new_empty_ext(uint width, uint height, bool wrapping) {
   if (width < 1 || height < 1) {
@@ -313,9 +321,9 @@ game game_new_empty_ext(uint width, uint height, bool wrapping) {
 
 /**
  * @brief Returns the number of columns on the game
- * @param game the game
+ * @param game is a valid pointer toward a game structure. The game
  * @return the width of the game
- * @pre @p g is a valid pointer toward a cgame structure
+ * @pre @p game != NULL
  **/
 uint game_width(cgame game) {
   if (game == NULL) {
@@ -326,9 +334,9 @@ uint game_width(cgame game) {
 
 /**
  * @brief Returns the number of lignes on the game
- * @param game the game
+ * @param game is a valid pointer toward a game structure. The game
  * @return the height of the game
- * @pre @p g is a valid pointer toward a cgame structure
+ * @pre @p game != NULL
  **/
 
 uint game_height(cgame game){
@@ -339,10 +347,10 @@ uint game_height(cgame game){
 }
 
 /**
- *@brief Tests if the game is wrapping or not
- *@param game the game
- *@return a boolean, true is the game is wrapping, false otherwise
- *@pre @p g != NULL
+ * @brief Tests if the game is wrapping or not
+ * @param game the game
+ * @return a boolean, true is the game is wrapping, false otherwise
+ * @pre @p game != NULL
  **/
 
 bool game_is_wrapping(cgame game){
@@ -378,7 +386,8 @@ void game_set_wrapping (game game, bool new_wrap){
  * @pre @p height > 0
  * @pre @p cells != NULL
  * @pre @p nb_moves_max > 0
- * @pre @p wrapping == false || true
+ * @pre @p wrapping == true
+ * @pre @p wrapping == false
  **/
 game game_new_ext(uint width, uint height, color *cells, uint nb_moves_max,
                   bool wrapping) {
