@@ -38,12 +38,12 @@ bool test_game_new() {
       return false;
     }
   }
-  if (game_nb_moves_cur(g1) =! 0){
+  if (game_nb_moves_cur(g1) != 0){
     game_delete(g1);
     return false;
   }
   game_play_one_move(g1,2);
-  if (game_nb_moves_cur(g1) =! 1){
+  if (game_nb_moves_cur(g1) != 1){
     game_delete(g1);
     return false;
   }
