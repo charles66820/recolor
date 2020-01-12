@@ -353,9 +353,9 @@ bool game_is_wrapping(cgame game){
 }
 
 /**
- *@brief Tests if the game is wrapping or not
+ *@brief set the wrapping parameter of the game
  *@param game the game
- *@return a boolean, true is the game is wrapping, false otherwise
+ *@param new_wrap the new wrapping parameter of game
  *@pre @p g != NULL
  **/
 
