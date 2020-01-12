@@ -12,8 +12,8 @@
  * @param g game with cells to print
  */
 void showCells(game g) {
-  for (int y = 0; y < SIZE; y++) {
-    for (int x = 0; x < SIZE; x++)
+  for (int y = 0; y < game_height(g); y++) {
+    for (int x = 0; x < game_width(g); x++)
       printf("%d", game_cell_current_color(g, x, y));
     printf("\n");
   }
