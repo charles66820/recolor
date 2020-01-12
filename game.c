@@ -359,7 +359,7 @@ bool game_is_wrapping(cgame game){
  *@pre @p g != NULL
  **/
 
-void game_set_wrapping (cgame game, bool new_wrap){
+void game_set_wrapping (game game, bool new_wrap){
   if (game == NULL){
     exit(EXIT_FAILURE);
   }
