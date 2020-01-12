@@ -169,7 +169,7 @@ bool test_game_wrapping(){
   if (g == NULL) {  // testing if g1 is a valid pointer
     return false;
   }
-  if (g->wrapping != false){
+  if (game_is_wrapping(g) != false){
     fprintf(stderr,"invalid wrapping in g\n");
     game_delete(g);
     return false;
