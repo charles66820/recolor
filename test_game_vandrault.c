@@ -149,7 +149,7 @@ bool test_game_height(){
     return false;
   }
   if (game_height(g)<1){
-    fprintf(stderr,'invalid height in g');
+    fprintf(stderr,"invalid height in g\n");
     game_delete(g);
     return false;
   }
@@ -170,19 +170,19 @@ bool test_game_wrapping(){
     return false;
   }
   if (game_wrapping(g) != false){
-    fprintf(stderr,'invalid wrapping in g');
+    fprintf(stderr,"invalid wrapping in g\n");
     game_delete(g);
     return false;
   }
   game_set_wrapping(g, false);
   if (game_wrapping(g) != false){
-    fprintf(stderr,'ERROR: the wrapping parameter is not the one expected');
+    fprintf(stderr,"ERROR: the wrapping parameter is not the one expected\n");
     game_delete(g);
     return false;
   }
   game_set_wrapping(g, true);
   if (game_wrapping(g) != true){
-    fprintf(stderr,'ERROR: the wrapping parameter is not the one expected');
+    fprintf(stderr,"ERROR: the wrapping parameter is not the one expected\n");
     game_delete(g);
     return false;
   }
