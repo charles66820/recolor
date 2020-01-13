@@ -64,8 +64,8 @@ bool test_game_copy() {
   }
 
   // copy of cells test
-  for (int y = 0; y < SIZE; y++)
-    for (int x = 0; x < SIZE; x++)
+  for (int y = 0; y < game_height(g); y++)
+    for (int x = 0; x < game_width(g); x++)
       if (game_cell_current_color(gc, x, y) !=
           game_cell_current_color(g, x, y)) {
         fprintf(stderr, "Error: game and copy game cells are not equal!\n");
@@ -214,8 +214,8 @@ bool test_game_restart() {
   game_restart(g);
 
   // test if game cells is equal to initial game cells
-  for (int y = 0; y < SIZE; y++)
-    for (int x = 0; x < SIZE; x++)
+  for (int y = 0; y < game_height(g); y++)
+    for (int x = 0; x < game_width(g); x++)
       if (game_cell_current_color(g, x, y) != cells[x + SIZE * y]) {
         fprintf(stderr,
                 "Error: game cells are not equal to initial game cells!\n");
