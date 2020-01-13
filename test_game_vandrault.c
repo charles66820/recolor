@@ -6,7 +6,11 @@
 //$ clang-format -i test_game_vandrault.c
 // tests//
 
-// test of game_new on valid parameters
+/**
+ * @brief Unite test for game_new
+ *
+ * @return bool
+ */
 bool test_game_new() {
   color cells[SIZE * SIZE] = {
       0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
@@ -51,7 +55,11 @@ bool test_game_new() {
   return true;
 }
 
-// test of game_new_empty
+/**
+ * @brief Unite test for game_new_empty
+ *
+ * @return bool
+ */
 bool test_game_new_empty() {
   game g = game_new_empty();
   if (g == NULL) {  // testing if g is a valid pointer
@@ -73,7 +81,11 @@ bool test_game_new_empty() {
   return true;
 }
 
-// test of game_set_cell_init on valid parameters
+/**
+ * @brief Unite test for game_set_cell_init
+ *
+ * @return bool
+ */
 bool test_game_set_cell_init() {
   color cells[SIZE * SIZE] = {
       0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
@@ -98,7 +110,11 @@ bool test_game_set_cell_init() {
   return true;
 }
 
-// test of game_set_max_moves on valid parameters
+/**
+ * @brief Unite test for game_set_max_moves
+ *
+ * @return bool
+ */
 bool test_game_set_max_moves() {
   color cells[SIZE * SIZE] = {
       0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
@@ -135,6 +151,11 @@ bool test_game_set_max_moves() {
   return true;
 }
 
+/**
+ * @brief Unite test for game_height
+ *
+ * @return bool
+ */
 bool test_game_height(){
   uint nbMax = 12;
   color cells[SIZE * SIZE] = {
@@ -157,6 +178,11 @@ bool test_game_height(){
   return true;
 }
 
+/**
+ * @brief Unite test for game_wrapping
+ *
+ * @return bool
+ */
 bool test_game_wrapping(){
   uint nbMax = 12;
   color cells[SIZE * SIZE] = {
