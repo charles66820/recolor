@@ -70,7 +70,7 @@ void game_set_cell_init(game g, uint x, uint y, color c) {
 void game_set_max_moves(game g, uint nb_max_moves) {
   if (g == NULL || nb_max_moves <= 0) {  // Check in case of bug
     fprintf(stderr,
-            " g is NULL or nb_max_moves is set at a number less or equal to 0 "
+            " Not enough for g or nb_max_moves is set at a number less or equal to 0 "
             ": in the function game_set_max_moves.\n");
     exit(EXIT_FAILURE);
   }
@@ -86,7 +86,7 @@ void game_set_max_moves(game g, uint nb_max_moves) {
  */
 uint game_nb_moves_max(cgame g) {
   if (g == NULL) {  // Check in case of bug
-    fprintf(stderr, "g is NULL : in the function game_nb_moves_max.\n");
+    fprintf(stderr, "Not enough memory for g in the function game_nb_moves_max.\n");
     exit(EXIT_FAILURE);
   }
   return g->nb_moves_max;
@@ -117,7 +117,7 @@ color game_cell_current_color(cgame g, uint x, uint y) {
  */
 uint game_nb_moves_cur(cgame g) {
   if (g == NULL) {  // Check in case of bug
-    fprintf(stderr, "g is NULL : in the function game_nb_moves_cur.\n");
+    fprintf(stderr,"Not enough memory for g in the function game_nb_moves_cur.\n");
     exit(EXIT_FAILURE);
   }
   return g->current_moves;
@@ -235,7 +235,7 @@ game game_copy(cgame g) {
  **/
 void game_delete(game g) {
   if (g == NULL) {
-    fprintf(stderr, "g is NULL : in the function game_delete.\n");
+    fprintf(stderr, "Not enough memory for g in the function game_delete.\n");
     exit(EXIT_FAILURE);
   }
   if (g->tab != NULL) free(g->tab);
@@ -306,26 +306,29 @@ game game_new_empty_ext(uint width, uint height, bool wrapping) {
     exit(EXIT_FAILURE);
   }
 
-  game g = (game)malloc(sizeof(struct game_s));
+  game g = malloc(sizeof(struct game_s));
   if (g == NULL) {
     fprintf(stderr, "Not enough memory for g in the function game_new_empty_ext.\n");
     exit(EXIT_FAILURE);
   }
+
   g->nb_moves_max = 0;
   g->current_moves = 0;
-  g->tab = malloc(g->width * g->height * sizeof(color));
+
+  g->tab = malloc((g->width * g->height) * sizeof(color));
   if (g->tab == NULL) {
-    fprintf(stderr, "Not enough memory for enough g->tab in the function game_new_empty_ext.\n");
+    fprintf(stderr,"Not enough memory for g->tab in the function game_new_empty_ext.\n");
     game_delete(g);
     exit(EXIT_FAILURE);
   }
-  g->tab_init =
-      malloc(g->width * g->height * sizeof(color));
+
+  g->tab_init = malloc((g->width * g->height) * sizeof(color));
   if (g->tab_init == NULL) {
-    fprintf(stderr, "Not enough memory for g->tab_init in the function g_empty_ext.\n");
+    fprintf(stderr,"Not enough memory for g->tab_init in the function game_new_empty_ext.\n");
     game_delete(g);
     exit(EXIT_FAILURE);
   }
+  
   g->width = width;
   g->height = height;
   g->wrapping = wrapping;
