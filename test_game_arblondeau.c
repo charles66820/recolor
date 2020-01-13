@@ -21,7 +21,7 @@ bool test_game_nb_moves_max() {
       1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
   game g = game_new(cells, nbMax);
   if (g == NULL) {
-    fprintf(stderr, "Error : invalid new game \n");
+    fprintf(stderr, "Error : invalid new game.\n");
     return false;
   }
 
@@ -51,7 +51,7 @@ bool test_game_nb_moves_cur() {
       1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
   game g = game_new(cells, nbMax);
   if (g == NULL) {
-    fprintf(stderr, "Error : invalid new game \n");
+    fprintf(stderr, "Error : invalid new game.\n");
     return false;
   }
 
@@ -94,7 +94,7 @@ bool test_game_cell_current_color() {
       1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
   game g = game_new(cells, nbMax);
   if (g == NULL) {
-    fprintf(stderr, "Error : invalid new game \n");
+    fprintf(stderr, "Error : invalid new game.\n");
     return false;
   }
 
@@ -138,12 +138,12 @@ bool test_game_play_one_move() {
   game g = game_new(cells, nbMax);
   game gc = game_copy(g);
   if (g == NULL) {
-    fprintf(stderr, "Error : invalid new game \n");
+    fprintf(stderr, "Error : invalid new game.\n");
     game_delete(gc);
     return false;
   }
   if (gc == NULL) {
-    fprintf(stderr, "Error : invalid new game copy \n");
+    fprintf(stderr, "Error : invalid new game copy.\n");
     game_delete(g);
     return false;
   }
@@ -152,7 +152,7 @@ bool test_game_play_one_move() {
     for (int x = 0; x < SIZE; x++) {
       if (game_cell_current_color(gc, x, y) !=
           game_cell_current_color(g, x, y)) {
-        fprintf(stderr, "Error: game and copy game cells are not equal!\n");
+        fprintf(stderr, "Error: game and copy game cells are not equal.\n");
         game_delete(g);
         game_delete(gc);
         return false;
@@ -170,7 +170,7 @@ bool test_game_play_one_move() {
 
   // test if current move has change
   if (game_nb_moves_cur(g) != 1) {
-    fprintf(stderr, "Error: invalid game nb curent move!\n");
+    fprintf(stderr, "Error: invalid game nb curent move.\n");
     game_delete(g);
     return false;
   }
@@ -197,14 +197,15 @@ bool test_game_width(){
       1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
   game g = game_new(cells, nbMax);
   if (g == NULL){
-    fprintf(stderr, "Error : invalid new game \n");
+    fprintf(stderr, "Error : invalid new game.\n");
     return false;
   }
   if (game_width(g) < 1){
-    fprintf(stderr, "g->width is an invalid parameter.\n");
+    fprintf(stderr, "Error : g->width is an invalid parameter.\n");
     game_delete(g);
     return false;
   }
+  game_delete(g);
   return true;
 }
 
@@ -225,20 +226,25 @@ bool test_game_new_empty_ext(){
       1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
   game g = game_new(cells, nbMax);
   if (g == NULL){
-    fprintf(stderr, "Error : invalid new game \n");
+    fprintf(stderr, "Error : invalid new game.\n");
     return false;
   }
-  test_game_width();
+  if (game_width(g) < 1) {
+    fprintf(stderr, "Error : g->width is an invalid parameter.\n");
+    game_delete(g);
+    return false;
+  }
   if (game_height(g) < 1){
-    fprintf(stderr, "g->height is an invalid parameter.\n");
+    fprintf(stderr, "Error : g->height is an invalid parameter.\n");
     game_delete(g);
     return false;
   }
   if (game_is_wrapping(g) != true && game_is_wrapping(g) != false){
-    fprintf(stderr, "g->wrapping is an invalid parameter.\n");
+    fprintf(stderr, "Error : g->wrapping is an invalid parameter.\n");
     game_delete(g);
     return false;
   }
+  game_delete(g);
   return true;
 }
 
