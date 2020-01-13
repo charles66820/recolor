@@ -260,18 +260,18 @@ bool test_game_new_ext() {
                          1, 3, 2, 0, 1, 0, 1, 0, 1, 2, 3, 2, 3, 2, 1, 0, 2};
 
   game g = game_new_ext(4, 8, cells, 11, false);
+  // check if game are not create
+  if (g == NULL) {
+    fprintf(stderr, "Error: invalid new game!\n");
+    return false;
+  }
 
   game gw = game_new_ext(5, 7, cellsw, 6, true);
 
   // check if game are not create
   if (gw == NULL) {
     fprintf(stderr, "Error: invalid new game!\n");
-    return false;
-  }
-
-  // check if game are not create
-  if (g == NULL) {
-    fprintf(stderr, "Error: invalid new game!\n");
+    game_delete(g);
     return false;
   }
 
@@ -280,6 +280,7 @@ bool test_game_new_ext() {
     fprintf(stderr,
             "Error: new game number of max moves is not correctly define!\n");
     game_delete(g);
+    game_delete(gw);
     return false;
   }
 
@@ -287,6 +288,7 @@ bool test_game_new_ext() {
   if (game_width(g) != 4) {
     fprintf(stderr, "Error: new game width is not correctly define!\n");
     game_delete(g);
+    game_delete(gw);
     return false;
   }
 
@@ -294,6 +296,7 @@ bool test_game_new_ext() {
   if (game_height(g) != 8) {
     fprintf(stderr, "Error: new game height is not correctly define!\n");
     game_delete(g);
+    game_delete(gw);
     return false;
   }
 
@@ -301,6 +304,7 @@ bool test_game_new_ext() {
   if (game_is_wrapping(g)) {
     fprintf(stderr, "Error: new game wrapping is not correctly define!\n");
     game_delete(g);
+    game_delete(gw);
     return false;
   }
 
@@ -308,6 +312,7 @@ bool test_game_new_ext() {
   if (!game_is_wrapping(gw)) {
     fprintf(stderr, "Error: new game wrapping is not correctly define!\n");
     game_delete(g);
+    game_delete(gw);
     return false;
   }
 
@@ -316,6 +321,7 @@ bool test_game_new_ext() {
     fprintf(stderr,
             "Error: new game nb current moves is not correctly define!\n");
     game_delete(g);
+    game_delete(gw);
     return false;
   }
 
@@ -325,6 +331,7 @@ bool test_game_new_ext() {
       if (game_cell_current_color(g, x, y) != cells[x + 4 * y]) {
         fprintf(stderr, "Error: cells of new game is not correctly define!\n");
         game_delete(g);
+        game_delete(gw);
         return false;
       }
 
@@ -333,10 +340,12 @@ bool test_game_new_ext() {
       if (game_cell_current_color(gw, x, y) != cellsw[x + 4 * y]) {
         fprintf(stderr, "Error: cells of new game is not correctly define!\n");
         game_delete(g);
+        game_delete(gw);
         return false;
       }
 
   game_delete(g);
+  game_delete(gw);
   return true;
 }
 
