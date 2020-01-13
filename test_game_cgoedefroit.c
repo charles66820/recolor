@@ -350,27 +350,35 @@ bool test_game_new_ext() {
 }
 
 int main(int argc, char const *argv[]) {
+  bool ok = false;
+
   // in case if program is run without args
   if (argc == 1) {
-    fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
-    exit(EXIT_FAILURE);
-  }
+    /* fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
+    exit(EXIT_FAILURE);*/
 
-  // select test from args
-  bool ok = false;
-  if (!strcmp(argv[1], "copy"))
     ok = test_game_copy();
-  else if (!strcmp(argv[1], "delete"))
     ok = test_game_delete();
-  else if (!strcmp(argv[1], "is_over"))
     ok = test_game_is_over();
-  else if (!strcmp(argv[1], "restart"))
     ok = test_game_restart();
-  else if (!strcmp(argv[1], "new_ext"))
     ok = test_game_restart();
-  else {
-    fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
-    exit(EXIT_FAILURE);
+
+  } else {
+    // select test from args
+    if (!strcmp(argv[1], "copy"))
+      ok = test_game_copy();
+    else if (!strcmp(argv[1], "delete"))
+      ok = test_game_delete();
+    else if (!strcmp(argv[1], "is_over"))
+      ok = test_game_is_over();
+    else if (!strcmp(argv[1], "restart"))
+      ok = test_game_restart();
+    else if (!strcmp(argv[1], "new_ext"))
+      ok = test_game_restart();
+    else {
+      fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
+      exit(EXIT_FAILURE);
+    }
   }
 
   // print test result

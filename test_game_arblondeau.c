@@ -250,29 +250,38 @@ bool test_game_new_empty_ext(){
  * @return EXIT_SUCCESS if no bug was found
  */
 int main(int argc, char const *argv[]) {
-  if (argc == 1) {
-    fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
-    exit(EXIT_FAILURE);
-  }
-
   bool ok = false;
 
-  if (!strcmp(argv[1], "game_nb_moves_max"))
+  if (argc == 1) {
+    /* fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
+    exit(EXIT_FAILURE); */
+
     ok = test_game_nb_moves_max();
-  else if (!strcmp(argv[1], "game_nb_moves_cur"))
     ok = test_game_nb_moves_cur();
-  else if (!strcmp(argv[1], "game_cell_current_color"))
     ok = test_game_cell_current_color();
-  else if (!strcmp(argv[1], "game_play_one_move"))
     ok = test_game_play_one_move();
-  else if (!strcmp(argv[1], "game_width"))
     ok = test_game_width();
-  else if (!strcmp(argv[1], "game_new_empty_ext"))
     ok = test_game_new_empty_ext();
-  else {
-    fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
-    exit(EXIT_FAILURE);
+
+  } else {
+    if (!strcmp(argv[1], "game_nb_moves_max"))
+      ok = test_game_nb_moves_max();
+    else if (!strcmp(argv[1], "game_nb_moves_cur"))
+      ok = test_game_nb_moves_cur();
+    else if (!strcmp(argv[1], "game_cell_current_color"))
+      ok = test_game_cell_current_color();
+    else if (!strcmp(argv[1], "game_play_one_move"))
+      ok = test_game_play_one_move();
+    else if (!strcmp(argv[1], "game_width"))
+      ok = test_game_width();
+    else if (!strcmp(argv[1], "game_new_empty_ext"))
+      ok = test_game_new_empty_ext();
+    else {
+      fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
+      exit(EXIT_FAILURE);
+    }
   }
+
   if (ok) {
     fprintf(stderr, "Test \"%s\" finished: SUCCESS\n", argv[1]);
     return EXIT_SUCCESS;

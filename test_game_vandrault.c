@@ -194,28 +194,36 @@ bool test_game_wrapping(){
 // main//
 
 int main(int argc, char *argv[]) {
-  if (argc == 1) {
-    fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
-    exit(EXIT_FAILURE);
-  }
-
   bool ok = false;
 
-  if (!strcmp(argv[1], "new"))
+  if (argc == 1) {
+    /* fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
+    exit(EXIT_FAILURE); */
+
     ok = test_game_new();
-  else if (!strcmp(argv[1], "new_empty"))
     ok = test_game_new_empty();
-  else if (!strcmp(argv[1], "set_cell_init"))
     ok = test_game_set_cell_init();
-  else if (!strcmp(argv[1], "set_max_moves"))
     ok = test_game_set_max_moves();
-  else if (!strcmp(argv[1], "height"))
     ok = test_game_height();
-  else if (!strcmp(argv[1], "wrapping"))
     ok = test_game_wrapping();
-  else {
-    fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
-    exit(EXIT_FAILURE);
+
+  } else {
+    if (!strcmp(argv[1], "new"))
+      ok = test_game_new();
+    else if (!strcmp(argv[1], "new_empty"))
+      ok = test_game_new_empty();
+    else if (!strcmp(argv[1], "set_cell_init"))
+      ok = test_game_set_cell_init();
+    else if (!strcmp(argv[1], "set_max_moves"))
+      ok = test_game_set_max_moves();
+    else if (!strcmp(argv[1], "height"))
+      ok = test_game_height();
+    else if (!strcmp(argv[1], "wrapping"))
+      ok = test_game_wrapping();
+    else {
+      fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
+      exit(EXIT_FAILURE);
+    }
   }
 
   // print test result
