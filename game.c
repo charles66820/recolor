@@ -50,7 +50,7 @@ game game_new_empty() {
  */
 void game_set_cell_init(game g, uint x, uint y, color c) {
   if (g == NULL || c >= NB_COLORS || x >= g->width || y >= g->height) {
-    fprintf(stderr, "Bad parameter");
+    fprintf(stderr, "Bad parameter on the function game_set_cell_init.\n");
     if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
@@ -71,7 +71,7 @@ void game_set_max_moves(game g, uint nb_max_moves) {
   if (g == NULL || nb_max_moves <= 0) {  // Check in case of bug
     fprintf(stderr,
             " g is NULL or nb_max_moves is set at a number less or equal to 0 "
-            ": in the function game_set_max_moves");
+            ": in the function game_set_max_moves.\n");
     exit(EXIT_FAILURE);
   }
   g->nb_moves_max = nb_max_moves;
@@ -86,7 +86,7 @@ void game_set_max_moves(game g, uint nb_max_moves) {
  */
 uint game_nb_moves_max(cgame g) {
   if (g == NULL) {  // Check in case of bug
-    fprintf(stderr, "g is NULL : in the function game_nb_moves_max");
+    fprintf(stderr, "g is NULL : in the function game_nb_moves_max.\n");
     exit(EXIT_FAILURE);
   }
   return g->nb_moves_max;
@@ -117,7 +117,7 @@ color game_cell_current_color(cgame g, uint x, uint y) {
  */
 uint game_nb_moves_cur(cgame g) {
   if (g == NULL) {  // Check in case of bug
-    fprintf(stderr, "g is NULL : in the function game_nb_moves_cur");
+    fprintf(stderr, "g is NULL : in the function game_nb_moves_cur.\n");
     exit(EXIT_FAILURE);
   }
   return g->current_moves;
@@ -141,7 +141,7 @@ uint game_nb_moves_cur(cgame g) {
  */
 void ff(game g, uint x, uint y, color tc, color c) {
   if (g == NULL || tc >= NB_COLORS || c >= NB_COLORS) {
-    fprintf(stderr, "Bad parameter");
+    fprintf(stderr, "Bad parameter in the function ff.\n");
     if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
@@ -182,7 +182,7 @@ void ff(game g, uint x, uint y, color tc, color c) {
  */
 void game_play_one_move(game g, color c) {
   if (g == NULL || c >= NB_COLORS) {
-    fprintf(stderr, "Bad parameter");
+    fprintf(stderr, "Bad parameter in the function game_play_one_move.\n");
     if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
@@ -235,7 +235,7 @@ game game_copy(cgame g) {
  **/
 void game_delete(game g) {
   if (g == NULL) {
-    fprintf(stderr, "g is NULL : in the function game_delete");
+    fprintf(stderr, "g is NULL : in the function game_delete.\n");
     exit(EXIT_FAILURE);
   }
   if (g->tab != NULL) free(g->tab);
@@ -275,7 +275,7 @@ bool game_is_over(cgame g) {
  */
 void game_restart(game g) {
   if (g == NULL) {
-    fprintf(stderr, "Bad parameter");
+    fprintf(stderr, "Bad parameter on the function game_restart.\n");
     exit(EXIT_FAILURE);
   }
 
@@ -302,32 +302,34 @@ void game_restart(game g) {
  **/
 game game_new_empty_ext(uint width, uint height, bool wrapping) {
   if (width < 1 || height < 1) {
-    fprintf(stderr, "Invalid parameter on the function 'game_new_empty_ext");
+    fprintf(stderr, "Invalid parameter on the function game_new_empty_ext.\n");
     exit(EXIT_FAILURE);
   }
 
-  game new_game = (game)malloc(sizeof(struct game_s));
-  if (new_game == NULL) {
-    fprintf (stderr, "Not enough memory for new_game in the function 'game_new_empty_ext'.\n");
+  game g = (game)malloc(sizeof(struct game_s));
+  if (g == NULL) {
+    fprintf(stderr, "Not enough memory for g in the function game_new_empty_ext.\n");
     exit(EXIT_FAILURE);
   }
-  new_game->tab = malloc(new_game->width * new_game->height * sizeof(color));
-  if (new_game->tab == NULL) {
-    fprintf (stderr, "Not enough memory for enough new_game->tab in the function 'game_new_empty_ext'.\n");
-    game_delete(new_game);
+  g->nb_moves_max = 0;
+  g->current_moves = 0;
+  g->tab = malloc(g->width * g->height * sizeof(color));
+  if (g->tab == NULL) {
+    fprintf(stderr, "Not enough memory for enough g->tab in the function game_new_empty_ext.\n");
+    game_delete(g);
     exit(EXIT_FAILURE);
   }
-  new_game->tab_init =
-      malloc(new_game->width * new_game->height * sizeof(color));
-  if (new_game->tab_init == NULL) {
-    fprintf (stderr, "Not enough memory for new_game->tab_init in the function 'new_game_empty_ext'.\n");
-    game_delete(new_game);
+  g->tab_init =
+      malloc(g->width * g->height * sizeof(color));
+  if (g->tab_init == NULL) {
+    fprintf(stderr, "Not enough memory for g->tab_init in the function g_empty_ext.\n");
+    game_delete(g);
     exit(EXIT_FAILURE);
   }
-  new_game->width = width;
-  new_game->height = height;
-  new_game->wrapping = wrapping;
-  return new_game;
+  g->width = width;
+  g->height = height;
+  g->wrapping = wrapping;
+  return g;
 }
 
 /**
@@ -403,13 +405,13 @@ void game_set_wrapping (game game, bool new_wrap){
 game game_new_ext(uint width, uint height, color *cells, uint nb_moves_max,
                   bool wrapping) {
   if (cells == NULL || nb_moves_max <= 0 || width < 1 || height < 1) {
-    fprintf(stderr, "Invalid parameter");
+    fprintf(stderr, "Invalid parameter on the function game_new_ext.\n");
     exit(EXIT_FAILURE);
   }
 
   game g = malloc(sizeof(struct game_s));
   if (g == NULL) {
-    fprintf(stderr, "Not enough memory");
+    fprintf(stderr, "Not enough memory for g in the function game_new_ext.\n");
     exit(EXIT_FAILURE);
   }
 
@@ -421,14 +423,14 @@ game game_new_ext(uint width, uint height, color *cells, uint nb_moves_max,
 
   g->tab = malloc((g->width * g->height) * sizeof(color));
   if (g->tab == NULL) {
-    fprintf(stderr, "Not enough memory");
+    fprintf(stderr, "Not enough memory for g->tab in the function game_new_ext.\n");
     game_delete(g);
     exit(EXIT_FAILURE);
   }
 
   g->tab_init = malloc((g->width * g->height) * sizeof(color));
   if (g->tab_init == NULL) {
-    fprintf(stderr, "Not enough memory");
+    fprintf(stderr, "Not enough memory for g->tab_init in the function game_new_ext.\n");
     game_delete(g);
     exit(EXIT_FAILURE);
   }
