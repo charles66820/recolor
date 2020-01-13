@@ -30,7 +30,7 @@ bool test_game_new() {
     game_delete(g1);
     return false;
   }
-  for (int i = 0; i < SIZE * SIZE;
+  for (int i = 0; i < game_height(g1) * game_width(g1);
        i += 1) {  // testing if the cells of the game are the same as the ones
                   // of the table
     if (game_cell_current_color(g1, i % 12, i / 12) != cells[i]) {
@@ -54,7 +54,7 @@ bool test_game_new() {
 // test of game_new_empty
 bool test_game_new_empty() {
   game g = game_new_empty();
-  if (g == NULL) {  // testing if g1 is a valid pointer
+  if (g == NULL) {  // testing if g is a valid pointer
     return false;
   }
   if (game_nb_moves_max(g) != 0) {  // testing if the number of max moves is 0
@@ -62,11 +62,13 @@ bool test_game_new_empty() {
     return false;
   }
   game_play_one_move(g, 0);
-  for (int i = 0; i < SIZE * SIZE;
-       i++) {  // testing if each cell of the game is equal to 0
-    if (game_cell_current_color(g, i % 12, i / 12) != 0) {
-      game_delete(g);
-      return false;
+  for (int x = 0; x < game_width(g);
+       x++) {  // testing if each cell of the game is equal to RED
+    for (int y = 0; y < game_height(g); y++){
+      if (game_cell_current_color(g, x, y) != RED) {
+        game_delete(g);
+        return false;
+      }
     }
   }
   game_delete(g);  // deleting g to free the memory
