@@ -307,10 +307,21 @@ game game_new_empty_ext(uint width, uint height, bool wrapping) {
   }
 
   game new_game = (game)malloc(sizeof(struct game_s));
+  if (new_game == NULL) {
+    fprintf (stderr, "Not enough memory for new_game in the function 'game_new_empty_ext'.\n");
+    exit(EXIT_FAILURE);
+  }
   new_game->tab = malloc(new_game->width * new_game->height * sizeof(color));
+  if (new_game->tab == NULL) {
+    fprintf (stderr, "Not enough memory for enough new_game->tab in the function 'game_new_empty_ext'.\n");
+    game_delete(new_game);
+    exit(EXIT_FAILURE);
+  }
   new_game->tab_init =
       malloc(new_game->width * new_game->height * sizeof(color));
-  if (new_game == NULL || new_game->tab == NULL || new_game->tab_init == NULL) {
+  if (new_game->tab_init == NULL) {
+    fprintf (stderr, "Not enough memory for new_game->tab_init in the function 'new_game_empty_ext'.\n");
+    game_delete(new_game);
     exit(EXIT_FAILURE);
   }
   new_game->width = width;
