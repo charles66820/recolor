@@ -153,6 +153,7 @@ bool test_game_height(){
     game_delete(g);
     return false;
   }
+  game_delete(g);
   return true;
 }
 
