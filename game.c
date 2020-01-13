@@ -135,12 +135,10 @@ uint game_nb_moves_cur(cgame g) {
  * @pre @p x >= 0
  * @pre @p y >= 0
  * @pre @p tc > 0
- * @pre @p tc < NB_COLORS
  * @pre @p c > 0
- * @pre @p c < NB_COLORS
  */
 void ff(game g, uint x, uint y, color tc, color c) {
-  if (g == NULL || tc >= NB_COLORS || c >= NB_COLORS) {
+  if (g == NULL) {
     fprintf(stderr, "Bad parameter in the function ff.\n");
     if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
@@ -335,8 +333,8 @@ game game_new_empty_ext(uint width, uint height, bool wrapping) {
     exit(EXIT_FAILURE);
   }
   for (uint i = 0; i < g->width * g->height; i++) {
-    g->tab[i] = RED;
-    g->tab_init[i] = RED;
+    g->tab[i] = 0;
+    g->tab_init[i] = 0;
   }
   return g;
 }
