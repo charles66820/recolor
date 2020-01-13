@@ -62,13 +62,11 @@ bool test_game_new_empty() {
     return false;
   }
   game_play_one_move(g, 0);
-  for (int x = 0; x < game_width(g);
-       x++) {  // testing if each cell of the game is equal to RED
-    for (int y = 0; y < game_height(g); y++){
-      if (game_cell_current_color(g, x, y) != RED) {
-        game_delete(g);
-        return false;
-      }
+  for (int i = 0; i < game_height(g) * game_width(g);
+       i += 1) {  // testing if each cell of the game is equal to RED
+    if (game_cell_current_color(g, i % 12, i / 12) != RED) {
+      game_delete(g);
+      return false;
     }
   }
   game_delete(g);  // deleting g to free the memory

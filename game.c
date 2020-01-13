@@ -334,6 +334,10 @@ game game_new_empty_ext(uint width, uint height, bool wrapping) {
     game_delete(g);
     exit(EXIT_FAILURE);
   }
+  for (uint i = 0; i < g->width * g->height; i++) {
+    g->tab[i] = RED;
+    g->tab_init[i] = RED;
+  }
   return g;
 }
 
