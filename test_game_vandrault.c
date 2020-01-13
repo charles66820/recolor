@@ -30,7 +30,7 @@ bool test_game_new() {
     game_delete(g1);
     return false;
   }
-  for (int i = 0; i < game_height(g1) * game_width(g1);
+  for (uint i = 0; i < game_height(g1) * game_width(g1);
        i += 1) {  // testing if the cells of the game are the same as the ones
                   // of the table
     if (game_cell_current_color(g1, i % 12, i / 12) != cells[i]) {
@@ -62,7 +62,7 @@ bool test_game_new_empty() {
     return false;
   }
   game_play_one_move(g, 0);
-  for (int i = 0; i < game_height(g) * game_width(g);
+  for (uint i = 0; i < game_height(g) * game_width(g);
        i += 1) {  // testing if each cell of the game is equal to RED
     if (game_cell_current_color(g, i % 12, i / 12) != RED) {
       game_delete(g);
