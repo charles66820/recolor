@@ -254,15 +254,11 @@ bool game_is_over(cgame g) {
   }
   color ref = g->tab[0];
 
-  if (g->current_moves > g->nb_moves_max) {
-    return false;
-  }
+  if (g->current_moves > g->nb_moves_max) return false;
 
-  for (int i = 0; i < g->width * g->height; i++) {
-    if (g->tab[i] != ref) {
-      return false;
-    }
-  }
+  for (int i = 0; i < g->width * g->height; i++)
+    if (g->tab[i] != ref) return false;
+
   return true;
 }
 
