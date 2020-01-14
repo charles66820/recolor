@@ -49,7 +49,7 @@ game game_new_empty() {
  * @pre @p c < NB_COLORS
  */
 void game_set_cell_init(game g, uint x, uint y, color c) {
-  if (g == NULL || c >= NB_COLORS || x >= g->width || y >= g->height) {
+  if (g == NULL || x >= g->width || y >= g->height) {
     fprintf(stderr, "Bad parameter on the function game_set_cell_init.\n");
     if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
@@ -179,7 +179,7 @@ void ff(game g, uint x, uint y, color tc, color c) {
  * @pre @p c < NB_COLORS
  */
 void game_play_one_move(game g, color c) {
-  if (g == NULL || c >= NB_COLORS) {
+  if (g == NULL) {
     fprintf(stderr, "Bad parameter in the function game_play_one_move.\n");
     if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
