@@ -299,43 +299,20 @@ void game_restart(game g) {
  * @pre @p wrapping == false
  **/
 game game_new_empty_ext(uint width, uint height, bool wrapping) {
-  if (width < 1 || height < 1) {
-    fprintf(stderr, "Invalid parameter on the function game_new_empty_ext.\n");
-    exit(EXIT_FAILURE);
-  }
 
-  game g = (game)malloc(sizeof(struct game_s));
-  if (g == NULL) {
+  color * cells = malloc(width * height * sizeof(color));
+  if (cells == NULL) {
     fprintf(stderr,
-            "Not enough memory for g in the function game_new_empty_ext.\n");
-    exit(EXIT_FAILURE);
-  }
-
-  g->nb_moves_max = 0;
-  g->current_moves = 0;
-  g->width = width;
-  g->height = height;
-  g->wrapping = wrapping;
-
-  g->tab = malloc(g->width * g->height * sizeof(color));
-  if (g->tab == NULL) {
-    fprintf(stderr,
-            "Not enough memory for enough g->tab in the function "
+            "Not enough memory for enough cells in the function "
             "game_new_empty_ext.\n");
-    game_delete(g);
     exit(EXIT_FAILURE);
   }
-  g->tab_init = malloc(g->width * g->height * sizeof(color));
-  if (g->tab_init == NULL) {
-    fprintf(stderr,
-            "Not enough memory for g->tab_init in the function g_empty_ext.\n");
-    game_delete(g);
-    exit(EXIT_FAILURE);
-  }
-  for (uint i = 0; i < g->width * g->height; i++) {
-    g->tab[i] = 0;
-    g->tab_init[i] = 0;
-  }
+
+  for (uint i = 0; i < width * height; i++) cells[i] = 0;
+
+  game g = game_new_ext(width, height, cells, 0, wrapping);
+
+  free(cells);
   return g;
 }
 
