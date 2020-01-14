@@ -153,14 +153,14 @@ void ff(game g, uint x, uint y, color tc, color c) {
   if (g->wrapping) {
     ff(g, (x + 1) % g->width, y, tc, c);   // spread to right
     ff(g, x, (y + 1) % g->height, tc, c);  // spread to down
-    if (x != 0)                            // spread to left
-      ff(g, x - 1, y, tc, c);
+    if (x != 0)
+      ff(g, x - 1, y, tc, c);  // spread to left
     else
-      ff(g, g->width, y, tc, c);
+      ff(g, g->width-1, y, tc, c);
     if (y != 0)                            // spread to up
       ff(g, x, y - 1, tc, c);
     else
-      ff(g, x, g->height, tc, c);
+      ff(g, x, g->height-1, tc, c);
   } else {
     ff(g, x + 1, y, tc, c);              // spread to right
     ff(g, x, y + 1, tc, c);              // spread to down
