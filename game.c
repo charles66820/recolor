@@ -68,7 +68,7 @@ void game_set_cell_init(game g, uint x, uint y, color c) {
  * @pre @p nb_moves_max > 0
  */
 void game_set_max_moves(game g, uint nb_max_moves) {
-  if (g == NULL || nb_max_moves <= 0) {  // Check in case of bug
+  if (g == NULL) {  // Check in case of bug
     fprintf(stderr,
             " Not enough for g or nb_max_moves is set at a number less or equal to 0 "
             ": in the function game_set_max_moves.\n");
@@ -105,7 +105,7 @@ color game_cell_current_color(cgame g, uint x, uint y) {
   if (g == NULL || x >= (g->width) || y >= g->height) {
     exit(EXIT_FAILURE);
   }
-  return g->tab[x + y * (g->width)];
+  return (color) g->tab[x + y * g->width];
 }
 
 /**
@@ -187,7 +187,7 @@ void game_play_one_move(game g, color c) {
 
   // Test if play can play
   if (g->current_moves < g->nb_moves_max) {
-    ff(g, 0, 0, g->tab[0], c);
+    ff(g, 0, 0, (color) g->tab[0], c);
     g->current_moves++;
   }
 }
@@ -257,7 +257,7 @@ bool game_is_over(cgame g) {
   if (g->current_moves > g->nb_moves_max) {
     over = false;
   }
-  for (int i = 0; i < (g->width) * (g->height); i++) {
+  for (int i = 0; i < g->width * g->height; i++) {
     if (g->tab[i] != ref) {
       over = false;
     }
@@ -411,7 +411,7 @@ void game_set_wrapping (game game, bool new_wrap){
  **/
 game game_new_ext(uint width, uint height, color *cells, uint nb_moves_max,
                   bool wrapping) {
-  if (cells == NULL || nb_moves_max <= 0 || width < 1 || height < 1) {
+  if (cells == NULL || width < 1 || height < 1) {
     fprintf(stderr, "Invalid parameter on the function game_new_ext.\n");
     exit(EXIT_FAILURE);
   }
