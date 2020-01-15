@@ -262,12 +262,9 @@ int main(int argc, char const *argv[]) {
     /* fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
     exit(EXIT_FAILURE); */
 
-    ok = test_game_nb_moves_max();
-    ok = test_game_nb_moves_cur();
-    ok = test_game_cell_current_color();
-    ok = test_game_play_one_move();
-    ok = test_game_width();
-    ok = test_game_new_empty_ext();
+    ok = test_game_nb_moves_max() && test_game_nb_moves_cur() &&
+         test_game_cell_current_color() && test_game_play_one_move() &&
+         test_game_width() && test_game_new_empty_ext();
 
   } else {
     if (!strcmp(argv[1], "game_nb_moves_max"))
