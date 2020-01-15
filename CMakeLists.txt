@@ -13,6 +13,12 @@ else()
     set(CMAKE_C_FLAGS "-O3 -std=c99") # mode -03 to optimise the compilation
 endif()
 
+#
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "generated")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "generated")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "generated")
+set(EXECUTABLE_OUTPUT_PATH "generated")
+
 include(CTest)
 enable_testing()
 
