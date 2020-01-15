@@ -69,7 +69,7 @@ bool test_game_new_empty() {
     game_delete(g);
     return false;
   }
-  if (game_nb_moves_cur(g) != 0) {  // testing if the number of current moves is 0
+  if (game_nb_moves_cur(g) != -1) {  // testing if the number of current moves is 0
     game_delete(g);
     return false;
   }
