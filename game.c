@@ -187,6 +187,9 @@ void game_play_one_move(game g, color c) {
   if (g->current_moves < g->nb_moves_max) {
     ff(g, 0, 0, (color) g->tab[0], c);
     g->current_moves++;
+  } else {
+    game_delete(g);
+    exit(EXIT_FAILURE);
   }
 }
 
