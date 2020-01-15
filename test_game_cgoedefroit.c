@@ -357,11 +357,7 @@ int main(int argc, char const *argv[]) {
     /* fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
     exit(EXIT_FAILURE);*/
 
-    ok = test_game_copy();
-    ok = test_game_delete();
-    ok = test_game_is_over();
-    ok = test_game_restart();
-    ok = test_game_restart();
+    ok = test_game_copy() && test_game_delete() && test_game_is_over() && test_game_restart() && test_game_restart();
 
   } else {
     // select test from args
