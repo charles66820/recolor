@@ -102,7 +102,7 @@ uint game_nb_moves_max(cgame g) {
  * @pre @p y > 0
  */
 color game_cell_current_color(cgame g, uint x, uint y) {
-  if (g == NULL || x >= (g->width) || y >= g->height) {
+  if (g == NULL || x >= g->width || y >= g->height) {
     exit(EXIT_FAILURE);
   }
   return (color) g->tab[x + y * g->width];
@@ -140,7 +140,6 @@ uint game_nb_moves_cur(cgame g) {
 void ff(game g, uint x, uint y, color tc, color c) {
   if (g == NULL) {
     fprintf(stderr, "Bad parameter in the function ff.\n");
-    if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
 
@@ -181,7 +180,6 @@ void ff(game g, uint x, uint y, color tc, color c) {
 void game_play_one_move(game g, color c) {
   if (g == NULL) {
     fprintf(stderr, "Bad parameter in the function game_play_one_move.\n");
-    if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
 
