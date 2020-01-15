@@ -159,9 +159,13 @@ bool test_game_is_over() {
   }
 
   // play 0
-  game_play_one_move(g, RED);
+  game_play_one_move(g, 0);
   // play 1
-  game_play_one_move(g, GREEN);
+  game_play_one_move(g, 1);
+  // play 0
+  game_play_one_move(g, 0);
+  // play 1
+  game_play_one_move(g, 1);
 
   // test game is not over if game is over
   if (game_is_over(g) == false) {
