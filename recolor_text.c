@@ -83,14 +83,15 @@ int main(void) {
     if (game_nb_moves_cur(g) >= game_nb_moves_max(g) && !game_is_over(g) && pl) {
       printf("DOMMAGE\n");
       pl = false;
-      /*game_delete(g);
-      exit(EXIT_SUCCESS);*/
     } 
-    if (game_is_over(g) && pl) {
+    if (game_is_over(g)) {
       // On game is successfully finish
       printf("BRAVO\n");
       showCells(g);
-      pl = false;
+
+      // exit on win
+      game_delete(g);
+      exit(EXIT_SUCCESS);
     }
   }
 
