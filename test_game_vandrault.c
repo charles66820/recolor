@@ -169,7 +169,7 @@ bool test_game_height(){
       1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
       0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
       1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
-  game g = game_new(cells, 12);
+  game g = game_new(cells, nbMax);
   if (g == NULL) {  // testing if g1 is a valid pointer
     return false;
   }
@@ -196,7 +196,7 @@ bool test_game_wrapping(){
       1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
       0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
       1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
-  game g = game_new(cells, 12);
+  game g = game_new(cells, nbMax);
   if (g == NULL) {  // testing if g1 is a valid pointer
     return false;
   }
