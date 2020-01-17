@@ -1,7 +1,7 @@
 # Minimal require version of CMake needed
 cmake_minimum_required (VERSION 2.6)
 
-option(ENABLE_DEBUG ON)
+option(ENABLE_DEBUG "debug options" ON)
 
 # The project name followed by the programming language use
 project (recolor_text C)
