@@ -140,7 +140,6 @@ uint game_nb_moves_cur(cgame g) {
 void ff(game g, uint x, uint y, color tc, color c) {
   if (g == NULL) {
     fprintf(stderr, "Bad parameter in the function ff.\n");
-    if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
 
@@ -181,15 +180,14 @@ void ff(game g, uint x, uint y, color tc, color c) {
 void game_play_one_move(game g, color c) {
   if (g == NULL) {
     fprintf(stderr, "Bad parameter in the function game_play_one_move.\n");
-    if (g != NULL) game_delete(g);
     exit(EXIT_FAILURE);
   }
 
   // Test if play can play
   if (g->current_moves < g->nb_moves_max) {
     ff(g, 0, 0, (color) g->tab[0], c);
-    g->current_moves++;
   }
+  g->current_moves++;
 }
 
 /**
@@ -254,12 +252,12 @@ bool game_is_over(cgame g) {
   }
   color ref = g->tab[0];
 
-  if (g->current_moves > g->nb_moves_max) return false;
-
   for (int i = 0; i < g->width * g->height; i++)
     if (g->tab[i] != ref) return false;
 
-  return true;
+  if (g->current_moves <= g->nb_moves_max) return true;
+
+  return false;
 }
 
 /**

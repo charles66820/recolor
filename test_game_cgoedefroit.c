@@ -159,9 +159,13 @@ bool test_game_is_over() {
   }
 
   // play 0
-  game_play_one_move(g, RED);
+  game_play_one_move(g, 0);
   // play 1
-  game_play_one_move(g, GREEN);
+  game_play_one_move(g, 1);
+  // play 0
+  game_play_one_move(g, 0);
+  // play 1
+  game_play_one_move(g, 1);
 
   // test game is not over if game is over
   if (game_is_over(g) == false) {
@@ -357,11 +361,7 @@ int main(int argc, char const *argv[]) {
     /* fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
     exit(EXIT_FAILURE);*/
 
-    ok = test_game_copy();
-    ok = test_game_delete();
-    ok = test_game_is_over();
-    ok = test_game_restart();
-    ok = test_game_restart();
+    ok = test_game_copy() && test_game_delete() && test_game_is_over() && test_game_restart() && test_game_restart();
 
   } else {
     // select test from args

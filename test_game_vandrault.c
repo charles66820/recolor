@@ -69,6 +69,10 @@ bool test_game_new_empty() {
     game_delete(g);
     return false;
   }
+  if (game_nb_moves_cur(g) != 0) {  // testing if the number of current moves is 0
+    game_delete(g);
+    return false;
+  }
   game_play_one_move(g, 0);
   for (uint i = 0; i < game_height(g) * game_width(g);
        i += 1) {  // testing if each cell of the game is equal to RED
@@ -165,7 +169,7 @@ bool test_game_height(){
       1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
       0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
       1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
-  game g = game_new(cells, 12);
+  game g = game_new(cells, nbMax);
   if (g == NULL) {  // testing if g1 is a valid pointer
     return false;
   }
@@ -192,7 +196,7 @@ bool test_game_wrapping(){
       1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
       0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
       1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
-  game g = game_new(cells, 12);
+  game g = game_new(cells, nbMax);
   if (g == NULL) {  // testing if g1 is a valid pointer
     return false;
   }
@@ -227,12 +231,9 @@ int main(int argc, char *argv[]) {
     /* fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
     exit(EXIT_FAILURE); */
 
-    ok = test_game_new();
-    ok = test_game_new_empty();
-    ok = test_game_set_cell_init();
-    ok = test_game_set_max_moves();
-    ok = test_game_height();
-    ok = test_game_wrapping();
+    ok = test_game_new() && test_game_new_empty() &&
+         test_game_set_cell_init() && test_game_set_max_moves() &&
+         test_game_height() && test_game_wrapping();
 
   } else {
     if (!strcmp(argv[1], "new"))
