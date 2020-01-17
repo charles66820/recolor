@@ -39,7 +39,7 @@ int charToInt(char c) { return c - '0'; }
 
 int main(void) {
   // Init game vars
-  bool over = false;
+  bool pl = true;
   int nbMaxHit = 12;
 
   color cells[SIZE * SIZE] = {
@@ -57,12 +57,13 @@ int main(void) {
   printGame(g);
   printf("\n");
   // Game loop
-  while (!over) {
+  while (true) {
     int input = getchar();
     char choice = (char)input;
 
     // user inputs
     if (choice == 'r') {  // For game restart
+      pl = true;
       game_restart(g);
       printGame(g);
       printf("\n");
@@ -79,17 +80,19 @@ int main(void) {
     }
 
     // If the game is lost
-    if (game_nb_moves_cur(g) >= game_nb_moves_max(g) && !game_is_over(g)) {
+    if (game_nb_moves_cur(g) >= game_nb_moves_max(g) && !game_is_over(g) && pl) {
       printf("DOMMAGE\n");
-      game_delete(g);
-      exit(EXIT_SUCCESS);
-    } else  // If the game is over
-      over = game_is_over(g);
+      pl = false;
+      /*game_delete(g);
+      exit(EXIT_SUCCESS);*/
+    } 
+    if (game_is_over(g) && pl) {
+      // On game is successfully finish
+      printf("BRAVO\n");
+      showCells(g);
+      pl = false;
+    }
   }
-
-  // On game is successfully finish
-  printf("BRAVO\n");
-  showCells(g);
 
   // Free memory
   game_delete(g);
