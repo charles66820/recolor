@@ -257,7 +257,7 @@ bool game_is_over(cgame g) {
 
   if (g->current_moves <= g->nb_moves_max) return true;
 
-  return true;
+  return false;
 }
 
 /**
