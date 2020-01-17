@@ -102,7 +102,7 @@ uint game_nb_moves_max(cgame g) {
  * @pre @p y > 0
  */
 color game_cell_current_color(cgame g, uint x, uint y) {
-  if (g == NULL || x >= (g->width) || y >= g->height) {
+  if (g == NULL || x >= g->width || y >= g->height) {
     exit(EXIT_FAILURE);
   }
   return (color) g->tab[x + y * g->width];
@@ -144,11 +144,11 @@ void ff(game g, uint x, uint y, color tc, color c) {
     exit(EXIT_FAILURE);
   }
 
-  if (x >= g->width || y >= g->height || g->tab[(y * g->width) + x] == c)
+  if (x >= g->width || y >= g->height || g->tab[y * g->width + x] == c)
     return;
-  if (g->tab[(y * g->width) + x] != tc) return;
+  if (g->tab[y * g->width + x] != tc) return;
 
-  g->tab[(y * g->width) + x] = c;  // replace target color by color
+  g->tab[y * g->width + x] = c;  // replace target color by color
 
   if (g->wrapping) {
     ff(g, (x + 1) % g->width, y, tc, c);   // spread to right
