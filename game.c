@@ -184,9 +184,9 @@ void game_play_one_move(game g, color c) {
   }
 
   // Test if play can play
-  if (g->current_moves < g->nb_moves_max) {
+  //if (g->current_moves < g->nb_moves_max) {
     ff(g, 0, 0, (color) g->tab[0], c);
-  }
+  //}
   g->current_moves++;
 }
 
