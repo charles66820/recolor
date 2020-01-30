@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "game.h"
+#include "game_io.h"
 
 /**
  * @brief Print cells in stdout
@@ -31,27 +32,36 @@ void printGame(game g) {
   showCells(g);  // print cells
 
   printf(
-      "Jouer un coup: (0,1,2,3,r ou q ; r pour redémarrer ou q pour "
-      "quitter)\n");
+      "Jouer un coup: (0,1,2,3,r ou q ; r pour redémarrer, q pour quitter ou s "
+      "pour enregistré)\n");
 }
 
 int charToInt(char c) { return c - '0'; }
 
-int main(void) {
+int main(int argc, char *argv[]) {
   // Init game vars
   bool pl = true;
-  int nbMaxHit = 12;
+  game g = NULL;
 
-  color cells[SIZE * SIZE] = {
-      0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
-      1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
-      2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
-      1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
-      0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
-      1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
+  if (argc > 1) {
+    g = game_load(argv[1]);
+  }
 
-  // Create new game
-  game g = game_new(cells, nbMaxHit);
+  if (argc == 1 || g == NULL) {  // if game is launch without arguments or if
+                                 // game is null we create new game
+    int nbMaxHit = 12;
+
+    color cells[SIZE * SIZE] = {
+        0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
+        1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
+        2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
+        1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
+        0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
+        1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
+
+    // Create new game
+    g = game_new(cells, nbMaxHit);
+  }
 
   // Show the game for the first time
   printGame(g);
@@ -67,11 +77,20 @@ int main(void) {
       game_restart(g);
       printGame(g);
       printf("\n");
+
     } else if (choice == 'q') {  // For quit game
       printGame(g);
       printf("DOMMAGE\n");
       game_delete(g);
       exit(EXIT_SUCCESS);
+
+    } else if (choice == 's') {  // For save game
+      char *fileName = NULL;
+      printf("Saisiser le nom du fichier où sera enregistré le jeu : ");
+      scanf("%s", fileName);
+      game_save(g, fileName);
+      printf("Partie enregistré!\n");
+
     } else if (charToInt(choice) >= 0 &&
                charToInt(choice) < NB_COLORS) {  // For play shot
       game_play_one_move(g, (color)charToInt(choice));
@@ -83,7 +102,8 @@ int main(void) {
     if (game_nb_moves_cur(g) >= game_nb_moves_max(g) && !game_is_over(g) && pl) {
       printf("DOMMAGE\n");
       pl = false;
-    } 
+    }
+
     if (game_is_over(g)) {
       // On game is successfully finish
       printf("BRAVO\n");
