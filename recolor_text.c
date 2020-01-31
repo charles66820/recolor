@@ -85,12 +85,12 @@ int main(int argc, char *argv[]) {
       exit(EXIT_SUCCESS);
 
     } else if (choice == 's') {  // For save game
-      char *fileName = NULL;
+      char *fileName = malloc(80);
       printf("Saisiser le nom du fichier où sera enregistré le jeu : ");
       scanf("%s", fileName);
       game_save(g, fileName);
-      printf("Partie enregistré!\n");
-
+      printf("Partie enregistré dans le fichier %s.txt!\n", fileName);
+      free(fileName);
     } else if (charToInt(choice) >= 0 &&
                charToInt(choice) < NB_COLORS) {  // For play shot
       game_play_one_move(g, (color)charToInt(choice));

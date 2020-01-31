@@ -28,20 +28,21 @@ game game_load(char* filename) {  //  A FINIR
   return;
 }
 
-void game_save(cgame g, char *name) {
+void game_save(cgame g, char* name) {
   if (g == NULL || name == NULL) {
     printf("At least one of the pointers is invalid");
     exit(EXIT_FAILURE);
   }
   // Creation of the name of the file
-  char *filename = malloc(strlen(name) + 4);
+  char* filename = malloc(strlen(name) + 4);
   strcat(filename, name);
   strcat(filename, ".txt");
-  FILE *savefile = NULL;
+  FILE* savefile = NULL;
   savefile = fopen(filename, "w");
   if (savefile == NULL) {
     printf("The file couldn't be created");
     exit(EXIT_FAILURE);
+  }
 
   // Writting of the parameters of the game in the file
   fprintf(savefile, "%u %u %u %d\n", game_width(g), game_height(g),
