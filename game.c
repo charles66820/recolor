@@ -4,50 +4,24 @@
 #include <stdlib.h>
 
 struct game_s {
-  color *tab;          // The tab that contains the game cells
+  color *tab;          // The tab that contains the game cells in a single dimensional tab
   uint nb_moves_max;   // The Maximum amount of move
   uint current_moves;  // The actual amount of move
-  color *tab_init;     // The tab_init that contains the copyt of game cells
+  color *tab_init;     // The tab_init that contains the copy of game cells in a
+                       // single dimensional tab
   uint width;          // The number of columns on the grid
   uint height;         // The number of rows on the grid
   bool wrapping;  // true the game is wrapping, false if the game not wrapping
 };
 
-/**
- * @brief Create a new game
- *
- * @param cells tab of colors
- * @param nb_moves_max number of max hit
- * @return game
- * @pre @p cells != NULL
- * @pre @p nb_moves_max > 0
- */
 game game_new(color *cells, uint nb_moves_max) {
   return game_new_ext(SIZE, SIZE, cells, nb_moves_max, false);
 }
 
-/**
- * @brief create new empty game
- *
- * @return game new empty game
- */
 game game_new_empty() {
   return game_new_empty_ext(SIZE, SIZE, false);
 }
 
-/**
- * @brief Define cell color in game
- *
- * @param g game for set cell
- * @param x coordinate x
- * @param y coordinate y
- * @param c new color
- * @pre @p g != NULL
- * @pre @p x >= 0
- * @pre @p y >= 0
- * @pre @p c > 0
- * @pre @p c < NB_COLORS
- */
 void game_set_cell_init(game g, uint x, uint y, color c) {
   if (g == NULL || x >= g->width || y >= g->height) {
     fprintf(stderr, "Bad parameter on the function game_set_cell_init.\n");
@@ -59,14 +33,6 @@ void game_set_cell_init(game g, uint x, uint y, color c) {
   g->tab_init[(y * g->width) + x] = c;
 }
 
-/**
- * @brief Set the maximum amount of move
- *
- * @param g The data of the game
- * @param nb_moves_max number of max hit
- * @pre @p g != NULL
- * @pre @p nb_moves_max > 0
- */
 void game_set_max_moves(game g, uint nb_max_moves) {
   if (g == NULL) {  // Check in case of bug
     fprintf(stderr,
@@ -77,13 +43,6 @@ void game_set_max_moves(game g, uint nb_max_moves) {
   g->nb_moves_max = nb_max_moves;
 }
 
-/**
- * @brief give the max amount of moves
- *
- * @param g The data of the game
- * @return nb_moves_max of g
- * @pre @p g != NULL
- */
 uint game_nb_moves_max(cgame g) {
   if (g == NULL) {  // Check in case of bug
     fprintf(stderr, "Not enough memory for g in the function game_nb_moves_max.\n");
@@ -92,15 +51,6 @@ uint game_nb_moves_max(cgame g) {
   return g->nb_moves_max;
 }
 
-/**
- * @brief give the current color in coordonate x, y
- *
- * @param g The data of the game
- * @return nb_moves_max of g
- * @pre @p g != NULL
- * @pre @p x > 0
- * @pre @p y > 0
- */
 color game_cell_current_color(cgame g, uint x, uint y) {
   if (g == NULL || x >= g->width || y >= g->height) {
     exit(EXIT_FAILURE);
@@ -108,13 +58,6 @@ color game_cell_current_color(cgame g, uint x, uint y) {
   return (color) g->tab[x + y * g->width];
 }
 
-/**
- * @brief give the number of the actual moves
- *
- * @param g The data of the game
- * @return current_moves of g
- * @pre @p g != NULL
- */
 uint game_nb_moves_cur(cgame g) {
   if (g == NULL) {  // Check in case of bug
     fprintf(stderr,"Not enough memory for g in the function game_nb_moves_cur.\n");
@@ -168,35 +111,17 @@ void ff(game g, uint x, uint y, color tc, color c) {
   }
 }
 
-/**
- * @brief For play one move in game and propag color
- *
- * @param g game to play one move
- * @param c color played
- * @pre @p g != NULL
- * @pre @p c > 0
- * @pre @p c < NB_COLORS
- */
 void game_play_one_move(game g, color c) {
   if (g == NULL) {
     fprintf(stderr, "Bad parameter in the function game_play_one_move.\n");
     exit(EXIT_FAILURE);
   }
 
-  // Test if play can play
-  //if (g->current_moves < g->nb_moves_max) {
-    ff(g, 0, 0, (color) g->tab[0], c);
-  //}
+  ff(g, 0, 0, (color) g->tab[0], c);
+
   g->current_moves++;
 }
 
-/**
- * @brief copy game in parameter
- *
- * @param g game for copy
- * @return game new game copy from game in parameter
- * @pre @p g != NULL
- */
 game game_copy(cgame g) {
   if (g == NULL || g->tab == NULL || g->tab_init == NULL) {
     exit(EXIT_FAILURE);
@@ -223,12 +148,6 @@ game game_copy(cgame g) {
   return game_copy;
 }
 
-/**
- * @brief delete, by using free(), the game from the memory
- *
- * @param g The all the data of the game
- * @pre @p g != NULL
- **/
 void game_delete(game g) {
   if (g == NULL) {
     fprintf(stderr, "Not enough memory for g in the function game_delete.\n");
@@ -239,13 +158,6 @@ void game_delete(game g) {
   free(g);
 }
 
-/**
- * @brief test if the game is over or not
- *
- * @param g The data of the game
- * @return a boolean, false if game is over, true otherwise
- * @pre @p g != NULL
- */
 bool game_is_over(cgame g) {
   if (g == NULL) {
     exit(EXIT_FAILURE);
@@ -260,12 +172,6 @@ bool game_is_over(cgame g) {
   return false;
 }
 
-/**
- * @brief Reinit game
- *
- * @param g game for restart
- * @pre @p g != NULL
- */
 void game_restart(game g) {
   if (g == NULL) {
     fprintf(stderr, "Bad parameter on the function game_restart.\n");
@@ -280,19 +186,6 @@ void game_restart(game g) {
   }
 }
 
-/**
- * @brief Creates a new empty game having height rows and width
- * columns. All the cells will have the default color (whose value is
- * 0). The maximum number of moves is set to 0
- * @param width the width of the grid
- * @param height the height of the grid
- * @param wrapping whether or not the game is wrapping
- * @return the created game
- * @pre @p width > 0
- * @pre @p height > 0
- * @pre @p wrapping == true
- * @pre @p wrapping == false
- **/
 game game_new_empty_ext(uint width, uint height, bool wrapping) {
 
   color * cells = malloc(width * height * sizeof(color));
@@ -311,12 +204,6 @@ game game_new_empty_ext(uint width, uint height, bool wrapping) {
   return g;
 }
 
-/**
- * @brief Returns the number of columns on the game
- * @param game is a valid pointer toward a game structure. The game
- * @return the width of the game
- * @pre @p game != NULL
- **/
 uint game_width(cgame game) {
   if (game == NULL) {
     exit(EXIT_FAILURE);
@@ -324,26 +211,12 @@ uint game_width(cgame game) {
   return game->width;
 }
 
-/**
- * @brief Returns the number of lignes on the game
- * @param game is a valid pointer toward a game structure. The game
- * @return the height of the game
- * @pre @p game != NULL
- **/
-
 uint game_height(cgame game){
   if (game == NULL){
    exit(EXIT_FAILURE);
   }
   return game->height;
 }
-
-/**
- * @brief Tests if the game is wrapping or not
- * @param game the game
- * @return a boolean, true is the game is wrapping, false otherwise
- * @pre @p game != NULL
- **/
 
 bool game_is_wrapping(cgame game){
   if (game == NULL){
@@ -353,12 +226,11 @@ bool game_is_wrapping(cgame game){
 }
 
 /**
- *@brief set the wrapping parameter of the game
- *@param game the game
- *@param new_wrap the new wrapping parameter of game
- *@pre @p g != NULL
+ * @brief set the wrapping parameter of the game
+ * @param game the game
+ * @param new_wrap the new wrapping parameter of game
+ * @pre @p g != NULL
  **/
-
 void game_set_wrapping (game game, bool new_wrap){
   if (game == NULL){
     exit(EXIT_FAILURE);
@@ -366,21 +238,6 @@ void game_set_wrapping (game game, bool new_wrap){
   game->wrapping = new_wrap;
 }
 
-/**
- * @brief Creates a new game
- * @param width the width of the grid
- * @param height the height of the grid
- * @param cells 1D array describing the color of each cell of the game. The
- *storage is row by row
- * @param wrapping whether or not the game is wrapping
- * @return the created game
- * @pre @p width > 0
- * @pre @p height > 0
- * @pre @p cells != NULL
- * @pre @p nb_moves_max > 0
- * @pre @p wrapping == true
- * @pre @p wrapping == false
- **/
 game game_new_ext(uint width, uint height, color *cells, uint nb_moves_max,
                   bool wrapping) {
   if (cells == NULL || width < 1 || height < 1) {
