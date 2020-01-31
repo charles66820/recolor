@@ -2,15 +2,31 @@
 #include "game.h"
 #include <stdlib.h>
 
-/**
- * @brief load a new game from a file
- *
- * @param filename name of file with the save
- * @return game
- * @pre @p filename != NULL
- */
-game game_load(char *filename) { return NULL; }
+game game_load(char* filename) {  //  A FINIR
+  if (filename == NULL) {
+    return NULL;
+  }
+  FILE* file_loaded = fopen(filename, "r");
+  if (file_loaded == NULL) {
+    fprintf(stderr,
+            "Problem when opening file on the function 'game_loaded'.\n");
+    return NULL;
+  }
 
+  char* c;
+  uint w;
+  uint h;
+  uint nb_max;
+  bool wrapping;
+  for (uint i = 0; i <= 4; i++) {
+    fscanf(file_loaded, "%s", c);
+    int w = atoi(c);
+    ftell(file_loaded);
+  }
+
+  fclose(file_loaded);
+  return;
+}
 
 void game_save(cgame g, char *filename) {
     if (g==NULL){
