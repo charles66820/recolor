@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
       exit(EXIT_SUCCESS);
 
     } else if (choice == 's') {  // For save game
-      char *fileName = malloc(80);
+      char *fileName = malloc(251);
       printf("Saisiser le nom du fichier où sera enregistré le jeu : ");
       scanf("%s", fileName);
       game_save(g, fileName);
