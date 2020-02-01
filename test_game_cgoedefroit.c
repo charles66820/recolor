@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "game.h"
+#include "game_io.h"
 
 /**
  * @brief Unite test for game_copy
@@ -353,6 +354,108 @@ bool test_game_new_ext() {
   return true;
 }
 
+/**
+ * @brief Unite test for game_save
+ *
+ * @return bool
+ */
+bool test_game_save() {
+  // create new game
+  color cells[4 * 5] = {0, 0, 0, 2, 0, 2, 1, 0, 1, 0,
+                        3, 0, 0, 3, 3, 1, 1, 1, 1, 3};
+  game g = game_new_ext(5, 4, cells, 7, true);
+  char validfilecontent[] = "5 4 7 S\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n";
+
+  // save the game
+  game_save(g, "data/savetest");
+
+  // open generated file
+  FILE *file = NULL;
+  file = fopen("data/savetest.txt", "r");
+  if (file == NULL) {
+    printf("The file couldn't be open\n");
+    remove("data/savetest.txt");
+    game_delete(g);
+    return false;
+  }
+
+  char *filecontent = malloc(sizeof(char) * strlen(validfilecontent));
+  fscanf(file, "%c", filecontent); // load file content
+
+  // compare generate file content with valid file content
+  if (strcmp(filecontent, validfilecontent)) {
+    fprintf(stderr, "Error: the game is not saved correctly in the file!\n");
+    remove("data/savetest.txt");
+    if (!filecontent) free(filecontent);
+    fclose(file);
+    game_delete(g);
+    return false;
+  }
+  if (!filecontent) free(filecontent);
+
+  // remove file
+  fclose(file);
+  remove("data/savetest.txt");
+
+  game_delete(g);
+  return true;
+}
+
+/**
+ * @brief Unite test for game_load
+ *
+ * @return bool
+ */
+bool test_game_load() {
+  // create file with game inner
+
+  // load file
+
+  // check if the loaded game is valid
+
+  // remove file
+
+  return true;
+}
+
+/**
+ * @brief Unite test for game_save and game_load
+ *
+ * @return bool
+ */
+bool test_game_save_load() {
+  // create new game
+
+  // save the new game
+
+  // load the save file
+
+  // test if game and loaded game are equal
+
+  // remove file
+
+  return true;
+}
+
+/**
+ * @brief Unite test for game_load and game_save
+ *
+ * @return bool
+ */
+bool test_game_load_save() {
+  // create file with game inner
+
+  // load game from file
+
+  // save game in new file
+
+  // commpare generate file content with valid file content
+
+  // remove file
+
+  return true;
+}
+
 int main(int argc, char const *argv[]) {
   bool ok = false;
 
@@ -361,7 +464,9 @@ int main(int argc, char const *argv[]) {
     /* fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
     exit(EXIT_FAILURE);*/
 
-    ok = test_game_copy() && test_game_delete() && test_game_is_over() && test_game_restart() && test_game_restart();
+    ok = test_game_copy() && test_game_delete() && test_game_is_over() &&
+         test_game_restart() && test_game_restart() && test_game_save() &&
+         test_game_load() && test_game_save_load() && test_game_load_save();
 
   } else {
     // select test from args
@@ -375,6 +480,14 @@ int main(int argc, char const *argv[]) {
       ok = test_game_restart();
     else if (!strcmp(argv[1], "new_ext"))
       ok = test_game_restart();
+    else if (!strcmp(argv[1], "save"))
+      ok = test_game_save();
+    else if (!strcmp(argv[1], "load"))
+      ok = test_game_load();
+    else if (!strcmp(argv[1], "save2load"))
+      ok = test_game_save_load();
+    else if (!strcmp(argv[1], "load2save"))
+      ok = test_game_load_save();
     else {
       fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
       exit(EXIT_FAILURE);
