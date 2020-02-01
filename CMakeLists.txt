@@ -19,6 +19,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "generated")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "generated")
 set(EXECUTABLE_OUTPUT_PATH "generated")
 
+# copy data folder to generated folder
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 include(CTest)
 enable_testing()
 
