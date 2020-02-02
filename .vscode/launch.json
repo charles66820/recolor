@@ -5,7 +5,7 @@
             "name": "(gdb) Recolor text",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/recolor_text",
+            "program": "${workspaceFolder}/build/generated/recolor_text",
             // "program": "${fileDirname}/${fileBasenameNoExtension}",
             "args": [],
             "stopAtEntry": false,
@@ -20,15 +20,16 @@
             ],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "/usr/bin/gdb"
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "build"
         },
         {
           "name": "(gdb) Tests charles",
           "type": "cppdbg",
           "request": "launch",
-          "program": "${workspaceFolder}/test_game_cgoedefroit",
+          "program": "${workspaceFolder}/build/generated/test_game_cgoedefroit",
           "args": [
-            "restart"
+            "load2save"
           ],
           "stopAtEntry": false,
           "cwd": "${workspaceFolder}",
@@ -42,15 +43,16 @@
           ],
           "externalConsole": false,
           "MIMode": "gdb",
-          "miDebuggerPath": "/usr/bin/gdb"
+          "miDebuggerPath": "/usr/bin/gdb",
+          "preLaunchTask": "build"
         },
         {
           "name": "(gdb) Launch test_game_arblondeau",
           "type": "cppdbg",
           "request": "launch",
-          "program": "${workspaceFolder}/test_game_arblondeau",
+          "program": "${workspaceFolder}/build/generated/test_game_arblondeau",
           "args": [
-            "game_play_one_move"
+            ""
           ],
           "stopAtEntry": true,
           "cwd": "${workspaceFolder}",
@@ -63,15 +65,16 @@
               "text": "-enable-pretty-printing",
               "ignoreFailures": true
             }
-          ]
+          ],
+          "preLaunchTask": "build"
         },
         {
           "name": "(gdb) Launch test_game_vandrault",
           "type": "cppdbg",
           "request": "launch",
-          "program": "${workspaceFolder}/test_game_vandrault",
+          "program": "${workspaceFolder}/build/generated/test_game_vandrault",
           "args": [
-            "new"
+            ""
           ],
           "stopAtEntry": true,
           "cwd": "${workspaceFolder}",
@@ -84,7 +87,8 @@
               "text": "-enable-pretty-printing",
               "ignoreFailures": true
             }
-          ]
+          ],
+          "preLaunchTask": "build"
         }
     ]
 }
