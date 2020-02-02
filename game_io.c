@@ -106,13 +106,28 @@ game game_load(char* filename) {  //  A FINIR
     line = read_next_line(file_loaded,&size);
   }
   game g = malloc(sizeof(game));
-  g->width = arr[0];
-  g->height = arr[1];
-  g->nb_moves_max = arr[2];
-  g->wrapping = arr[3];
-
-  game_new_ext(g->width, g->height, color cells, g->nb_moves_max, g->wrapping);
-  
+  int width = arr[0];
+  int height = arr[1];
+  int nb_moves_max = arr[2];
+  char wrapping = arr[3];
+  color *cells;
+  bool is_wrap;
+  if (wrapping = "N") {
+    is_wrap = false;
+  }
+  if (wrapping = "S") {
+    is_wrap = true;
+  }
+  else {
+    fprintf(stderr, "Error with the swap choice on the file.");
+    return NULL;
+  }
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      cells = fgetc (file_loaded);
+    }
+  }
+  game_new_ext(width, height, cells, nb_moves_max, is_wrap);
   fclose(file_loaded);
   return;
 }
