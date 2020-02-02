@@ -106,11 +106,12 @@ game game_load(char* filename) {  //  A FINIR
     line = read_next_line(file_loaded,&size);
   }
   game g = malloc(sizeof(game));
-  arr[0] = game_width(g);
-  arr[1] = game_height(g);
-  arr[2] = game_nb_moves_max(g);
-  arr[3] = game_is_wrapping(g);
+  g->width = arr[0];
+  g->height = arr[1];
+  g->nb_moves_max = arr[2];
+  g->wrapping = arr[3];
 
+  game_new_ext(g->width, g->height, color cells, g->nb_moves_max, g->wrapping);
   
   fclose(file_loaded);
   return;
