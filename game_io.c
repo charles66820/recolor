@@ -105,7 +105,6 @@ game game_load(char* filename) {  //  A FINIR
     treat(arr,size);
     line = read_next_line(file_loaded,&size);
   }
-  game g = malloc(sizeof(game));
   int width = arr[0];
   int height = arr[1];
   int nb_moves_max = arr[2];
