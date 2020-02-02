@@ -7,6 +7,9 @@
             "options": {
                 "cwd": "${workspaceRoot}/build"
             },
+            "presentation": {
+                "reveal": "silent"
+            },
             "command": "cmake ${workspaceRoot}",
         }, {
             "label": "make",
@@ -15,12 +18,18 @@
             "options": {
                 "cwd": "${workspaceRoot}/build"
             },
+            "presentation": {
+                "reveal": "silent"
+            },
             "dependsOn": ["cmake"]
         }, {
             "label": "build",
             "type": "shell",
             "options": {
                 "cwd": "${workspaceRoot}/build"
+            },
+            "presentation": {
+                "reveal": "silent"
             },
             "group": {
                 "kind": "build",
