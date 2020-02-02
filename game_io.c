@@ -13,12 +13,12 @@
  **/
 char* read_next_line(FILE* p_f, long* p_size) {
   if (p_f == NULL) {
-    fprintf (stderr,"Error with the file on the function read_next_line");
+    fprintf (stderr,"Error with the file on the function read_next_line.\n");
     return NULL;
   }
   char* s = malloc(MAXLINELEN * sizeof(char));
   if(s==NULL) {
-    fprintf (stderr, "Error : s is NULL on the function read_next_line");
+    fprintf (stderr, "Error : s is NULL on the function read_next_line.\n");
     return NULL;
   }
   long old_pos = ftell(p_f), len = 0;
@@ -30,7 +30,7 @@ char* read_next_line(FILE* p_f, long* p_size) {
     }
     else {
       if(!feof(p_f)) {
-      fprintf(stderr,"Line too long...");
+      fprintf(stderr,"Line too long.\n");
       exit(EXIT_FAILURE);
       }
     }
@@ -50,7 +50,7 @@ char* read_next_line(FILE* p_f, long* p_size) {
 long* convert_line(char* line,long* p_size) {
   long* arr = malloc((*p_size)*sizeof(long));
   if(arr == NULL) {
-    fprinft (stderr, "Error : arr is NULL on the function convert_line");
+    fprinft (stderr, "Error : arr is NULL on the function convert_line.\n");
   }
   long arr_s=0;
   char * token = strtok(line," ");
@@ -88,6 +88,7 @@ void treat(long* arr, long s) {
 
 game game_load(char* filename) {  //  A FINIR
   if (filename == NULL) {
+    fprintf (stderr, "Incorrect file in the function game_load.\n");
     return NULL;
   }
   FILE* file_loaded = fopen(filename, "r");
@@ -98,11 +99,19 @@ game game_load(char* filename) {  //  A FINIR
   }
   long size = 0;
   char* line = read_next_line(file_loaded,&size);
-  long* arr = convert_line(line,&size);
-  treat(arr,size);
-  line=read_next_line(file_loaded,&size);
-  
+  long* arr;
+  while (line != NULL) {
+    arr = convert_line(line,&size);
+    treat(arr,size);
+    line = read_next_line(file_loaded,&size);
+  }
+  game g = malloc(sizeof(game));
+  arr[0] = game_width(g);
+  arr[1] = game_height(g);
+  arr[2] = game_nb_moves_max(g);
+  arr[3] = game_is_wrapping(g);
 
+  
   fclose(file_loaded);
   return;
 }
