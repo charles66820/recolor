@@ -128,7 +128,7 @@ void game_save(cgame g, char* name) {
   // Creation of the name of the file
   char* filename = malloc(strlen(name) + 4);
   strcat(filename, name);
-  strcat(filename, ".txt");
+  strcat(filename, ".rec");
   FILE* savefile = NULL;
   savefile = fopen(filename, "w");
   if (savefile == NULL) {
@@ -137,7 +137,7 @@ void game_save(cgame g, char* name) {
   }
 
   // Writting of the parameters of the game in the file
-  fprintf(savefile, "%u %u %u %d\n", game_width(g), game_height(g),
+  fprintf(savefile, "%u %u %u %B\n", game_width(g), game_height(g),
           game_nb_moves_max(g), game_is_wrapping(g));
   // Writting of the table of the game in the file
   for (int y = 0; y < game_height(g); y++) {  //
