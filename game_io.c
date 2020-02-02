@@ -127,9 +127,8 @@ game game_load(char* filename) {  //  A FINIR
       cells = fgetc (file_loaded);
     }
   }
-  game_new_ext(width, height, cells, nb_moves_max, is_wrap);
   fclose(file_loaded);
-  return;
+  return game_new_ext(width, height, cells, nb_moves_max, is_wrap);
 }
 
 
