@@ -1,47 +1,10 @@
+#define _GNU_SOURCE
 #include <libgen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include "game.h"
-#define MAXLINELEN 4096
-
-/**
- * @brief take a line into a file of char
- * @param p_f an existing FILE
- * @param p_size the size 
- * @pre @p p_f != NULL
- * @return s the current line
- **/
-char* read_next_line(FILE* p_f, long* p_size) {
-  if (p_f == NULL) {
-    fprintf (stderr,"Error with the file on the function read_next_line.\n");
-    return NULL;
-  }
-  char* s = malloc(MAXLINELEN * sizeof(char));
-  if(s==NULL) {
-    fprintf (stderr, "Error : s is NULL on the function read_next_line.\n");
-    return NULL;
-  }
-  long old_pos = ftell(p_f), len = 0;
-  if(fgets(s, MAXLINELEN, p_f) != NULL) {
-    len = ftell(p_f) - old_pos;
-    if(s[len-1] == "\n") {
-      s[len-1] = "\0";
-      len--;
-    }
-    else {
-      if(!feof(p_f)) {
-      fprintf(stderr,"Line too long.\n");
-      exit(EXIT_FAILURE);
-      }
-    }
-    (*p_size)=len;
-    return s;
-  }
-  free(s);
-  return NULL;
-}
 
 /**
  * @brief turn a line of char into an array
@@ -49,86 +12,125 @@ char* read_next_line(FILE* p_f, long* p_size) {
  * @param p_size the size of the line
  * @return the array
  **/
-long* convert_line(char* line,long* p_size) {
-  long* arr = malloc((*p_size)*sizeof(long));
-  if(arr == NULL) {
-    fprintf (stderr, "Error : arr is NULL on the function convert_line.\n");
+char** convert_line(char* line, size_t* p_size) {
+  char** arr = malloc(*p_size * sizeof(char*));
+  if (arr == NULL) {
+    fprintf(stderr, "Error : arr is NULL on the function convert_line.\n");
     return NULL;
   }
-  long arr_s=0;
-  char * token = strtok(line," ");
-  while(token != NULL) {
-    char* endval = token;
-    long val = strtol(token, &endval, 10);
-    if ((*endval) == "\0") {
-      arr[arr_s]=val;
-      arr_s++;
-    }
-    else {
-      free(arr);
-      return NULL;
-    }
+
+  uint arr_s = 0;
+  char* token = strtok(line, " ");
+  char* iarr;
+  while (token != NULL) {
+    iarr = malloc(strlen(token) * sizeof(char));
+    strcpy(iarr, token);
+    arr[arr_s] = iarr;
+    arr_s++;
     token = strtok(NULL, " ");
   }
-  (*p_size)=arr_s;
+
+  (*p_size) = arr_s;
   return arr;
 }
 
-/**
- * @brief print the array
- * @param arr the array from the line
- * @param s the size of the array
- **/
-void treat(long* arr, long s) {
-  while(s>0) {
-    printf("%ld ",(*arr)+1);
-    arr++;
-    s--;
-  }
-  printf("\n");
-}
-
-
-game game_load(char* filename) {  //  A FINIR
+game game_load(char* filename) {
   if (filename == NULL) {
     fprintf (stderr, "Incorrect file in the function game_load.\n");
     return NULL;
   }
+
   FILE* file_loaded = fopen(filename, "r");
   if (file_loaded == NULL) {
     fprintf(stderr,
             "Problem when opening file on the function 'game_loaded'.\n");
     return NULL;
   }
-  long size = 0;
-  char* line = read_next_line(file_loaded,&size);
-  long* arr;
-  while (line != NULL) {
-    arr = convert_line(line,&size);
-    treat(arr,size);
-    line = read_next_line(file_loaded,&size);
+
+  char* row = NULL;
+  size_t len = 0;
+  size_t read;
+
+  // load first row
+  read = getline(&row, &len, file_loaded);
+  if (row[read -1] == '\n') {
+    row[read - 1] = '\0';
+    read--;
   }
-  int width = arr[0];
-  int height = arr[1];
-  int nb_moves_max = arr[2];
-  char* wrapping = arr[3];
-  color* cells;
-  bool is_wrap;
-  if (wrapping = "N") {
-    is_wrap = false;
-  }
-  if (wrapping = "S") {
-    is_wrap = true;
-  }
-  else {
-    fprintf(stderr, "Error with the swap choice on the file.");
+
+  char** arr = convert_line(row, &read);
+  if (arr == NULL) {
+    if (row) free(row);
+    fclose(file_loaded);
     return NULL;
   }
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      cells = fgetc (file_loaded);
-    }
+
+  int width = atoi(arr[0]);
+  int height = atoi(arr[1]);
+  int nb_moves_max = atoi(arr[2]);
+  char* wrapping = arr[3];
+  bool is_wrap;
+  if (*wrapping == 'N') {
+    is_wrap = false;
+  } else if (*wrapping == 'S') {
+    is_wrap = true;
+  } else {
+    fprintf(stderr, "Error with the swap choice on the file.");
+    for (uint i = 0; i < read; i++) free(arr[i]);
+    free(arr);
+    if (row) free(row);
+    fclose(file_loaded);
+    return NULL;
   }
+
+  for (uint i = 0; i < read; i++) free(arr[i]);
+  free(arr);
+  if (row) free(row);
+
+  // load cells
+  color* cells = malloc(width * height * sizeof(color));
+  uint h = 0;
+  while ((read = getline(&row, &len, file_loaded)) != -1) {
+    if (row[read - 1] == '\n') {
+      row[read - 1] = '\0';
+      read--;
+    }
+
+    arr = convert_line(row, &read);
+    if (arr == NULL) {
+      if (row) free(row);
+      fclose(file_loaded);
+      return NULL;
+    }
+
+    if (read != width) {
+      fprintf(stderr, "Incorrect cells width in the function game_load.\n");
+      for (uint i = 0; i < read; i++) free(arr[i]);
+      free(arr);
+      if (row) free(row);
+      fclose(file_loaded);
+      return NULL;
+    }
+
+    if (h >= height) {
+      fprintf(stderr, "Incorrect cells height in the function game_load.\n");
+      for (uint i = 0; i < read; i++) free(arr[i]);
+      free(arr);
+      if (row) free(row);
+      fclose(file_loaded);
+      return NULL;
+    }
+
+    for (uint j = 0; j < read; j++) cells[(h * width) + j] = atoi(arr[j]);
+
+    for (uint i = 0; i < read; i++) free(arr[i]);
+    free(arr);
+    if (row) free(row);
+
+    h++;
+  }
+  if (row) free(row);
+
   fclose(file_loaded);
   return game_new_ext(width, height, cells, nb_moves_max, is_wrap);
 }

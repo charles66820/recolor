@@ -416,7 +416,7 @@ bool test_game_load() {
   }
 
   // fill test file with valid content
-  fprintf(file, "5 4 7 S\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n");
+  fprintf(file, "5 4 17 S\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n");
   fclose(file);
 
   // load file
@@ -449,7 +449,7 @@ bool test_game_load() {
     return false;
   }
 
-  if (game_nb_moves_max(g) != 7) {
+  if (game_nb_moves_max(g) != 17) {
     printf("The nb_moves_max of loaded game are not valid!\n");
     game_delete(g);
     return false;
