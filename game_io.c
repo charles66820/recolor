@@ -50,14 +50,15 @@ char* read_next_line(FILE* p_f, long* p_size) {
 long* convert_line(char* line,long* p_size) {
   long* arr = malloc((*p_size)*sizeof(long));
   if(arr == NULL) {
-    fprinft (stderr, "Error : arr is NULL on the function convert_line.\n");
+    fprintf (stderr, "Error : arr is NULL on the function convert_line.\n");
+    return NULL;
   }
   long arr_s=0;
   char * token = strtok(line," ");
   while(token != NULL) {
     char* endval = token;
     long val = strtol(token, &endval, 10);
-    if ((*endval)=="\0") {
+    if ((*endval) == "\0") {
       arr[arr_s]=val;
       arr_s++;
     }
@@ -108,8 +109,8 @@ game game_load(char* filename) {  //  A FINIR
   int width = arr[0];
   int height = arr[1];
   int nb_moves_max = arr[2];
-  char wrapping = arr[3];
-  color *cells;
+  char* wrapping = arr[3];
+  color* cells;
   bool is_wrap;
   if (wrapping = "N") {
     is_wrap = false;
