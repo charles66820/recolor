@@ -2,6 +2,89 @@
 #include "game.h"
 #include <stdlib.h>
 #include <string.h>
+#define MAXLINELEN 4096
+
+/**
+ * @brief take a line into a file of char
+ * @param p_f an existing FILE
+ * @param p_size the size 
+ * @pre @p p_f != NULL
+ * @return s the current line
+ **/
+char* read_next_line(FILE* p_f, long* p_size) {
+  if (p_f == NULL) {
+    fprintf (stderr,"Error with the file on the function read_next_line");
+    return NULL;
+  }
+  char* s = malloc(MAXLINELEN * sizeof(char));
+  if(s==NULL) {
+    fprintf (stderr, "Error : s is NULL on the function read_next_line");
+    return NULL;
+  }
+  long old_pos = ftell(p_f), len = 0;
+  if(fgets(s, MAXLINELEN, p_f) != NULL) {
+    len = ftell(p_f) - old_pos;
+    if(s[len-1] == "\n") {
+      s[len-1] = "\0";
+      len--;
+    }
+    else {
+      if(!feof(p_f)) {
+      fprintf(stderr,"Line too long...");
+      exit(EXIT_FAILURE);
+      }
+    }
+    (*p_size)=len;
+    return s;
+  }
+  free(s);
+  return NULL;
+}
+
+/**
+ * @brief turn a line of char into an array
+ * @param line the already existing line from a file
+ * @param p_size the size of the line
+ * @return the array
+ **/
+long* convert_line(char* line,long* p_size) {
+  long* arr = malloc((*p_size)*sizeof(long));
+  if(arr == NULL) {
+    fprinft (stderr, "Error : arr is NULL on the function convert_line");
+  }
+  long arr_s=0;
+  char * token = strtok(line," ");
+  while(token != NULL) {
+    char* endval = token;
+    long val = strtol(token, &endval, 10);
+    if ((*endval)=="\0") {
+      arr[arr_s]=val;
+      arr_s++;
+    }
+    else {
+      free(arr);
+      return NULL;
+    }
+    token = strtok(NULL, " ");
+  }
+  (*p_size)=arr_s;
+  return arr;
+}
+
+/**
+ * @brief print the array
+ * @param arr the array from the line
+ * @param s the size of the array
+ **/
+void treat(long* arr, long s) {
+  while(s>0) {
+    printf("%ld ",(*arr)+1);
+    arr++;
+    s--;
+  }
+  printf("\n");
+}
+
 
 game game_load(char* filename) {  //  A FINIR
   if (filename == NULL) {
@@ -13,20 +96,18 @@ game game_load(char* filename) {  //  A FINIR
             "Problem when opening file on the function 'game_loaded'.\n");
     return NULL;
   }
-  char* c;
-  uint w;
-  uint h;
-  uint nb_max;
-  bool wrapping;
-  for (uint i = 0; i <= 4; i++) {
-    fscanf(file_loaded, "%s", c);
-    int w = atoi(c);
-    ftell(file_loaded);
-  }
+  long size = 0;
+  char* line = read_next_line(file_loaded,&size);
+  long* arr = convert_line(line,&size);
+  treat(arr,size);
+  line=read_next_line(file_loaded,&size);
+  
 
   fclose(file_loaded);
   return;
 }
+
+
 
 void game_save(cgame g, char* name) {
   if (g == NULL || name == NULL) {
