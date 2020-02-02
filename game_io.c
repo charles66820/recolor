@@ -114,6 +114,7 @@ void game_save(cgame g, char* name) {
     printf("At least one of the pointers is invalid");
     exit(EXIT_FAILURE);
   }
+  
   // Creation of the name of the file
   char* filename = malloc(strlen(name) + 4);
   strcat(filename, name);
@@ -131,7 +132,10 @@ void game_save(cgame g, char* name) {
   // Writting of the table of the game in the file
   for (int y = 0; y < game_height(g); y++) {  //
     for (int x = 0; x < game_width(g); x++) {
-      fprintf(savefile, "%u ", game_cell_current_color(g, x, y));
+      fprintf(savefile, "%u", game_cell_current_color(g, x, y));
+      if (x != game_width(g)-1){
+        fprintf(savefile," ");
+      }
     }
     fprintf(savefile, "\n");
   }
