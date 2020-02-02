@@ -468,8 +468,8 @@ bool test_game_load() {
   color cells[] = {0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3};
 
   for (uint i = 0; i < 20; i++)
-    if (cells[i] != game_cell_current_color(g, i % 5, i / 5)) {
-      printf("The cells of loaded game are not valid!\n");
+    if (cells[i] != game_cell_current_color(g, i % game_width(g), i / game_width(g))) {
+      printf("The grid of loaded game are not valid!\n");
       game_delete(g);
       return false;
     }
@@ -485,14 +485,83 @@ bool test_game_load() {
  */
 bool test_game_save_load() {
   // create new game
+  color cells[] = {0, 10, 0, 2, 0, 2, 1, 0, 1,  0, 3, 8, 0, 3,
+                   3, 1,  5, 1, 1, 3, 0, 0, 11, 2, 0, 2, 1, 0,
+                   1, 0,  3, 0, 6, 3, 3, 1, 1,  1, 1, 3};
+  game g = game_new_ext(10, 4, cells, 12, false);
+  if (g == NULL) {
+    fprintf(stderr, "Error: invalid new game!\n");
+
+    return false;
+  }
 
   // save the new game
+  game_save(g, "data/savetest");
 
   // load the save file
-
-  // test if game and loaded game are equal
+  game gl = game_load("data/savetest.rec");
+  if (gl == NULL) {
+    printf("The game has not been loaded!\n");
+    remove("data/savetest.rec");
+    return false;
+  }
 
   // remove file
+  remove("data/savetest.rec");
+
+  // test if game and loaded game are equal
+  if (game_width(g) != game_width(gl)) {
+    printf("The width of game and width of loaded game are not equal!\n");
+    game_delete(g);
+    game_delete(gl);
+    return false;
+  }
+
+  if (game_height(g) != game_height(gl)) {
+    printf("The height of game and height of loaded game are not equal!\n");
+    game_delete(g);
+    game_delete(gl);
+    return false;
+  }
+
+  if (game_is_wrapping(g) != game_is_wrapping(gl)) {
+    printf(
+        "The property wrapping of game and property wrapping of loaded game "
+        "are not equal!\n");
+    game_delete(g);
+    game_delete(gl);
+    return false;
+  }
+
+  if (game_nb_moves_max(g) != game_nb_moves_max(gl)) {
+    printf(
+        "The nb_moves_max of game and nb_moves_max of loaded game are not "
+        "equal!\n");
+    game_delete(g);
+    game_delete(gl);
+    return false;
+  }
+
+  if (game_nb_moves_cur(g) != game_nb_moves_cur(gl)) {
+    printf(
+        "The nb_moves_cur of game and nb_moves_cur of loaded game are not "
+        "equal!\n");
+    game_delete(g);
+    game_delete(gl);
+    return false;
+  }
+
+  for (uint i = 0; i < 40; i++)
+    if (game_cell_current_color(g, i % game_width(g), i / game_width(g)) !=
+        game_cell_current_color(gl, i % game_width(gl), i / game_width(gl))) {
+      printf("The grid of game and grid of loaded game are not equal!\n");
+      game_delete(g);
+      game_delete(gl);
+      return false;
+    }
+
+  game_delete(g);
+  game_delete(gl);
 
   return true;
 }
