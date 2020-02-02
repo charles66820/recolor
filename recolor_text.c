@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
       printf("Saisiser le nom du fichier où sera enregistré le jeu : ");
       scanf("%s", fileName);
       game_save(g, fileName);
-      printf("Partie enregistré dans le fichier %s.txt!\n", fileName);
+      printf("Partie enregistré dans le fichier %s.rec!\n", fileName);
       free(fileName);
     } else if (charToInt(choice) >= 0 &&
                charToInt(choice) < NB_COLORS) {  // For play shot

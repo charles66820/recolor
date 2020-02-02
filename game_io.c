@@ -1,7 +1,9 @@
+#include <libgen.h>
 #include <stdio.h>
-#include "game.h"
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include "game.h"
 #define MAXLINELEN 4096
 
 /**
@@ -131,34 +133,63 @@ game game_load(char* filename) {  //  A FINIR
   return game_new_ext(width, height, cells, nb_moves_max, is_wrap);
 }
 
-
-
 void game_save(cgame g, char* name) {
   if (g == NULL || name == NULL) {
     printf("At least one of the pointers is invalid");
     exit(EXIT_FAILURE);
   }
-  
+
   // Creation of the name of the file
-  char* filename = malloc(strlen(name) + 4);
-  strcat(filename, name);
+  uint filenamelen = strlen(name) + 4;
+  char* filename = malloc(filenamelen);
+  if (filename == NULL) {
+    printf("Not enough memory!\n");
+    exit(EXIT_FAILURE);
+  }
+  strcpy(filename, name);
+
+  // if file path contain folder
+  char* dir = malloc(filenamelen);
+  if (dir == NULL) {
+    printf("Not enough memory!\n");
+    free(filename);
+    exit(EXIT_FAILURE);
+  }
+  strcpy(dir, filename);
   strcat(filename, ".rec");
+
+  dirname(dir);
+  if (strcmp(".", dir)) {
+    char* mkcmd = malloc(filenamelen);
+    if (mkcmd == NULL) {
+      printf("Not enough memory!\n");
+      free(filename);
+      exit(EXIT_FAILURE);
+    }
+    sprintf(mkcmd, "mkdir -p %s", dir);
+    system(mkcmd);
+    free(mkcmd);
+  }
+  free(dir);
+
   FILE* savefile = NULL;
   savefile = fopen(filename, "w");
   if (savefile == NULL) {
     printf("The file couldn't be created");
+    free(filename);
     exit(EXIT_FAILURE);
   }
+  free(filename);
 
   // Writting of the parameters of the game in the file
   fprintf(savefile, "%u %u %u %c\n", game_width(g), game_height(g),
-          game_nb_moves_max(g), game_is_wrapping(g));
+          game_nb_moves_max(g), game_is_wrapping(g) ? 'S' : 'N');
   // Writting of the table of the game in the file
   for (int y = 0; y < game_height(g); y++) {  //
     for (int x = 0; x < game_width(g); x++) {
       fprintf(savefile, "%u", game_cell_current_color(g, x, y));
-      if (x != game_width(g)-1){
-        fprintf(savefile," ");
+      if (x != game_width(g) - 1) {
+        fprintf(savefile, " ");
       }
     }
     fprintf(savefile, "\n");
