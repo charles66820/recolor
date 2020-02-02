@@ -369,6 +369,7 @@ bool test_game_save() {
 
   // save the game
   game_save(g, "data/savetest");
+  game_delete(g);
 
   // open generated file
   FILE *file = NULL;
@@ -376,29 +377,24 @@ bool test_game_save() {
   if (file == NULL) {
     printf("The test file couldn't be open!\n");
     remove("data/savetest.rec");
-    game_delete(g);
     return false;
   }
 
   char *filecontent = malloc(sizeof(char) * strlen(validfilecontent));
   fscanf(file, "%c", filecontent);  // load file content
 
+  // close and remove file
+  fclose(file);
+  remove("data/savetest.rec");
+
   // compare generate file content with valid file content
   if (strcmp(filecontent, validfilecontent)) {
     fprintf(stderr, "Error: the game is not saved correctly in the file!\n");
-    remove("data/savetest.rec");
     if (!filecontent) free(filecontent);
-    fclose(file);
-    game_delete(g);
     return false;
   }
   if (!filecontent) free(filecontent);
 
-  // remove file
-  fclose(file);
-  remove("data/savetest.rec");
-
-  game_delete(g);
   return true;
 }
 
@@ -468,7 +464,8 @@ bool test_game_load() {
   color cells[] = {0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3};
 
   for (uint i = 0; i < 20; i++)
-    if (cells[i] != game_cell_current_color(g, i % game_width(g), i / game_width(g))) {
+    if (cells[i] !=
+        game_cell_current_color(g, i % game_width(g), i / game_width(g))) {
       printf("The grid of loaded game are not valid!\n");
       game_delete(g);
       return false;
@@ -573,14 +570,55 @@ bool test_game_save_load() {
  */
 bool test_game_load_save() {
   // create file with game inner
+  char validfilecontent[] =
+      "5 4 7 N\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n";
+
+  FILE *file = NULL;
+  file = fopen("data/savetest.rec", "w");
+  if (file == NULL) {
+    printf("The test file couldn't be create!\n");
+    return false;
+  }
+
+  fprintf(file, "5 4 7 N\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n");
+  fclose(file);
 
   // load game from file
+  game g = game_load("data/savetest.rec");
+  if (g == NULL) {
+    printf("The game has not been loaded!\n");
+    remove("data/savetest.rec");
+    return false;
+  }
+  remove("data/savetest.rec");
 
   // save game in new file
+  game_save(g, "data/savetest");
+  game_delete(g);
 
-  // commpare generate file content with valid file content
+  // open generated file
+  file = NULL;
+  file = fopen("data/savetest.rec", "r");
+  if (file == NULL) {
+    printf("The file couldn't be open!\n");
+    remove("data/savetest.rec");
+    return false;
+  }
 
-  // remove file
+  char *filecontent = malloc(sizeof(char) * strlen(validfilecontent));
+  fscanf(file, "%c", filecontent);  // load file content
+
+  // close and remove file
+  fclose(file);
+  remove("data/savetest.rec");
+
+  // compare generate file content with valid default file content
+  if (strcmp(filecontent, validfilecontent)) {
+    fprintf(stderr, "Error: the game is not correctly load or save!\n");
+    if (!filecontent) free(filecontent);
+    return false;
+  }
+  if (!filecontent) free(filecontent);
 
   return true;
 }
