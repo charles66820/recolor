@@ -10,8 +10,9 @@
             "presentation": {
                 "reveal": "silent"
             },
-            "command": "cmake ${workspaceRoot}",
-        }, {
+            "command": "cmake ${workspaceRoot}"
+        },
+        {
             "label": "make",
             "type": "shell",
             "command": "make",
@@ -21,8 +22,11 @@
             "presentation": {
                 "reveal": "silent"
             },
-            "dependsOn": ["cmake"]
-        }, {
+            "dependsOn": [
+                "cmake"
+            ]
+        },
+        {
             "label": "build",
             "type": "shell",
             "options": {
@@ -35,7 +39,9 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOn": ["make"]
+            "dependsOn": [
+                "make"
+            ]
         }
     ]
 }
