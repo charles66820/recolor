@@ -380,8 +380,14 @@ bool test_game_save() {
     return false;
   }
 
-  char *filecontent = malloc(sizeof(char) * strlen(validfilecontent));
-  fscanf(file, "%c", filecontent);  // load file content
+  char* filecontent = malloc(sizeof(char) * strlen(validfilecontent));
+  if (filecontent == NULL) {
+    printf("Not enough memory!\n");
+    fclose(file);
+    remove("data/savetest.rec");
+    return false;
+  }
+  fscanf(file, "%255c", filecontent);  // load file content
 
   // close and remove file
   fclose(file);
@@ -606,7 +612,13 @@ bool test_game_load_save() {
   }
 
   char *filecontent = malloc(sizeof(char) * strlen(validfilecontent));
-  fscanf(file, "%c", filecontent);  // load file content
+  if (filecontent == NULL) {
+    printf("Not enough memory!\n");
+    fclose(file);
+    remove("data/savetest.rec");
+    return false;
+  }
+  fscanf(file, "%255c", filecontent);  // load file content
 
   // close and remove file
   fclose(file);
