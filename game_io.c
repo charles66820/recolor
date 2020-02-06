@@ -142,8 +142,8 @@ void game_save(cgame g, char* name) {
   }
 
   // Creation of the name of the file
-  uint filenamelen = strlen(name) + 4;
-  char* filename = malloc(filenamelen);
+  uint filenamelen = (uint) strlen(name) + 4;
+  char* filename = malloc(sizeof(char*) * filenamelen);
   if (filename == NULL) {
     printf("Not enough memory!\n");
     exit(EXIT_FAILURE);
@@ -151,7 +151,7 @@ void game_save(cgame g, char* name) {
   strcpy(filename, name);
 
   // if file path contain folder
-  char* dir = malloc(filenamelen);
+  char* dir = malloc(sizeof(char*) * filenamelen);
   if (dir == NULL) {
     printf("Not enough memory!\n");
     free(filename);
@@ -162,10 +162,11 @@ void game_save(cgame g, char* name) {
 
   dirname(dir);
   if (strcmp(".", dir)) {
-    char* mkcmd = malloc(filenamelen);
+    char* mkcmd = malloc(sizeof(char*) * filenamelen);
     if (mkcmd == NULL) {
       printf("Not enough memory!\n");
       free(filename);
+      free(dir);
       exit(EXIT_FAILURE);
     }
     sprintf(mkcmd, "mkdir -p %s", dir);
