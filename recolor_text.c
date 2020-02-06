@@ -45,6 +45,7 @@ int main(int argc, char *argv[]) {
 
   if (argc > 1) {
     g = game_load(argv[1]);
+    if (g == NULL) printf("Error on game load : The default game as load\n");
   }
 
   if (argc == 1 || g == NULL) {  // if game is launch without arguments or if
@@ -85,7 +86,7 @@ int main(int argc, char *argv[]) {
       exit(EXIT_SUCCESS);
 
     } else if (choice == 's') {  // For save game
-      char *fileName = malloc(251);
+      char* fileName = malloc(251);
       printf("Saisiser le nom du fichier où sera enregistré le jeu : ");
       scanf("%s", fileName);
       game_save(g, fileName);
