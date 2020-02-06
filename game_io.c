@@ -28,8 +28,9 @@ char** convert_line(char* line, size_t* p_size) {
     if (iarr == NULL) {
       fprintf(stderr,
               "Error : Not enough memory on the function convert_line.\n");
-      for (uint i = 0; i < arr_s; i++) free(arr[i]);
-      free(arr);
+      for (uint i = 0; i < arr_s; i++)
+        if (arr[i] != NULL) free(arr[i]);
+      if (arr != NULL) free(arr);
       return NULL;
     }
     strcpy(iarr, token);
@@ -81,7 +82,6 @@ game game_load(char* filename) {
   for (uint i = 0; i < read; i++) free(arr[i]);
   free(arr);
   if (row != NULL) free(row);
-  fclose(file_loaded);
 
   bool is_wrap;
   if (wrapping == 'N') {
@@ -90,6 +90,7 @@ game game_load(char* filename) {
     is_wrap = true;
   } else {
     fprintf(stderr, "Error with the swap choice on the file.\n");
+    fclose(file_loaded);
     return NULL;
   }
 
@@ -142,7 +143,6 @@ game game_load(char* filename) {
     for (uint i = 0; i < read; i++)
       if (arr[i] != NULL) free(arr[i]);
     if (arr != NULL) free(arr);
-    if (row != NULL) free(row);
 
     h++;
   }
