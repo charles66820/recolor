@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
       printf("Partie enregistré dans le fichier %s.rec!\n", fileName);
       free(fileName);
     } else if (charToInt(choice) >= 0 &&
-               charToInt(choice) < NB_COLORS) {  // For play shot
+               charToInt(choice) < 255) {  // For play shot
       game_play_one_move(g, (color)charToInt(choice));
       printGame(g);
       printf("\n");
