@@ -1,10 +1,10 @@
 #define _GNU_SOURCE
+#include "game.h"
 #include <libgen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include "game.h"
 
 /**
  * @brief turn a line of char into an array
@@ -24,13 +24,12 @@ char** convert_line(char* line, size_t* p_size) {
   char* token = strtok(line, " ");
   char* iarr;
   while (token != NULL) {
-    iarr = malloc(strlen(token) * sizeof(char));
+    iarr = malloc((strlen(token) + 1) * sizeof(char));
     if (iarr == NULL) {
       fprintf(stderr,
               "Error : Not enough memory on the function convert_line.\n");
-      for (uint i = 0; i < arr_s; i++)
-        if (arr[i] != NULL) free(arr[i]);
-      if (arr != NULL) free(arr);
+      for (uint i = 0; i < arr_s; i++) free(arr[i]);
+      free(arr);
       return NULL;
     }
     strcpy(iarr, token);
@@ -45,7 +44,7 @@ char** convert_line(char* line, size_t* p_size) {
 
 game game_load(char* filename) {
   if (filename == NULL) {
-    fprintf (stderr, "Incorrect file in the function game_load.\n");
+    fprintf(stderr, "Incorrect file in the function game_load.\n");
     return NULL;
   }
 
@@ -62,26 +61,30 @@ game game_load(char* filename) {
 
   // load first row
   read = getline(&row, &len, file_loaded);
-  if (row[read -1] == '\n') {
+  if (row[read - 1] == '\n') {
     row[read - 1] = '\0';
     read--;
   }
 
+  // convert the string into a array of char
   char** arr = convert_line(row, &read);
   if (arr == NULL) {
-    if (row != NULL) free(row);
+    free(row);
     fclose(file_loaded);
     return NULL;
   }
 
+  // affect the char from the array into int local var via atoi function
   int width = atoi(arr[0]);
   int height = atoi(arr[1]);
   int nb_moves_max = atoi(arr[2]);
   char wrapping = *arr[3];
 
+  // free the array
   for (uint i = 0; i < read; i++) free(arr[i]);
   free(arr);
-  if (row != NULL) free(row);
+  free(row);
+  row = NULL;
 
   bool is_wrap;
   if (wrapping == 'N') {
@@ -93,7 +96,6 @@ game game_load(char* filename) {
     fclose(file_loaded);
     return NULL;
   }
-
 
   // load cells
   color* cells = malloc(width * height * sizeof(color));
@@ -110,7 +112,7 @@ game game_load(char* filename) {
 
     arr = convert_line(row, &read);
     if (arr == NULL) {
-      if (row != NULL) free(row);
+      free(row);
       free(cells);
       fclose(file_loaded);
       return NULL;
@@ -118,10 +120,9 @@ game game_load(char* filename) {
 
     if (read != width) {
       fprintf(stderr, "Incorrect cells width in the function game_load.\n");
-      for (uint i = 0; i < read; i++)
-        if (arr[i] != NULL) free(arr[i]);
-      if (arr != NULL) free(arr);
-      if (row != NULL) free(row);
+      for (uint i = 0; i < read; i++) free(arr[i]);
+      free(arr);
+      free(row);
       free(cells);
       fclose(file_loaded);
       return NULL;
@@ -129,10 +130,9 @@ game game_load(char* filename) {
 
     if (h >= height) {
       fprintf(stderr, "Incorrect cells height in the function game_load.\n");
-      for (uint i = 0; i < read; i++)
-        if (arr[i] != NULL) free(arr[i]);
-      if (arr != NULL) free(arr);
-      if (row != NULL) free(row);
+      for (uint i = 0; i < read; i++) free(arr[i]);
+      free(arr);
+      free(row);
       free(cells);
       fclose(file_loaded);
       return NULL;
@@ -140,13 +140,15 @@ game game_load(char* filename) {
 
     for (uint j = 0; j < read; j++) cells[(h * width) + j] = atoi(arr[j]);
 
-    for (uint i = 0; i < read; i++)
-      if (arr[i] != NULL) free(arr[i]);
-    if (arr != NULL) free(arr);
+    for (uint i = 0; i < read; i++) free(arr[i]);
+    free(arr);
+
+    free(row);
+    row = NULL;
 
     h++;
   }
-  if (row != NULL) free(row);
+  free(row);
 
   fclose(file_loaded);
   return game_new_ext(width, height, cells, nb_moves_max, is_wrap);
@@ -159,7 +161,7 @@ void game_save(cgame g, char* name) {
   }
 
   // Creation of the name of the file
-  uint filenamelen = (uint) strlen(name) + 4;
+  uint filenamelen = (uint)strlen(name) + 4;
   char* filename = malloc(sizeof(char*) * filenamelen);
   if (filename == NULL) {
     printf("Not enough memory!\n");
