@@ -413,19 +413,6 @@ bool test_game_wrapping(){
     game_delete(g);
     return false;
   }
-  /*
-  game_set_wrapping(g, false);
-  if (g->wrapping != false){
-    fprintf(stderr,"ERROR: the wrapping parameter is not the one expected\n");
-    game_delete(g);
-    return false;
-  }
-  game_set_wrapping(g, true);
-  if (g->wrapping != true){
-    fprintf(stderr,"ERROR: the wrapping parameter is not the one expected\n");
-    game_delete(g);
-    return false;
-  }*/
   game_delete(g);
   return true;
 }
