@@ -13,9 +13,18 @@
  * @param g game with cells to print
  */
 void showCells(game g) {
+  color color;
+  char sColor[10] = "";
   for (int y = 0; y < game_height(g); y++) {
-    for (int x = 0; x < game_width(g); x++)
-      printf("%d", game_cell_current_color(g, x, y));
+    for (int x = 0; x < game_width(g); x++){
+      color = game_cell_current_color(g, x, y);
+      if (color < 9) {
+        sprintf(sColor, "%d", color);
+      } else{
+        sprintf(sColor, "%c", 55+color);
+      }
+      printf("%s", sColor);
+    }
     printf("\n");
   }
 }
