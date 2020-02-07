@@ -151,7 +151,9 @@ game game_load(char* filename) {
   free(row);
 
   fclose(file_loaded);
-  return game_new_ext(width, height, cells, nb_moves_max, is_wrap);
+  game g = game_new_ext(width, height, cells, nb_moves_max, is_wrap);
+  free(cells);
+  return g;
 }
 
 void game_save(cgame g, char* name) {
