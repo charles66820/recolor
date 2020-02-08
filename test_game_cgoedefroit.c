@@ -368,7 +368,7 @@ bool test_game_save() {
       "5 4 7 S\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n";
 
   // save the game
-  game_save(g, "data/savetest");
+  game_save(g, "data/savetest.rec");
   game_delete(g);
 
   // open generated file
@@ -499,7 +499,7 @@ bool test_game_save_load() {
   }
 
   // save the new game
-  game_save(g, "data/savetest");
+  game_save(g, "data/savetest.rec");
 
   // load the save file
   game gl = game_load("data/savetest.rec");
@@ -599,7 +599,7 @@ bool test_game_load_save() {
   remove("data/savetest.rec");
 
   // save game in new file
-  game_save(g, "data/savetest");
+  game_save(g, "data/savetest.rec");
   game_delete(g);
 
   // open generated file
