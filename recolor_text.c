@@ -18,7 +18,7 @@ void showCells(game g) {
   for (int y = 0; y < game_height(g); y++) {
     for (int x = 0; x < game_width(g); x++){
       color = game_cell_current_color(g, x, y);
-      if (color < 9) {
+      if (color <= 9) {
         sprintf(sColor, "%d", color);
       } else{
         sprintf(sColor, "%c", 55+color);
@@ -102,8 +102,12 @@ int main(int argc, char *argv[]) {
       printf("Partie enregistré dans le fichier %s.rec!\n", fileName);
       free(fileName);
     } else if (charToInt(choice) >= 0 &&
-               charToInt(choice) < 255) {  // For play shot
+               charToInt(choice) <= 9) {  // For play shot
       game_play_one_move(g, (color)charToInt(choice));
+      printGame(g);
+      printf("\n");
+    } else if (choice >= 65 && choice < 71) {
+      game_play_one_move(g, (color)choice-55);
       printGame(g);
       printf("\n");
     }
