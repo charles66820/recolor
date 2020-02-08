@@ -1,9 +1,9 @@
 #define _GNU_SOURCE
-#include "game.h"
 #include <libgen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "game.h"
 
 /**
  * @brief turn a line of char into an array
@@ -155,37 +155,28 @@ game game_load(char* filename) {
   return g;
 }
 
-void game_save(cgame g, char* name) {
-  if (g == NULL || name == NULL) {
+void game_save(cgame g, char* filename) {
+  if (g == NULL || filename == NULL) {
     printf("At least one of the pointers is invalid\n");
     exit(EXIT_FAILURE);
   }
 
   // Creation of the name of the file
-  uint filenamelen = (uint)strlen(name) + 4;
-  char* filename = malloc(sizeof(char*) * filenamelen);
-  if (filename == NULL) {
-    printf("Not enough memory!\n");
-    exit(EXIT_FAILURE);
-  }
-  strcpy(filename, name);
+  uint filenamelen = (uint)strlen(filename) + 4;
 
   // if file path contain folder
   char* dir = malloc(sizeof(char*) * filenamelen);
   if (dir == NULL) {
     printf("Not enough memory!\n");
-    free(filename);
     exit(EXIT_FAILURE);
   }
   strcpy(dir, filename);
-  strcat(filename, ".rec");
 
   dirname(dir);
-  if (strcmp(".", dir)) {
+  if (strcmp(".", dir) && strcmp(filename, dir)) {
     char* mkcmd = malloc(sizeof(char*) * filenamelen);
     if (mkcmd == NULL) {
       printf("Not enough memory!\n");
-      free(filename);
       free(dir);
       exit(EXIT_FAILURE);
     }
@@ -199,10 +190,8 @@ void game_save(cgame g, char* name) {
   savefile = fopen(filename, "w");
   if (savefile == NULL) {
     printf("The file couldn't be created\n");
-    free(filename);
     exit(EXIT_FAILURE);
   }
-  free(filename);
 
   // Writting of the parameters of the game in the file
   fprintf(savefile, "%u %u %u %c\n", game_width(g), game_height(g),
