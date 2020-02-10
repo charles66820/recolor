@@ -25,8 +25,7 @@ void delete_arr(char** arr, uint arr_s) {
 char** convert_line(char* line, size_t* p_size) {
   char** arr = malloc(*p_size * sizeof(char*));
   if (arr == NULL) {
-    fprintf(stderr,
-            "Error : Not enough memory on the function convert_line.\n");
+    fprintf(stderr, "Error : Not enough memory on the fun convert_line.\n");
     return NULL;
   }
 
@@ -36,8 +35,7 @@ char** convert_line(char* line, size_t* p_size) {
   while (token != NULL) {
     iarr = malloc((strlen(token) + 1) * sizeof(char));
     if (iarr == NULL) {
-      fprintf(stderr,
-              "Error : Not enough memory on the function convert_line.\n");
+      fprintf(stderr, "Error : Not enough memory on the fun convert_line.\n");
       delete_arr(arr, arr_s);
       return NULL;
     }
@@ -53,14 +51,13 @@ char** convert_line(char* line, size_t* p_size) {
 
 game game_load(char* filename) {
   if (filename == NULL) {
-    fprintf(stderr, "Incorrect file in the function game_load.\n");
+    fprintf(stderr, "Incorrect file in the fun game_load.\n");
     return NULL;
   }
 
   FILE* file_loaded = fopen(filename, "r");
   if (file_loaded == NULL) {
-    fprintf(stderr,
-            "Problem when opening file on the function 'game_loaded'.\n");
+    fprintf(stderr, "Problem when opening file on the fun 'game_loaded'.\n");
     return NULL;
   }
 
@@ -108,7 +105,7 @@ game game_load(char* filename) {
   // load cells
   color* cells = malloc(width * height * sizeof(color));
   if (cells == NULL) {
-    fprintf(stderr, "Not enough memory on the function game_load.\n");
+    fprintf(stderr, "Not enough memory on the fun game_load.\n");
     return NULL;
   }
   uint h = 0;
@@ -127,7 +124,7 @@ game game_load(char* filename) {
     }
 
     if (read != width) {
-      fprintf(stderr, "Incorrect cells width in the function game_load.\n");
+      fprintf(stderr, "Incorrect cells width in the fun game_load.\n");
       delete_arr(arr, read);
       free(row);
       free(cells);
@@ -136,7 +133,7 @@ game game_load(char* filename) {
     }
 
     if (h >= height) {
-      fprintf(stderr, "Incorrect cells height in the function game_load.\n");
+      fprintf(stderr, "Incorrect cells height in the fun game_load.\n");
       delete_arr(arr, read);
       free(row);
       free(cells);
