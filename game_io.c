@@ -6,6 +6,17 @@
 #include "game.h"
 
 /**
+ * @brief free the two dimenssional array
+ *
+ * @param arr array will be free
+ * @param arr_s size of array
+ */
+void delete_arr(char** arr, uint arr_s) {
+  for (uint i = 0; i < arr_s; i++) free(arr[i]);
+  free(arr);
+}
+
+/**
  * @brief turn a line of char into an array
  * @param line the already existing line from a file
  * @param p_size the size of the line
@@ -27,8 +38,7 @@ char** convert_line(char* line, size_t* p_size) {
     if (iarr == NULL) {
       fprintf(stderr,
               "Error : Not enough memory on the function convert_line.\n");
-      for (uint i = 0; i < arr_s; i++) free(arr[i]);
-      free(arr);
+      delete_arr(arr, arr_s);
       return NULL;
     }
     strcpy(iarr, token);
@@ -80,8 +90,7 @@ game game_load(char* filename) {
   char wrapping = *arr[3];
 
   // free the array
-  for (uint i = 0; i < read; i++) free(arr[i]);
-  free(arr);
+  delete_arr(arr, read);
   free(row);
   row = NULL;
 
@@ -119,8 +128,7 @@ game game_load(char* filename) {
 
     if (read != width) {
       fprintf(stderr, "Incorrect cells width in the function game_load.\n");
-      for (uint i = 0; i < read; i++) free(arr[i]);
-      free(arr);
+      delete_arr(arr, read);
       free(row);
       free(cells);
       fclose(file_loaded);
@@ -129,8 +137,7 @@ game game_load(char* filename) {
 
     if (h >= height) {
       fprintf(stderr, "Incorrect cells height in the function game_load.\n");
-      for (uint i = 0; i < read; i++) free(arr[i]);
-      free(arr);
+      delete_arr(arr, read);
       free(row);
       free(cells);
       fclose(file_loaded);
@@ -139,9 +146,7 @@ game game_load(char* filename) {
 
     for (uint j = 0; j < read; j++) cells[(h * width) + j] = atoi(arr[j]);
 
-    for (uint i = 0; i < read; i++) free(arr[i]);
-    free(arr);
-
+    delete_arr(arr, read);
     free(row);
     row = NULL;
 
@@ -197,7 +202,7 @@ void game_save(cgame g, char* filename) {
   fprintf(savefile, "%u %u %u %c\n", game_width(g), game_height(g),
           game_nb_moves_max(g), game_is_wrapping(g) ? 'S' : 'N');
   // Writting of the table of the game in the file
-  for (int y = 0; y < game_height(g); y++) {  //
+  for (int y = 0; y < game_height(g); y++) {
     for (int x = 0; x < game_width(g); x++) {
       fprintf(savefile, "%u", game_cell_current_color(g, x, y));
       if (x != game_width(g) - 1) {
