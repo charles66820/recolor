@@ -12,7 +12,7 @@
  * @param arr_s size of array
  */
 void delete_arr(char** arr, uint arr_s) {
-  for (uint i = 0; i < arr_s; i++) free(arr[i]);
+  if (arr != NULL) for (uint i = 0; i < arr_s; i++) free(arr[i]);
   free(arr);
 }
 
@@ -23,19 +23,18 @@ void delete_arr(char** arr, uint arr_s) {
  * @return the array
  **/
 char** convert_line(char* line, size_t* p_size) {
-  char** arr = malloc(*p_size * sizeof(char*));
-  if (arr == NULL) {
-    fprintf(stderr, "Error : Not enough memory on the fun convert_line.\n");
-    return NULL;
-  }
-
   uint arr_s = 0;
+
+  char** arr = malloc(*p_size * sizeof(char*));
+  if (arr == NULL) goto nem;
+
   char* token = strtok(line, " ");
   char* iarr;
   while (token != NULL) {
     iarr = malloc((strlen(token) + 1) * sizeof(char));
     if (iarr == NULL) {
-      fprintf(stderr, "Error : Not enough memory on the fun convert_line.\n");
+      nem: fprintf(stderr,
+                  "Error : Not enough memory on the fun convert_line.\n");
       delete_arr(arr, arr_s);
       return NULL;
     }
