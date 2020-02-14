@@ -2,15 +2,29 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "mkbuild",
+            "type": "shell",
+            "command": "mkdir ${workspaceRoot}/build -p",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
             "label": "cmake",
             "type": "shell",
+            "command": "cmake ${workspaceRoot}",
             "options": {
                 "cwd": "${workspaceRoot}/build"
             },
             "presentation": {
                 "reveal": "silent"
             },
-            "command": "cmake ${workspaceRoot}"
+            "dependsOn": [
+                "mkbuild"
+            ]
         },
         {
             "label": "make",
