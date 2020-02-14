@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "game.h"
 #include "game_io.h"
 
@@ -13,9 +14,18 @@
  * @param g game with cells to print
  */
 void showCells(game g) {
+  color color;
+  char sColor[10] = "";
   for (int y = 0; y < game_height(g); y++) {
-    for (int x = 0; x < game_width(g); x++)
-      printf("%d", game_cell_current_color(g, x, y));
+    for (int x = 0; x < game_width(g); x++) {
+      color = game_cell_current_color(g, x, y);
+      if (color <= 9) {
+        sprintf(sColor, "%d", color);
+      } else {
+        sprintf(sColor, "%c", 55 + color);
+      }
+      printf("%s", sColor);
+    }
     printf("\n");
   }
 }
@@ -38,7 +48,7 @@ void printGame(game g) {
 
 int charToInt(char c) { return c - '0'; }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   // Init game vars
   bool pl = true;
   game g = NULL;
@@ -89,18 +99,24 @@ int main(int argc, char *argv[]) {
       char* fileName = malloc(251);
       printf("Saisiser le nom du fichier où sera enregistré le jeu : ");
       scanf("%s", fileName);
+      strcat(fileName, ".rec");
       game_save(g, fileName);
-      printf("Partie enregistré dans le fichier %s.rec!\n", fileName);
+      printf("Partie enregistré dans le fichier %s!\n", fileName);
       free(fileName);
     } else if (charToInt(choice) >= 0 &&
-               charToInt(choice) < 255) {  // For play shot
+               charToInt(choice) <= 9) {  // For play shot
       game_play_one_move(g, (color)charToInt(choice));
+      printGame(g);
+      printf("\n");
+    } else if (choice >= 65 && choice < 71) {
+      game_play_one_move(g, (color)choice - 55);
       printGame(g);
       printf("\n");
     }
 
     // If the game is lost
-    if (game_nb_moves_cur(g) >= game_nb_moves_max(g) && !game_is_over(g) && pl) {
+    if (game_nb_moves_cur(g) >= game_nb_moves_max(g) && !game_is_over(g) &&
+        pl) {
       printf("DOMMAGE\n");
       pl = false;
     }

@@ -1,10 +1,20 @@
 #define _GNU_SOURCE
-#include "game.h"
 #include <libgen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
+#include "game.h"
+
+/**
+ * @brief free the two dimenssional array
+ *
+ * @param arr array will be free
+ * @param arr_s size of array
+ */
+void delete_arr(char** arr, uint arr_s) {
+  if (arr != NULL) for (uint i = 0; i < arr_s; i++) free(arr[i]);
+  free(arr);
+}
 
 /**
  * @brief turn a line of char into an array
@@ -13,23 +23,19 @@
  * @return the array
  **/
 char** convert_line(char* line, size_t* p_size) {
-  char** arr = malloc(*p_size * sizeof(char*));
-  if (arr == NULL) {
-    fprintf(stderr,
-            "Error : Not enough memory on the function convert_line.\n");
-    return NULL;
-  }
-
   uint arr_s = 0;
+
+  char** arr = malloc(*p_size * sizeof(char*));
+  if (arr == NULL) goto nem;
+
   char* token = strtok(line, " ");
   char* iarr;
   while (token != NULL) {
     iarr = malloc((strlen(token) + 1) * sizeof(char));
     if (iarr == NULL) {
-      fprintf(stderr,
-              "Error : Not enough memory on the function convert_line.\n");
-      for (uint i = 0; i < arr_s; i++) free(arr[i]);
-      free(arr);
+      nem: fprintf(stderr,
+                  "Error : Not enough memory on the fun convert_line.\n");
+      delete_arr(arr, arr_s);
       return NULL;
     }
     strcpy(iarr, token);
@@ -44,14 +50,13 @@ char** convert_line(char* line, size_t* p_size) {
 
 game game_load(char* filename) {
   if (filename == NULL) {
-    fprintf(stderr, "Incorrect file in the function game_load.\n");
+    fprintf(stderr, "Incorrect file in the fun game_load.\n");
     return NULL;
   }
 
   FILE* file_loaded = fopen(filename, "r");
   if (file_loaded == NULL) {
-    fprintf(stderr,
-            "Problem when opening file on the function 'game_loaded'.\n");
+    fprintf(stderr, "Problem when opening file on the fun 'game_loaded'.\n");
     return NULL;
   }
 
@@ -81,8 +86,7 @@ game game_load(char* filename) {
   char wrapping = *arr[3];
 
   // free the array
-  for (uint i = 0; i < read; i++) free(arr[i]);
-  free(arr);
+  delete_arr(arr, read);
   free(row);
   row = NULL;
 
@@ -100,7 +104,7 @@ game game_load(char* filename) {
   // load cells
   color* cells = malloc(width * height * sizeof(color));
   if (cells == NULL) {
-    fprintf(stderr, "Not enough memory on the function game_load.\n");
+    fprintf(stderr, "Not enough memory on the fun game_load.\n");
     return NULL;
   }
   uint h = 0;
@@ -119,9 +123,8 @@ game game_load(char* filename) {
     }
 
     if (read != width) {
-      fprintf(stderr, "Incorrect cells width in the function game_load.\n");
-      for (uint i = 0; i < read; i++) free(arr[i]);
-      free(arr);
+      fprintf(stderr, "Incorrect cells width in the fun game_load.\n");
+      delete_arr(arr, read);
       free(row);
       free(cells);
       fclose(file_loaded);
@@ -129,9 +132,8 @@ game game_load(char* filename) {
     }
 
     if (h >= height) {
-      fprintf(stderr, "Incorrect cells height in the function game_load.\n");
-      for (uint i = 0; i < read; i++) free(arr[i]);
-      free(arr);
+      fprintf(stderr, "Incorrect cells height in the fun game_load.\n");
+      delete_arr(arr, read);
       free(row);
       free(cells);
       fclose(file_loaded);
@@ -140,9 +142,7 @@ game game_load(char* filename) {
 
     for (uint j = 0; j < read; j++) cells[(h * width) + j] = atoi(arr[j]);
 
-    for (uint i = 0; i < read; i++) free(arr[i]);
-    free(arr);
-
+    delete_arr(arr, read);
     free(row);
     row = NULL;
 
@@ -156,37 +156,28 @@ game game_load(char* filename) {
   return g;
 }
 
-void game_save(cgame g, char* name) {
-  if (g == NULL || name == NULL) {
+void game_save(cgame g, char* filename) {
+  if (g == NULL || filename == NULL) {
     printf("At least one of the pointers is invalid\n");
     exit(EXIT_FAILURE);
   }
 
   // Creation of the name of the file
-  uint filenamelen = (uint)strlen(name) + 4;
-  char* filename = malloc(sizeof(char*) * filenamelen);
-  if (filename == NULL) {
-    printf("Not enough memory!\n");
-    exit(EXIT_FAILURE);
-  }
-  strcpy(filename, name);
+  uint filenamelen = (uint)strlen(filename) + 4;
 
   // if file path contain folder
   char* dir = malloc(sizeof(char*) * filenamelen);
   if (dir == NULL) {
     printf("Not enough memory!\n");
-    free(filename);
     exit(EXIT_FAILURE);
   }
   strcpy(dir, filename);
-  strcat(filename, ".rec");
 
   dirname(dir);
-  if (strcmp(".", dir)) {
+  if (strcmp(".", dir) && strcmp(filename, dir)) {
     char* mkcmd = malloc(sizeof(char*) * filenamelen);
     if (mkcmd == NULL) {
       printf("Not enough memory!\n");
-      free(filename);
       free(dir);
       exit(EXIT_FAILURE);
     }
@@ -200,16 +191,14 @@ void game_save(cgame g, char* name) {
   savefile = fopen(filename, "w");
   if (savefile == NULL) {
     printf("The file couldn't be created\n");
-    free(filename);
     exit(EXIT_FAILURE);
   }
-  free(filename);
 
   // Writting of the parameters of the game in the file
   fprintf(savefile, "%u %u %u %c\n", game_width(g), game_height(g),
           game_nb_moves_max(g), game_is_wrapping(g) ? 'S' : 'N');
   // Writting of the table of the game in the file
-  for (int y = 0; y < game_height(g); y++) {  //
+  for (int y = 0; y < game_height(g); y++) {
     for (int x = 0; x < game_width(g); x++) {
       fprintf(savefile, "%u", game_cell_current_color(g, x, y));
       if (x != game_width(g) - 1) {

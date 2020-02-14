@@ -368,7 +368,7 @@ bool test_game_save() {
       "5 4 7 S\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n";
 
   // save the game
-  game_save(g, "data/savetest");
+  game_save(g, "data/savetest.rec");
   game_delete(g);
 
   // open generated file
@@ -478,6 +478,73 @@ bool test_game_load() {
     }
 
   game_delete(g);
+
+  // test with bad file : bad is_swap
+
+  // open new file for test
+  file = fopen("data/savetest.rec", "w");
+  if (file == NULL) {
+    printf("The test file couldn't be create!\n");
+    return false;
+  }
+
+  // fill test file with bad is_swap
+  fprintf(file, "5 4 17 V\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n");
+  fclose(file);
+
+  // load file
+  g = game_load("data/savetest.rec");
+  if (g != NULL) {
+    printf("The game has load when can not be!\n");
+    remove("data/savetest.rec");
+    game_delete(g);
+    return false;
+  }
+
+  // test with bad file : bad width
+
+  // open new file for test
+  file = fopen("data/savetest.rec", "w");
+  if (file == NULL) {
+    printf("The test file couldn't be create!\n");
+    return false;
+  }
+
+  // fill test file with bad width
+  fprintf(file, "5 4 17 N\n0 0 0 2 0\n2 1 0 1 0 8\n3 0 0 3\n1 1 1 1 3 5\n");
+  fclose(file);
+
+  // load file
+  g = game_load("data/savetest.rec");
+  if (g != NULL) {
+    printf("The game has load when can not be!\n");
+    remove("data/savetest.rec");
+    game_delete(g);
+    return false;
+  }
+
+  // test with bad file : bad hight
+
+  // open new file for test
+  file = fopen("data/savetest.rec", "w");
+  if (file == NULL) {
+    printf("The test file couldn't be create!\n");
+    return false;
+  }
+
+  // fill test file with bad height
+  fprintf(file,
+          "5 4 17 N\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n1 1 1 1 3\n");
+  fclose(file);
+
+  // load file
+  g = game_load("data/savetest.rec");
+  if (g != NULL) {
+    printf("The game has load when can not be!\n");
+    remove("data/savetest.rec");
+    game_delete(g);
+    return false;
+  }
   return true;
 }
 
@@ -499,7 +566,7 @@ bool test_game_save_load() {
   }
 
   // save the new game
-  game_save(g, "data/savetest");
+  game_save(g, "data/savetest.rec");
 
   // load the save file
   game gl = game_load("data/savetest.rec");
@@ -599,7 +666,7 @@ bool test_game_load_save() {
   remove("data/savetest.rec");
 
   // save game in new file
-  game_save(g, "data/savetest");
+  game_save(g, "data/savetest.rec");
   game_delete(g);
 
   // open generated file
