@@ -45,6 +45,7 @@ add_executable (test_game_vandrault test_game_vandrault.c)
 target_link_libraries (test_game_vandrault game)
 
 add_executable(recolor_solve recolor_solve.c)
+target_link_libraries (recolor_solve pthread game)
 
 # Those line launch the test to find the bug
 add_test(test_vandrault_new generated/test_game_vandrault new)
