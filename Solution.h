@@ -31,3 +31,5 @@ void nb_sol(cgame g);
  * @param g game with cells to print
  */
 void find_min(cgame g);
+
+#endif // __SOLUTION_H__
