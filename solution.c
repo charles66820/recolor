@@ -7,7 +7,7 @@
 struct solution_s{
     color* tab;
     uint tab_len;
-}solution;
+};
 
 
 
