@@ -36,13 +36,13 @@ int main(int* argc, int* argv[]){
     }
 
     solution retsol = NULL;
-    
+    game g = game_load(argv[1]);
     if (!strcmp(argv[1], "FIND_ONE"))
-      retsol = find_one();
+      retsol = find_one(g);
     else if (!strcmp(argv[1], "NB_SOL"))
-      retsol = nb_sol();
+      retsol = nb_sol(g);
     else if (!strcmp(argv[1], "FIND_MIN"))
-      retsol = find_min();
+      retsol = find_min(g);
     else{
       fprintf(stderr, "Error:  \"%s\" doesn't exist!\n", argv[1]);
       exit(EXIT_FAILURE);
