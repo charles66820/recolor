@@ -24,6 +24,7 @@ solution find_one(game g){
  * @param g game with cells to print
  */
 uint nb_sol(game g){
+  return 0;
 }
 
 /**
@@ -32,6 +33,7 @@ uint nb_sol(game g){
  * @param g game with cells to print
  */
 solution find_min(game g){
+  return NULL;
 }
 
 int main(int* argc, int* argv[]){
