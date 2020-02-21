@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
   }
 
   solution retsol = NULL;
-  game g = game_load(argv[1]);
+  game g = game_load(argv[2]);
   if (!strcmp(argv[1], "FIND_ONE"))
     retsol = find_one(g);
   else if (!strcmp(argv[1], "NB_SOL"))
