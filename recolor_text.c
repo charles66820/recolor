@@ -20,7 +20,7 @@ void showCells(game g) {
     for (int x = 0; x < game_width(g); x++) {
       color = game_cell_current_color(g, x, y);
       if (color <= 9) {
-        sprintf(sColor, "%d", color);
+        sprintf(sColor, "%u", color);
       } else {
         sprintf(sColor, "%c", 55 + color);
       }
@@ -36,7 +36,7 @@ void showCells(game g) {
  * @param g game to print
  */
 void printGame(game g) {
-  printf("nb coups joués: %d ; nb coups max : %d\n", game_nb_moves_cur(g),
+  printf("nb coups joués: %u ; nb coups max : %u\n", game_nb_moves_cur(g),
          game_nb_moves_max(g));
 
   showCells(g);  // print cells
