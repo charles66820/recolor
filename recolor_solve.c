@@ -29,10 +29,11 @@ uint nb_color(game g) {
  * @brief find one possible solution and store it in the struct solution
  *
  * @param g game with cells to print
+ * @return solution a struct with the solution or the msg "NO SOLUTION"
  */
 solution find_one(game g) {
   uint* nb_col = nb_color(g);
-  uint nb_move= game_nb_moves_cur(g)-game_nb_moves_max(g);
+  uint nb_move = game_nb_moves_cur(g) - game_nb_moves_max(g);
   return NULL;
 }
 
