@@ -380,14 +380,8 @@ bool test_game_save() {
     return false;
   }
 
-  char* filecontent = malloc(sizeof(char) * strlen(validfilecontent));
-  if (filecontent == NULL) {
-    printf("Not enough memory!\n");
-    fclose(file);
-    remove("data/savetest.rec");
-    return false;
-  }
-  fscanf(file, "%255c", filecontent);  // load file content
+  char filecontent[49];
+  fscanf(file, "%49c", filecontent);  // load file content
 
   // close and remove file
   fclose(file);
@@ -396,10 +390,8 @@ bool test_game_save() {
   // compare generate file content with valid file content
   if (strcmp(filecontent, validfilecontent)) {
     fprintf(stderr, "Error: the game is not saved correctly in the file!\n");
-    if (!filecontent) free(filecontent);
     return false;
   }
-  if (!filecontent) free(filecontent);
 
   return true;
 }
@@ -670,7 +662,7 @@ bool test_game_load_save() {
   game_delete(g);
 
   // open generated file
-  file = NULL;
+  // file = NULL;
   file = fopen("data/savetest.rec", "r");
   if (file == NULL) {
     printf("The file couldn't be open!\n");
@@ -678,14 +670,8 @@ bool test_game_load_save() {
     return false;
   }
 
-  char *filecontent = malloc(sizeof(char) * strlen(validfilecontent));
-  if (filecontent == NULL) {
-    printf("Not enough memory!\n");
-    fclose(file);
-    remove("data/savetest.rec");
-    return false;
-  }
-  fscanf(file, "%255c", filecontent);  // load file content
+  char filecontent[49];
+  fscanf(file, "%49c", filecontent);  // load file content
 
   // close and remove file
   fclose(file);
@@ -694,10 +680,8 @@ bool test_game_load_save() {
   // compare generate file content with valid default file content
   if (strcmp(filecontent, validfilecontent)) {
     fprintf(stderr, "Error: the game is not correctly load or save!\n");
-    if (!filecontent) free(filecontent);
     return false;
   }
-  if (!filecontent) free(filecontent);
 
   return true;
 }
@@ -725,7 +709,7 @@ int main(int argc, char const *argv[]) {
     else if (!strcmp(argv[1], "restart"))
       ok = test_game_restart();
     else if (!strcmp(argv[1], "new_ext"))
-      ok = test_game_restart();
+      ok = test_game_new_ext();
     else if (!strcmp(argv[1], "save"))
       ok = test_game_save();
     else if (!strcmp(argv[1], "load"))

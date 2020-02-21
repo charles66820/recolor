@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "game.h"
-#include "solution.c"
+#include "solution.h"
 
 uint nb_color(game g) {
   uint* tab = (uint*)malloc(16 * sizeof(uint));
