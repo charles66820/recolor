@@ -14,7 +14,7 @@ uint nb_color (game g){
  * @param g game with cells to print
  */
 solution find_one(game g){
-  uint nb_col = 
+  uint nb_col = 0;
     return NULL;
 }
 
