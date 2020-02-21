@@ -158,7 +158,7 @@ bool test_game_new() {
     for (uint i = 0; i < game_height(g1) * game_width(g1); i += 1)
       if (game_cell_current_color(g1, i % 12, i / 12) != cellst[j][i]) {
         fprintf(stderr,
-                "Error on play %d moves game cells are not equal to cells%d.\n",
+                "Error on play %u moves game cells are not equal to cells%u.\n",
                 j, j);
         game_delete(g1);
         return false;
@@ -251,8 +251,8 @@ bool test_game_new() {
     for (uint i = 0; i < game_height(g1) * game_width(g1); i += 1)
       if (game_cell_current_color(g1, i % 12, i / 12) != cellstw[j][i]) {
         fprintf(stderr,
-                "Error on play %d moves game wrapping cells are not equal to "
-                "cells%d.\n",
+                "Error on play %u moves game wrapping cells are not equal to "
+                "cells%u.\n",
                 j, j);
         game_delete(g1);
         return false;
