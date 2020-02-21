@@ -6,12 +6,13 @@ option(ENABLE_DEBUG "debug options" ON)
 # The project name followed by the programming language use
 project (recolor_text C)
 
-# for the compilation, -std=c99 to compile under the standard c99, -g for the debuggage, -Wall to show compilation bug, --coverage to check if all the test go in all the code
-if(ENABLE_DEBUG)
-    set(CMAKE_C_FLAGS "-g -Wall -std=c99 --coverage") # mode debug
-else()
-    set(CMAKE_C_FLAGS "-O3 -std=c99") # mode -03 to optimise the compilation
-endif()
+
+# Compile all the files without any particular specification
+set(CMAKE_C_FLAGS "std=c99 -Wall")
+# Compile all the files in a DEBUG mode (add debug and coverage)
+set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG --coverage")
+# Compile all the file on the release mode (optimise version of the compilation faster than the normal version)
+set(CMAKE_C_FLAGS_RELEASE "-03")
 
 # for generate bin and lib files in generated folder
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "generated")
