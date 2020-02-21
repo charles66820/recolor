@@ -322,7 +322,7 @@ bool test_game_new_ext() {
   }
 
   // check if game nb current moves is correctly define
-  if (!game_nb_moves_cur(g)) {
+  if (game_nb_moves_cur(g) != 0) {
     fprintf(stderr,
             "Error: new game nb current moves is not correctly define!\n");
     game_delete(g);
@@ -340,9 +340,9 @@ bool test_game_new_ext() {
         return false;
       }
 
-  for (uint y = 0; y < 8; y++)
-    for (uint x = 0; x < 4; x++)
-      if (game_cell_current_color(gw, x, y) != cellsw[x + 4 * y]) {
+  for (uint y = 0; y < 7; y++)
+    for (uint x = 0; x < 5; x++)
+      if (game_cell_current_color(gw, x, y) != cellsw[x + 5 * y]) {
         fprintf(stderr, "Error: cells of new game is not correctly define!\n");
         game_delete(g);
         game_delete(gw);
@@ -382,6 +382,7 @@ bool test_game_save() {
 
   char filecontent[49];
   fscanf(file, "%49c", filecontent);  // load file content
+  filecontent[48] = '\0';
 
   // close and remove file
   fclose(file);
@@ -672,6 +673,7 @@ bool test_game_load_save() {
 
   char filecontent[49];
   fscanf(file, "%49c", filecontent);  // load file content
+  filecontent[48] = '\0';
 
   // close and remove file
   fclose(file);

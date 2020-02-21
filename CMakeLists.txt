@@ -6,7 +6,6 @@ option(ENABLE_DEBUG "debug options" ON)
 # The project name followed by the programming language use
 project (recolor_text C)
 
-
 # Compile all the files without any particular specification
 set(CMAKE_C_FLAGS "-std=c99 -Wall")
 # Compile all the files in a DEBUG mode (add debug and coverage)
