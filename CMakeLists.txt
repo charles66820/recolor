@@ -11,7 +11,7 @@ set(CMAKE_C_FLAGS "-std=c99 -Wall")
 # Compile all the files in a DEBUG mode (add debug and coverage)
 set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG --coverage")
 # Compile all the file on the release mode (optimise version of the compilation faster than the normal version)
-set(CMAKE_C_FLAGS_RELEASE "-03")
+set(CMAKE_C_FLAGS_RELEASE "-O3")
 
 # for generate bin and lib files in generated folder
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "generated")
