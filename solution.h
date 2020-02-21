@@ -3,15 +3,45 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef unsigned int uint;
+
 /**
- * @brief The structure pointer that stores the solution. it willbe useful to
- *transfer those data in a file.
+ * @brief The structure pointer that stores the solution. it will be useful to
+ * transfer those data in a file.
  **/
-typedef struct solution_s *solution;
+typedef struct solution_s* solution;
 
+/**
+ * @brief use to have the length of the solution
+ *
+ * @param sol a struct solution
+ * @return uint the length of the solution
+ */
+uint solution_len(solution sol);
 
-sollen
-solstring
-solcreate
+/**
+ * @brief use to have the array of char of the solution
+ *
+ * @param sol a struct solution
+ * @return char* the array of char of the solution
+ */
+char* solution_string(solution sol);
 
-#endif // __SOLUTION_H__
+/**
+ * @brief Create a solution object
+ *
+ * @param tab an array of uint
+ * @param length a uint that is the soze of the arr
+ * @return solution a struct with tab and length
+ */
+solution create_solution(uint* tab, uint length);
+
+/**
+ * @brief free the solution
+ *
+ * @param sol the solution to be free
+ */
+void delete_solution(solution sol);
+
+#endif  // __SOLUTION_H__
