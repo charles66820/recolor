@@ -9,7 +9,7 @@
  *
  * @param g game with cells to print
  */
-solution find_one(){
+solution find_one(game g){
     return NULL;
 }
 
@@ -18,7 +18,7 @@ solution find_one(){
  *
  * @param g game with cells to print
  */
-uint nb_sol(){
+uint nb_sol(game g){
 }
 
 /**
@@ -26,7 +26,7 @@ uint nb_sol(){
  *
  * @param g game with cells to print
  */
-solution find_min(){
+solution find_min(game g){
 }
 
 int main(int* argc, int* argv[]){
