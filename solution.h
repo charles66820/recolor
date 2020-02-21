@@ -18,7 +18,7 @@ typedef struct solution_s* solution;
  * @param sol a struct solution
  * @return uint the length of the solution
  */
-uint solution_len(solution sol);
+uint len_solution(solution sol);
 
 /**
  * @brief use to have the array of char of the solution
@@ -26,7 +26,7 @@ uint solution_len(solution sol);
  * @param sol a struct solution
  * @return char* the array of char of the solution
  */
-char* solution_string(solution sol);
+char* string_solution(solution sol);
 
 /**
  * @brief Create a solution object
