@@ -5,7 +5,24 @@
 #include "solution.c"
 
 uint nb_color (game g){
-  return 0;
+  uint *tab = (uint*) malloc(16*sizeof(uint));
+  if(tab==NULL){
+    exit(EXIT_FAILURE);
+  }
+  uint cpt = 1;
+  for(int i=0; i<game_height(g)*game_width(g); i++){
+    bool exist = false;
+    for (int y=0 ; y<cpt ; y++){
+      if (tab[y] == game_cell_current_color(g, i % 12, i / 12)){
+        exist = true;
+      }
+    }
+    if (exist == false){
+      tab[cpt] = game_cell_current_color(g, i % 12, i / 12);
+      cpt ++;
+    }
+  }
+  return tab;
 }
 
 /**
@@ -14,7 +31,7 @@ uint nb_color (game g){
  * @param g game with cells to print
  */
 solution find_one(game g){
-  uint nb_col = 0;
+  uint *nb_col= nb_color(g);
     return NULL;
 }
 
