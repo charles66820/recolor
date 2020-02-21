@@ -20,7 +20,7 @@ struct game_s {
  * @param p pointer will be check
  * @param msg message will print if pointer is null
  */
-void check_pointer(const void* p, char *msg) {
+static void check_pointer(const void* p, char *msg) {
   if (p == NULL) {
     if (msg == NULL) fprintf(stderr, "Null pointer error.\n");
     else fprintf(stderr, "%s\n", msg);

@@ -8,6 +8,12 @@ struct solution_s {
   uint tab_len;
 };
 
+/**
+ * @brief Check if pointer is null
+ *
+ * @param p pointer will be check
+ * @param msg message will print if pointer is null
+ */
 void check_pointer(const void* p, char* msg) {
   if (p == NULL) {
     if (msg == NULL)
