@@ -74,6 +74,23 @@
         "ignoreFailures": true
       }],
       "preLaunchTask": "build"
+    }, {
+      "name": "(gdb) Launch test_solution_arblondeau",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/generated/test_solution_arblondeau",
+      "args": [],
+      "stopAtEntry": true,
+      "cwd": "${workspaceFolder}/build",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [{
+        "description": "enable Pretty printing mode for gdb",
+        "text": "-enable-pretty-printing",
+        "ignoreFailures": true
+      }],
+      "preLaunchTask": "build"
     }
   ]
 }
