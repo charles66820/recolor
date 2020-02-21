@@ -8,7 +8,7 @@ project (recolor_text C)
 
 
 # Compile all the files without any particular specification
-set(CMAKE_C_FLAGS "std=c99 -Wall")
+set(CMAKE_C_FLAGS "-std=c99 -Wall")
 # Compile all the files in a DEBUG mode (add debug and coverage)
 set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG --coverage")
 # Compile all the file on the release mode (optimise version of the compilation faster than the normal version)
