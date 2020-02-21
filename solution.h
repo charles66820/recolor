@@ -21,7 +21,7 @@ typedef struct solution_s* solution;
 uint len_solution(solution sol);
 
 /**
- * @brief use to have the array of char of the solution
+ * @brief take the arr of int of the sol and turn it into an arr of char
  *
  * @param sol a struct solution
  * @return char* the array of char of the solution

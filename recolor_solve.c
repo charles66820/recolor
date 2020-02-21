@@ -32,9 +32,16 @@ uint nb_color(game g) {
  * @return solution a struct with the solution or the msg "NO SOLUTION"
  */
 solution find_one(game g) {
+  return NULL;
+  /*bool is_sol = false;  // if true, return the sol for the file, if false
+  return
+                        // an arr of char (it contain "NO SOLUTION\n") for the
+                        // file
   uint* nb_col = nb_color(g);
   uint nb_move = game_nb_moves_cur(g) - game_nb_moves_max(g);
-  return NULL;
+
+  solution sol = create_solution();
+  return sol;*/
 }
 
 /**
