@@ -201,19 +201,6 @@ bool game_is_wrapping(cgame game){
   return game->wrapping;
 }
 
-/**
- * @brief set the wrapping parameter of the game
- * @param game the game
- * @param new_wrap the new wrapping parameter of game
- * @pre @p g != NULL
- **/
-void game_set_wrapping (game game, bool new_wrap){
-  check_pointer(game,
-                "g parameter on the function game_set_wrapping is null.\n");
-
-  game->wrapping = new_wrap;
-}
-
 game game_new_ext(uint width, uint height, color *cells, uint nb_moves_max,
                   bool wrapping) {
   check_pointer(cells,
