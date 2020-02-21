@@ -1,4 +1,3 @@
-#include "game.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,4 +10,7 @@ struct solution_s{
 
 
 
-solution find_one()
+
+
+
+
