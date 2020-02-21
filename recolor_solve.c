@@ -4,12 +4,17 @@
 #include <string.h>
 #include "solution.c"
 
+uint nb_color (game g){
+  return 0;
+}
+
 /**
  * @brief find one possible solution and store it in the struct solution
  *
  * @param g game with cells to print
  */
 solution find_one(game g){
+  uint nb_col = 
     return NULL;
 }
 
