@@ -187,7 +187,7 @@ void game_save(cgame g, char* filename) {
   }
   free(dir);
 
-  FILE* savefile = NULL;
+  FILE* savefile;
   savefile = fopen(filename, "w");
   if (savefile == NULL) {
     printf("The file couldn't be created\n");

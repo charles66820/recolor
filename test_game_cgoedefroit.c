@@ -372,7 +372,7 @@ bool test_game_save() {
   game_delete(g);
 
   // open generated file
-  FILE *file = NULL;
+  FILE *file;
   file = fopen("data/savetest.rec", "r");
   if (file == NULL) {
     printf("The test file couldn't be open!\n");
@@ -407,7 +407,7 @@ bool test_game_load() {
   system("mkdir -p data");
 
   // open new file for test
-  FILE *file = NULL;
+  FILE *file;
   file = fopen("data/savetest.rec", "w");
   if (file == NULL) {
     printf("The test file couldn't be create!\n");
@@ -639,7 +639,7 @@ bool test_game_load_save() {
   char validfilecontent[] =
       "5 4 7 N\n0 0 0 2 0\n2 1 0 1 0\n3 0 0 3 3\n1 1 1 1 3\n";
 
-  FILE *file = NULL;
+  FILE *file;
   file = fopen("data/savetest.rec", "w");
   if (file == NULL) {
     printf("The test file couldn't be create!\n");
