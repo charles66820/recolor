@@ -30,6 +30,8 @@ enable_testing()
 add_library (game game.c game_io.c)
 target_link_libraries(game m)
 
+add_library (sol solution.c)
+
 # executable of the game
 add_executable (recolor_text recolor_text.c)
 target_link_libraries (recolor_text game)
@@ -45,7 +47,7 @@ add_executable (test_game_vandrault test_game_vandrault.c)
 target_link_libraries (test_game_vandrault game)
 
 add_executable(recolor_solve recolor_solve.c)
-target_link_libraries (recolor_solve pthread game)
+target_link_libraries (recolor_solve pthread game sol)
 
 # Those line launch the test to find the bug
 add_test(test_vandrault_new generated/test_game_vandrault new)

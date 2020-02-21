@@ -28,13 +28,13 @@ char int_to_char(int x) { return x + '0'; }
 
 char* string_solution(solution sol) {
   check_pointer(sol, "sol parameter on the function string_solution is null.");
-  char* string;
-  for (uint i = 0; i < sol->tab_len; i++) {
+  char* string = malloc(sizeof(char) * sol->tab_len * 2);
+  for (uint i = 0; i < sol->tab_len*2; i += 2) {
     if (int_to_char(sol->tab[i]) >= 0 && int_to_char(sol->tab[i]) <= 9) {
-      string[i] = int_to_char(sol->tab[i])
+      string[i] = int_to_char(sol->tab[i]);
     } else if (int_to_char(sol->tab[i]) >= 10 &&
                int_to_char(sol->tab[i]) < 16) {
-      string[i] = (char)(sol->tab[i] + 55)
+      string[i] = (char)(sol->tab[i] + 55);
     }
   }
   return string;
@@ -51,13 +51,8 @@ solution create_solution(uint* tab, uint length) {
 void delete_solution(solution sol) {
   if (sol != NULL) {
     if (sol->tab != NULL) {
-      for (uint i = 0; i < sol->tab_len; i++) {
-        free(sol->tab[i]);
-      }
       free(sol->tab);
     }
-    if (sol->tab_len != NULL) {
-      free(sol->tab_len);
-    }
+    free(sol);
   }
 }

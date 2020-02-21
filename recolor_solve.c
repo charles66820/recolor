@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "game.h"
+#include "game_io.h"
 #include "solution.h"
 
 uint nb_color(game g) {
@@ -22,7 +23,7 @@ uint nb_color(game g) {
       cpt++;
     }
   }
-  return tab;
+  return tab == NULL? 0 : 1;
 }
 
 /**
@@ -58,7 +59,7 @@ uint nb_sol(game g) { return 0; }
  */
 solution find_min(game g) { return NULL; }
 
-int main(int* argc, int* argv[]) {
+int main(int argc, char* argv[]) {
   if (argc != 4) {
     fprintf(stderr, "Error: invalid arguments");
     exit(EXIT_FAILURE);
@@ -69,7 +70,7 @@ int main(int* argc, int* argv[]) {
   if (!strcmp(argv[1], "FIND_ONE"))
     retsol = find_one(g);
   else if (!strcmp(argv[1], "NB_SOL"))
-    retsol = nb_sol(g);
+    printf("nb sul if : %u\n", nb_sol(g));
   else if (!strcmp(argv[1], "FIND_MIN"))
     retsol = find_min(g);
   else {
@@ -78,4 +79,7 @@ int main(int* argc, int* argv[]) {
   }
 
   // on test si retsol est null sinon on écrit dans le fichier
+  if (retsol != NULL) printf("la solution est : %s", string_solution(retsol));
+
+  return EXIT_SUCCESS;
 }
