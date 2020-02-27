@@ -37,10 +37,10 @@ char* string_solution(solution sol) {
   char* string = malloc(sizeof(char) * sol->tab_len * 2);
 
   uint j = 0;
-  for (uint i = 0; i < sol->tab_len-1; i++) {
+  for (uint i = 0; i < sol->tab_len - 1; i++) {
     if (sol->tab[i] >= 0 && sol->tab[i] <= 9) {
       string[j] = int_to_char(sol->tab[i]);
-      if (i < sol->tab_len-2) string[j + 1] = ' ';
+      if (i < sol->tab_len - 2) string[j + 1] = ' ';
     } else if (sol->tab[i] >= 10 && sol->tab[i] < 16) {
       string[j] = (char)(sol->tab[i] + 55);
       if (i < sol->tab_len - 2) string[j + 1] = ' ';
@@ -54,7 +54,7 @@ solution* create_solution(uint* tab, uint length) {
   solution* sol = malloc(sizeof(struct solution_s));
   check_pointer(sol, "sol parameter on the function create_solution is null.");
   (*sol)->tab = tab;
-  (*sol)ss->tab_len = length;
+  (*sol)->tab_len = length;
   return sol;
 }
 
