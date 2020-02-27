@@ -41,7 +41,7 @@ nb_color_struct* nb_color(game g) {
   return col_tab;
 }
 
-solution* uint_to_tab_sol(uint k, uint n, uint base, uint tab[]) {
+solution uint_to_tab_sol(uint k, uint n, uint base, uint tab[]) {
   uint x[k];
   for (int i = k - 1; i != -1; i--) {
     if (n / (base ^ i) > 0) {
@@ -55,8 +55,8 @@ solution* uint_to_tab_sol(uint k, uint n, uint base, uint tab[]) {
 }
 
 // This fonction test all the possibles solutions
-solution** all_possibilities(uint tab[], uint nb_color, uint size_sol) {
-  solution** solutions = malloc(sizeof(solutions) * nb_color ^ size_sol);
+solution* all_possibilities(uint tab[], uint nb_color, uint size_sol) {
+  solution* solutions = malloc(sizeof(solutions) * nb_color ^ size_sol);
   for (int i = 0; i < (nb_color ^ size_sol);
        i++) {  // we try all the possibilities
     solutions[i] = uint_to_tab_sol(size_sol, i, nb_color, tab);

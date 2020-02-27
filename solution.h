@@ -35,7 +35,7 @@ char* string_solution(solution sol);
  * @param length a uint that is the soze of the arr
  * @return solution a struct with tab and length
  */
-solution* create_solution(uint* tab, uint length);
+solution create_solution(uint* tab, uint length);
 
 /**
  * @brief free the solution

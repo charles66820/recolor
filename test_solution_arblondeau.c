@@ -60,7 +60,7 @@ bool test_delete_solution() {
   return true;
 }
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const* argv[]) {
   bool ok = false;
 
   if (argc == 1) {
