@@ -46,11 +46,11 @@ char* string_solution(solution sol) {
   return string;
 }
 
-solution create_solution(uint* tab, uint length) {
-  solution sol = malloc(sizeof(struct solution_s));
+solution* create_solution(uint* tab, uint length) {
+  solution* sol = malloc(sizeof(struct solution_s));
   check_pointer(sol, "sol parameter on the function create_solution is null.");
-  sol->tab = tab;
-  sol->tab_len = length;
+  (*sol)->tab = tab;
+  (*sol)ss->tab_len = length;
   return sol;
 }
 
