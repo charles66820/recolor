@@ -11,15 +11,15 @@ uint nb_color(game g) {
     exit(EXIT_FAILURE);
   }
   uint cpt = 1;
-  for (int i = 0; i < game_height(g) * game_width(g); i++) {
+  for (int i = 0; i < game_height(g) * game_width(g); i++) { //i go through all the tab
     bool exist = false;
     for (int y = 0; y < cpt; y++) {
-      if (tab[y] == game_cell_current_color(g, i % 12, i / 12)) {
+      if (tab[y] == game_cell_current_color(g, i % 12, i / 12)) { // if the color is already in the tab, we don't add it
         exist = true;
       }
     }
     if (exist == false) {
-      tab[cpt] = game_cell_current_color(g, i % 12, i / 12);
+      tab[cpt] = game_cell_current_color(g, i % 12, i / 12); // if the color isn't in the tab, we add it  and we increment the cpt
       cpt++;
     }
   }
@@ -33,16 +33,19 @@ uint nb_color(game g) {
  * @return solution a struct with the solution or the msg "NO SOLUTION"
  */
 solution find_one(game g) {
+  uint* nb_col = nb_color(g);
+  uint nb_move = game_nb_moves_max(g);
   return NULL;
-  /*bool is_sol = false;  // if true, return the sol for the file, if false
+  /* for (uint i=0, i <= )
+  bool is_sol = false;  // if true, return the sol for the file, if false
   return
                         // an arr of char (it contain "NO SOLUTION\n") for the
                         // file
   uint* nb_col = nb_color(g);
-  uint nb_move = game_nb_moves_cur(g) - game_nb_moves_max(g);
+  
 
   solution sol = create_solution();
-  return sol;*/
+  return sol; */
 }
 
 /**
