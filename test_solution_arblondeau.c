@@ -7,60 +7,60 @@
 bool test_create_solution() {
   uint tab[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
   uint length = 16;
-  solution sol = create_solution(tab, length);
+  solution* sol = create_solution(tab, length);
   if (sol == NULL) {
     fprintf(stderr, "Error : invalid solution.\n");
     return false;
   }
-  delete_solution(sol);
+  delete_solution(*sol);
   return true;
 }
 
 bool test_len_solution() {
   uint tab[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
   uint length = 16;
-  solution sol = create_solution(tab, length);
+  solution* sol = create_solution(tab, length);
   if (sol == NULL) {
     fprintf(stderr, "Error : invalid solution.\n");
     return false;
   }
-  if (len_solution(sol) != length) {
+  if (len_solution(*sol) != length) {
     fprintf(stderr, "Error : invalid length for solution.\n");
     return false;
   }
-  delete_solution(sol);
+  delete_solution(*sol);
   return true;
 }
 
 bool test_string_solution() {
   uint tab[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
   uint length = 16;
-  solution sol = create_solution(tab, length);
+  solution* sol = create_solution(tab, length);
   if (sol == NULL) {
     fprintf(stderr, "Error : invalid solution.\n");
     return false;
   }
-  if (strcmp(string_solution(sol), "1 2 3 4 5 6 7 8 9 A B C D E F")) {
+  if (strcmp(string_solution(*sol), "1 2 3 4 5 6 7 8 9 A B C D E F")) {
     fprintf(stderr, "Error : invalid string for solution.\n");
     return false;
   }
-  delete_solution(sol);
+  delete_solution(*sol);
   return true;
 }
 
 bool test_delete_solution() {
   uint tab[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
   uint length = 16;
-  solution sol = create_solution(tab, length);
+  solution* sol = create_solution(tab, length);
   if (sol == NULL) {
     fprintf(stderr, "Error : invalid solution.\n");
     return false;
   }
-  delete_solution(sol);
+  delete_solution(*sol);
   return true;
 }
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const* argv[]) {
   bool ok = false;
 
   if (argc == 1) {
