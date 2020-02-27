@@ -74,7 +74,7 @@ solution* all_possibilities(uint tab[], uint nb_color, uint size_sol) {
 solution find_one(game g) {
   nb_color_struct* nb_col = nb_color(g);
   uint nb_move = game_nb_moves_max(g);
-  
+
   return NULL;
   /* for (uint i=0, i <= )
   bool is_sol = false;  // if true, return the sol for the file, if false

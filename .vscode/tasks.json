@@ -58,7 +58,7 @@
                 "cwd": "${workspaceRoot}/build"
             },
             "presentation": {
-                "reveal": "silent"
+                "reveal": "always"
             },
             "group": {
                 "kind": "build",
