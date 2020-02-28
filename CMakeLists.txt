@@ -37,7 +37,7 @@ add_executable (recolor_text recolor_text.c)
 target_link_libraries (recolor_text game)
 
 add_executable(recolor_solve recolor_solve.c)
-target_link_libraries (recolor_solve pthread game sol)
+target_link_libraries (recolor_solve pthread game m sol)
 
 # executable of the bug finder
 add_executable (test_game_arblondeau test_game_arblondeau.c)
