@@ -36,11 +36,22 @@ nb_color_struct* nb_color(game g) {
     }  // We should do a realloc but It is not necessary in this exercise
   }
   nb_color_struct* col_tab = malloc(sizeof(nb_color_struct));
+  if (col_tab == NULL) {
+    exit(EXIT_FAILURE);
+  }
   col_tab->tab = tab;
   col_tab->tab_len = cpt;
   return col_tab;
 }
 
+/**
+ * @brief .
+ * @param k the solution length
+ * @param n the solution number
+ * @param base the numbers of colors
+ * @param tab the table of colors
+ * @return the solution
+ **/
 solution uint_to_tab_sol(uint k, uint n, uint base, uint tab[]) {
   uint x[k];
   for (int i = k - 1; i != -1; i--) {
@@ -54,7 +65,14 @@ solution uint_to_tab_sol(uint k, uint n, uint base, uint tab[]) {
   return create_solution(x, k);
 }
 
-// This fonction test all the possibles solutions
+/**
+ * @brief This fonction test all the possibles solutions.
+ * @param tab the colors table
+ * @param nb_color the number of color in table (the table length)
+ * @param size_sol the siwe of the solution
+ * @return one table of solutions
+ * @pre @p tab is not NULL
+ **/
 solution* all_possibilities(uint tab[], uint nb_color, uint size_sol) {
   solution* solutions = malloc(sizeof(solutions) * nb_color ^ size_sol);
   for (int i = 0; i < (nb_color ^ size_sol);
@@ -93,7 +111,34 @@ solution find_one(game g) {
  *
  * @param g game with cells to print
  */
-uint nb_sol(game g) { return 0; }
+uint nb_sol(game g) {
+  uint nb_sol = 0;
+
+  nb_color_struct* nb_col = nb_color(g);
+  uint nb_move = game_nb_moves_max(g);
+
+  solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
+
+  for (uint i = 0; nb_col->tab_len ^ nb_move; i++) {
+    int* tab = int_solution(all_poss[i]);
+    for (uint j = 0; j < len_solution(all_poss[i]); j++) {
+      game_play_one_move(g, tab[j]);
+      if (game_is_over(g)) {
+        nb_sol++;
+        break;
+      }
+    }
+    delete_solution(all_poss[i]);
+    game_restart(g);
+  }
+
+  game_delete(g);
+  free(all_poss);
+  free(nb_col->tab);
+  free(nb_col);
+
+  return nb_sol;
+}
 
 /**
  * @brief find the solution who require the smallest amount of moves

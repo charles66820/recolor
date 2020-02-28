@@ -50,6 +50,13 @@ char* string_solution(solution sol) {
   return string;
 }
 
+int* int_solution(solution sol) {
+  check_pointer(sol, "sol parameter on the function string_solution is null.");
+  int* tab = malloc(sizeof(int) * sol->tab_len);
+  for (uint i = 0; i < sol->tab_len; i++) tab[i] = sol->tab[i];
+  return tab;
+}
+
 solution create_solution(uint* tab, uint length) {
   solution sol = malloc(sizeof(struct solution_s));
   check_pointer(sol, "sol parameter on the function create_solution is null.");
