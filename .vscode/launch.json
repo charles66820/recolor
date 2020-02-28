@@ -21,7 +21,82 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "(gdb) Tests charles",
+      "name": "(gdb) Recolor solve FIND_ONE",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/generated/recolor_solve",
+      "args": [
+        "FIND_ONE",
+        "data/default_game.rec",
+        "testone.sol"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build",
+      "environment": [],
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "(gdb) Recolor solve NB_SOL",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/generated/recolor_solve",
+      "args": [
+        "NB_SOL",
+        "data/default_game.rec",
+        "testnb.nbsol"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build",
+      "environment": [],
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "(gdb) Recolor solve FIND_MIN",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/generated/recolor_solve",
+      "args": [
+        "FIND_ONE",
+        "data/default_game.rec",
+        "testmin.sol"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build",
+      "environment": [],
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "(gdb) Tests game cgoedefroit",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/test_game_cgoedefroit",
@@ -40,7 +115,7 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "(gdb) Launch test_game_arblondeau",
+      "name": "(gdb) Tests game arblondeau",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/test_game_arblondeau",
@@ -58,7 +133,7 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "(gdb) Launch test_game_vandrault",
+      "name": "(gdb) Tests game vandrault",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/test_game_vandrault",
@@ -75,7 +150,7 @@
       }],
       "preLaunchTask": "build"
     }, {
-      "name": "(gdb) Launch test_solution_arblondeau",
+      "name": "(gdb) Tests solution arblondeau",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/test_solution_arblondeau",
