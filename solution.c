@@ -51,7 +51,7 @@ char* string_solution(solution sol) {
 }
 
 int* int_solution(solution sol) {
-  check_pointer(sol, "sol parameter on the function string_solution is null.");
+  check_pointer(sol, "sol parameter on the function int_solution is null.");
   int* tab = malloc(sizeof(int) * sol->tab_len);
   for (uint i = 0; i < sol->tab_len; i++) tab[i] = sol->tab[i];
   return tab;

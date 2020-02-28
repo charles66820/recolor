@@ -49,7 +49,7 @@ nb_color_struct* nb_color(game g) {
  * @param k the solution length
  * @param n the solution number
  * @param base the numbers of colors
- * @param tab the table of colors
+ * @param tab the array of colors
  * @return the solution
  **/
 solution uint_to_tab_sol(uint k, uint n, uint base, uint tab[]) {
@@ -67,10 +67,10 @@ solution uint_to_tab_sol(uint k, uint n, uint base, uint tab[]) {
 
 /**
  * @brief This fonction test all the possibles solutions.
- * @param tab the colors table
- * @param nb_color the number of color in table (the table length)
- * @param size_sol the siwe of the solution
- * @return one table of solutions
+ * @param tab an array of colors
+ * @param nb_color the number of color in the array (the length of the array)
+ * @param size_sol the size of the solution
+ * @return one array of solutions
  * @pre @p tab is not NULL
  **/
 solution* all_possibilities(uint tab[], uint nb_color, uint size_sol) {
