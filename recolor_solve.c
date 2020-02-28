@@ -93,23 +93,38 @@ solution find_one(game g) {
   nb_color_struct* nb_col = nb_color(g);
   uint nb_move = game_nb_moves_max(g);
 
+  solution* first_sol =
+      all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
+
+  for (uint i = 0; i < (nb_col->tab_len ^ nb_move); i++) {
+    int* tab = int_solution(first_sol[i]);
+    for (uint j = 0; j < len_solution(first_sol[i]); j++) {
+      game_play_one_move(g, tab[j]);
+      if (game_is_over(g)) {
+        uint* sol_tab = tab;
+        uint len_sol_tab = len_solution(first_sol[i]);
+        game_delete(g);
+        free(first_sol);
+        free(nb_col->tab);
+        free(nb_col);
+        return create_solution(sol_tab, len_sol_tab);
+      }
+      delete_solution(first_sol[i]);
+      game_restart(g);
+    }
+  }
+  game_delete(g);
+  free(first_sol);
+  free(nb_col->tab);
+  free(nb_col);
   return NULL;
-  /* for (uint i=0, i <= )
-  bool is_sol = false;  // if true, return the sol for the file, if false
-  return
-                        // an arr of char (it contain "NO SOLUTION\n") for the
-                        // file
-  uint* nb_col = nb_color(g);
-
-
-  solution sol = create_solution();
-  return sol; */
 }
 
 /**
  * @brief seak for the number of solution
  *
  * @param g game with cells to print
+ * @return uint the number of solutions for the game g
  */
 uint nb_sol(game g) {
   uint nb_sol = 0;
@@ -144,6 +159,7 @@ uint nb_sol(game g) {
  * @brief find the solution who require the smallest amount of moves
  *
  * @param g game with cells to print
+ * @return solution a struct with the smallest possible solution of the game g
  */
 solution find_min(game g) { return NULL; }
 
@@ -166,7 +182,7 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  // on test si retsol est null sinon on écrit dans le fichier
+  // try if retsol is NULL else we can write in the file
   if (retsol != NULL) printf("la solution est : %s", string_solution(retsol));
 
   return EXIT_SUCCESS;
