@@ -1,20 +1,35 @@
 {
+  // docs: https://code.visualstudio.com/docs/cpp/launch-json-reference
   "version": "0.2.0",
-  "configurations": [{
-      "name": "(gdb) Recolor text",
+  "configurations": [
+    {
+      "name": "(run) Recolor text",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/recolor_text",
       // "program": "${fileDirname}/${fileBasenameNoExtension}",
       "args": [],
+      "cwd": "${workspaceFolder}/build",
+      "environment": [],
+      "externalConsole": false,
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "(gdb) Recolor text",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/generated/recolor_text",
+      "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build",
       "environment": [],
-      "setupCommands": [{
-        "description": "Enable pretty-printing for gdb",
-        "text": "-enable-pretty-printing",
-        "ignoreFailures": true
-      }],
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
       "externalConsole": false,
       "MIMode": "gdb",
       "miDebuggerPath": "/usr/bin/gdb",
@@ -104,11 +119,13 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build",
       "environment": [],
-      "setupCommands": [{
-        "description": "Enable pretty-printing for gdb",
-        "text": "-enable-pretty-printing",
-        "ignoreFailures": true
-      }],
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
       "externalConsole": false,
       "MIMode": "gdb",
       "miDebuggerPath": "/usr/bin/gdb",
@@ -125,11 +142,13 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
-      "setupCommands": [{
-        "description": "enable Pretty printing mode for gdb",
-        "text": "-enable-pretty-printing",
-        "ignoreFailures": true
-      }],
+      "setupCommands": [
+        {
+          "description": "enable Pretty printing mode for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
       "preLaunchTask": "build"
     },
     {
@@ -143,13 +162,16 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
-      "setupCommands": [{
-        "description": "enable Pretty printing mode for gdb",
-        "text": "-enable-pretty-printing",
-        "ignoreFailures": true
-      }],
+      "setupCommands": [
+        {
+          "description": "enable Pretty printing mode for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
       "preLaunchTask": "build"
-    }, {
+    },
+    {
       "name": "(gdb) Tests solution arblondeau",
       "type": "cppdbg",
       "request": "launch",
@@ -160,11 +182,13 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
-      "setupCommands": [{
-        "description": "enable Pretty printing mode for gdb",
-        "text": "-enable-pretty-printing",
-        "ignoreFailures": true
-      }],
+      "setupCommands": [
+        {
+          "description": "enable Pretty printing mode for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
       "preLaunchTask": "build"
     }
   ]
