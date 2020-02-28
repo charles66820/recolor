@@ -12,6 +12,9 @@ typedef struct nb_color_s {
 } nb_color_struct;
 
 nb_color_struct* nb_color(game g) {
+  if (g==NULL){
+    exit(EXIT_FAILURE);
+  }
   uint* tab = (uint*)malloc(16 * sizeof(uint));
   if (tab == NULL) {
     exit(EXIT_FAILURE);
@@ -48,16 +51,16 @@ nb_color_struct* nb_color(game g) {
  * @brief .
  * @param k the solution length
  * @param n the solution number
- * @param base the numbers of colors
+ * @param nb_col the numbers of colors
  * @param tab the array of colors
  * @return the solution
  **/
-solution uint_to_tab_sol(uint k, uint n, uint base, uint tab[]) {
+solution uint_to_tab_sol(uint k, uint n, uint nb_col, uint tab[]) {
   uint x[k];
-  for (int i = k - 1; i != -1; i--) {
-    if (n / (base ^ i) > 0) {
-      x[i] = tab[n / (base ^ i)];
-      n = n - (base ^ i);
+  for (uint i = k - 1; i > -1; i--) {
+    if (n / pow(nb_col, i) > 0) {
+      x[i] = tab[(n / pow(nb_col, i))];
+      n = n - pow(nb_col, i);
     } else {
       x[i] = tab[0];
     }
