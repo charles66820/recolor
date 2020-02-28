@@ -68,6 +68,16 @@ solution uint_to_tab_sol(uint k, uint n, uint nb_col, uint tab[]) {
   return create_solution(x, k);
 }
 
+int int_pow(int base, int exp) {
+  int result = 1;
+  while (exp) {
+    if (exp % 2) result *= base;
+    exp /= 2;
+    base *= base;
+  }
+  return result;
+}
+
 /**
  * @brief This fonction test all the possibles solutions.
  * @param tab an array of colors
@@ -165,6 +175,7 @@ uint nb_sol(game g) {
  * @return solution a struct with the smallest possible solution of the game g
  */
 solution find_min(game g) { return NULL; }
+/* Appeler FIND_ONE avec nb_coups_max = 1; puis 2 puis 3 jusqu'à n*/
 
 int main(int argc, char* argv[]) {
   if (argc != 4) {
