@@ -76,16 +76,6 @@ solution uint_to_tab_sol(uint k, uint n, uint nb_col, uint tab[]) {
   return create_solution(x, k);
 }
 
-int int_pow(int base, int exp) {
-  int result = 1;
-  while (exp) {
-    if (exp % 2) result *= base;
-    exp /= 2;
-    base *= base;
-  }
-  return result;
-}
-
 /**
  * @brief This fonction test all the possibles solutions.
  * @param tab an array of colors
@@ -95,8 +85,8 @@ int int_pow(int base, int exp) {
  * @pre @p tab is not NULL
  **/
 solution* all_possibilities(uint tab[], uint nb_color, uint size_sol) {
-  solution* solutions = malloc(sizeof(solutions) * nb_color ^ size_sol);
-  for (int i = 0; i < (nb_color ^ size_sol);
+  solution* solutions = malloc(sizeof(solutions) * ((int)pow(nb_color, size_sol)));
+  for (int i = 0; i < ((int)pow(nb_color, size_sol));
        i++) {  // we try all the possibilities
     solutions[i] = uint_to_tab_sol(size_sol, i, nb_color, tab);
     // here, we have to test if the solution works
@@ -117,7 +107,7 @@ solution find_one(game g) {
   solution* first_sol =
       all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
 
-  for (uint i = 0; i < (nb_col->tab_len ^ nb_move); i++) {
+  for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
     int* tab = int_solution(first_sol[i]);
     for (uint j = 0; j < len_solution(first_sol[i]); j++) {
       game_play_one_move(g, tab[j]);
@@ -155,7 +145,7 @@ uint nb_sol(game g) {
 
   solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
 
-  for (uint i = 0; nb_col->tab_len ^ nb_move; i++) {
+  for (uint i = 0; ((int)pow(nb_col->tab_len, nb_move)); i++) {
     int* tab = int_solution(all_poss[i]);
     for (uint j = 0; j < len_solution(all_poss[i]); j++) {
       game_play_one_move(g, tab[j]);
