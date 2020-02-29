@@ -58,9 +58,9 @@ nb_color_struct* nb_color(game g) {
 solution uint_to_tab_sol(uint k, uint n, uint nb_col, uint tab[]) {
   uint x[k];
   for (uint i = k - 1; i > -1; i--) {
-    if (n / pow(nb_col, i) > 0) {
-      x[i] = tab[(n / pow(nb_col, i))];
-      n = n - pow(nb_col, i);
+    if (n / (int)pow(nb_col, i) > 0) {
+      x[i] = tab[(n / (int)pow(nb_col, i))];
+      n = n - (int)pow(nb_col, i);
     } else {
       x[i] = tab[0];
     }
