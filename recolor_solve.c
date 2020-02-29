@@ -115,7 +115,7 @@ solution find_one(game g) {
         uint* sol_tab = tab;
         uint len_sol_tab = len_solution(first_sol[i]);
         game_delete(g);
-        free(first_sol);
+        delete_solution(first_sol);
         free(nb_col->tab);
         free(nb_col);
         return create_solution(sol_tab, len_sol_tab);
@@ -125,7 +125,7 @@ solution find_one(game g) {
     }
   }
   game_delete(g);
-  free(first_sol);
+  delete_solution(first_sol);
   free(nb_col->tab);
   free(nb_col);
   return NULL;
