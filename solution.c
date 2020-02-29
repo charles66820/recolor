@@ -45,7 +45,9 @@ static char int_to_char(int x) { return x + '0'; }
 
 char* string_solution(solution sol) {
   check_solution(sol, "sol parameter on the function string_solution is null.");
-  char* string = malloc(sizeof(char) * sol->tab_len * 2);
+  char* string = calloc(sol->tab_len * 2, sizeof(char));
+  check_pointer(
+      string, "not enough memory for string on the function string_solution.");
 
   uint j = 0;
   for (uint i = 0; i < sol->tab_len - 1; i++) {
@@ -64,8 +66,7 @@ char* string_solution(solution sol) {
 int* int_solution(solution sol) {
   check_solution(sol, "sol parameter on the function int_solution is null.");
   int* tab = malloc(sizeof(int) * sol->tab_len);
-  check_pointer(tab,
-                "not enough memory for int tab on the function int_solution.");
+  check_pointer(tab, "not enough memory for tab on the function int_solution.");
   for (uint i = 0; i < sol->tab_len; i++) tab[i] = sol->tab[i];
   return tab;
 }
@@ -75,7 +76,11 @@ solution create_solution(uint* tab, uint length) {
   solution sol = malloc(sizeof(struct solution_s));
   check_pointer(sol,
                 "not enough memory for sol on the function create_solution.");
-  sol->tab = tab;
+  int* newtab = malloc(sizeof(int) * length);
+  check_pointer(
+      newtab, "not enough memory for newtab on the function create_solution.");
+  for (uint i = 0; i < length; i++) newtab[i] = tab[i];
+  sol->tab = newtab;
   sol->tab_len = length;
   return sol;
 }

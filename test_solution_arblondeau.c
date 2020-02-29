@@ -33,7 +33,7 @@ bool test_len_solution() {
 }
 
 bool test_string_solution() {
-  uint tab[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+  uint tab[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
   uint length = 16;
   solution sol = create_solution(tab, length);
   if (sol == NULL) {
