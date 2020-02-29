@@ -24,8 +24,19 @@ static void check_pointer(const void* p, char* msg) {
   }
 }
 
+/**
+ * @brief Check is solution is null
+ *
+ * @param sol solution will be check
+ * @param msg message will print if pointer is null
+ */
+static void check_solution(const solution sol, char* msg) {
+  check_pointer(sol, msg);
+  check_pointer(sol->tab, msg);
+}
+
 uint len_solution(solution sol) {
-  check_pointer(sol, "sol parameter on the function len_solution is null.");
+  check_solution(sol, "sol parameter on the function len_solution is null.");
   uint length = sol->tab_len;
   return length;
 }
@@ -33,7 +44,7 @@ uint len_solution(solution sol) {
 static char int_to_char(int x) { return x + '0'; }
 
 char* string_solution(solution sol) {
-  check_pointer(sol, "sol parameter on the function string_solution is null.");
+  check_solution(sol, "sol parameter on the function string_solution is null.");
   char* string = malloc(sizeof(char) * sol->tab_len * 2);
 
   uint j = 0;
@@ -51,15 +62,19 @@ char* string_solution(solution sol) {
 }
 
 int* int_solution(solution sol) {
-  check_pointer(sol, "sol parameter on the function int_solution is null.");
+  check_solution(sol, "sol parameter on the function int_solution is null.");
   int* tab = malloc(sizeof(int) * sol->tab_len);
+  check_pointer(tab,
+                "not enough memory for int tab on the function int_solution.");
   for (uint i = 0; i < sol->tab_len; i++) tab[i] = sol->tab[i];
   return tab;
 }
 
 solution create_solution(uint* tab, uint length) {
+  check_pointer(tab, "tab parameter on the function create_solution is null.");
   solution sol = malloc(sizeof(struct solution_s));
-  check_pointer(sol, "sol parameter on the function create_solution is null.");
+  check_pointer(sol,
+                "not enough memory for sol on the function create_solution.");
   sol->tab = tab;
   sol->tab_len = length;
   return sol;
