@@ -15,33 +15,41 @@ nb_color_struct* nb_color(game g) {
   if (g==NULL){
     exit(EXIT_FAILURE);
   }
-  uint* tab = (uint*)malloc(16 * sizeof(uint));
-  if (tab == NULL) {
+
+  uint* colors_tab = (uint*)malloc(16 * sizeof(uint));
+  if (colors_tab == NULL) {
     exit(EXIT_FAILURE);
   }
-  uint cpt = 1;
-  for (int i = 0; i < game_height(g) * game_width(g);
-       i++) {  // I go through all the tab
-    bool exist = false;
-    for (int y = 0; y < cpt; y++) {
-      if (tab[y] ==
-          game_cell_current_color(
-              g, i % 12,
-              i / 12)) {  // if the color is already in the tab, we don't add it
+  uint cpt = 0;
+  bool exist;
+
+  // I go through all the tab
+  for (int i = 0; i < game_height(g) * game_width(g); i++) {
+    // check if the color is already in the tab, we don't add it
+    exist = false;
+    for (int y = 0; y < cpt; y++)
+      if (colors_tab[y] == game_cell_current_color(g, i % 12, i / 12))
         exist = true;
-      }
-    }
-    if (exist == false) {
-      tab[cpt] = game_cell_current_color(
-          g, i % 12, i / 12);  // if the color isn't in the tab, we add it and
-                               // we increment the cpt
+
+    // if the color isn't in the tab, we add it and we increment the cpt
+    if (!exist) {
+      colors_tab[cpt] = game_cell_current_color(g, i % 12, i / 12);
       cpt++;
     }  // We should do a realloc but It is not necessary in this exercise
   }
+
+  // create struture for return colors and nuber of colors
   nb_color_struct* col_tab = malloc(sizeof(nb_color_struct));
   if (col_tab == NULL) {
     exit(EXIT_FAILURE);
   }
+  uint* tab = (uint*) malloc(cpt + 1 * sizeof(uint));
+  if (tab == NULL) {
+    exit(EXIT_FAILURE);
+  }
+
+  for (uint i = 0; i < cpt+1; i++) tab[i] = colors_tab[i];
+  free(colors_tab);
   col_tab->tab = tab;
   col_tab->tab_len = cpt;
   return col_tab;
