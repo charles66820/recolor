@@ -40,7 +40,7 @@ int* int_solution(solution sol);
  * @brief Create a solution object
  *
  * @param tab an array of uint
- * @param length a uint that is the soze of the arr
+ * @param length a uint that is the size of the arr
  * @return solution a struct with tab and length
  */
 solution create_solution(uint* tab, uint length);

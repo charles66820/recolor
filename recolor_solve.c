@@ -56,40 +56,35 @@ nb_color_struct* nb_color(game g) {
 }
 
 /**
- * @brief .
- * @param k the solution length
- * @param n the solution number
- * @param nb_col the numbers of colors
- * @param tab the array of colors
- * @return the solution
- **/
-solution uint_to_tab_sol(uint k, uint n, uint nb_col, uint tab[]) {
-  uint x[k];
-  for (uint i = k - 1; i > -1; i--) {
-    if (n / (int)pow(nb_col, i) > 0) {
-      x[i] = tab[(n / (int)pow(nb_col, i))];
-      n = n - (int)pow(nb_col, i);
-    } else {
-      x[i] = tab[0];
-    }
-  }
-  return create_solution(x, k);
-}
-
-/**
  * @brief This fonction test all the possibles solutions.
- * @param tab an array of colors
- * @param nb_color the number of color in the array (the length of the array)
- * @param size_sol the size of the solution
+ * @param tab_colors an array of colors
+ * @param nb_colors the colors number in game grid +1 (tab_colors length)
+ * @param size_sol the solution length (number of moves)
  * @return one array of solutions
  * @pre @p tab is not NULL
  **/
-solution* all_possibilities(uint tab[], uint nb_color, uint size_sol) {
-  solution* solutions = malloc(sizeof(solutions) * ((int)pow(nb_color, size_sol)));
-  for (int i = 0; i < ((int)pow(nb_color, size_sol));
-       i++) {  // we try all the possibilities
-    solutions[i] = uint_to_tab_sol(size_sol, i, nb_color, tab);
-    // here, we have to test if the solution works
+solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
+  int nb_solutions = (int)pow(nb_colors, size_sol);
+  solution* solutions = malloc(sizeof(solutions) * nb_solutions);
+
+  // we create all the possibilities
+  for (int i = 0; i < nb_solutions; i++) {
+
+    // we create one possibilities
+    uint* x = malloc(sizeof(uint) * size_sol);
+    int n = i;  // the solution number (solution index °~°. fist, second...)
+    for (uint j = size_sol - 1;j > -1;j--) {  // form size_sol-1 to 0
+      int pv = (int)pow(nb_colors, j);
+      if (n / pv > 0) {
+        x[j] = tab_colors[(n / pv)];
+        n = n - pv;  // n*(n/pv)
+      } else {
+        x[j] = tab_colors[0];
+      }
+    }
+
+    solutions[i] = create_solution(x, size_sol);
+    free(x);
   }
   return solutions;
 }
