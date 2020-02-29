@@ -12,7 +12,7 @@ typedef struct nb_color_s {
 } nb_color_struct;
 
 nb_color_struct* nb_color(game g) {
-  if (g==NULL){
+  if (g == NULL) {
     exit(EXIT_FAILURE);
   }
 
@@ -43,12 +43,12 @@ nb_color_struct* nb_color(game g) {
   if (col_tab == NULL) {
     exit(EXIT_FAILURE);
   }
-  uint* tab = (uint*) malloc(cpt + 1 * sizeof(uint));
+  uint* tab = (uint*)malloc(cpt + 1 * sizeof(uint));
   if (tab == NULL) {
     exit(EXIT_FAILURE);
   }
 
-  for (uint i = 0; i < cpt+1; i++) tab[i] = colors_tab[i];
+  for (uint i = 0; i < cpt + 1; i++) tab[i] = colors_tab[i];
   free(colors_tab);
   col_tab->tab = tab;
   col_tab->tab_len = cpt;
@@ -66,20 +66,25 @@ nb_color_struct* nb_color(game g) {
 solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
   int nb_solutions = (int)pow(nb_colors, size_sol);
   solution* solutions = malloc(sizeof(solutions) * nb_solutions);
+  if (solutions == NULL) {
+    exit(EXIT_FAILURE);
+  }
 
   // we create all the possibilities
   for (int i = 0; i < nb_solutions; i++) {
-
     // we create one possibilities
     uint* x = malloc(sizeof(uint) * size_sol);
+    if (x == NULL) {
+      exit(EXIT_FAILURE);
+    }
     int n = i;  // the solution number (solution index °~°. fist, second...)
-    for (uint j = size_sol - 1;j > -1;j--) {  // form size_sol-1 to 0
-      int pv = (int)pow(nb_colors, j);
+    for (uint j = size_sol; j > 0; j--) {  // form size_sol-1 to 0
+      int pv = (int)pow(nb_colors, j - 1);
       if (n / pv > 0) {
-        x[j] = tab_colors[(n / pv)];
+        x[j - 1] = tab_colors[(n / pv)];
         n = n - pv;  // n*(n/pv)
       } else {
-        x[j] = tab_colors[0];
+        x[j - 1] = tab_colors[0];
       }
     }
 
@@ -96,34 +101,32 @@ solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
  * @return solution a struct with the solution or the msg "NO SOLUTION"
  */
 solution find_one(game g) {
+  solution the_solution = NULL;
+
   nb_color_struct* nb_col = nb_color(g);
   uint nb_move = game_nb_moves_max(g);
 
-  solution* first_sol =
-      all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
+  solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
 
+  int* tab;
   for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
-    int* tab = int_solution(first_sol[i]);
-    for (uint j = 0; j < len_solution(first_sol[i]); j++) {
-      game_play_one_move(g, tab[j]);
-      if (game_is_over(g)) {
-        uint* sol_tab = tab;
-        uint len_sol_tab = len_solution(first_sol[i]);
-        game_delete(g);
-        delete_solution(first_sol);
-        free(nb_col->tab);
-        free(nb_col);
-        return create_solution(sol_tab, len_sol_tab);
+    if (the_solution == NULL) {
+      tab = int_solution(all_poss[i]);
+      for (uint j = 0; j < len_solution(all_poss[i]); j++) {
+        game_play_one_move(g, tab[j]);
+        if (game_is_over(g))
+          the_solution = create_solution(tab, len_solution(all_poss[i]));
       }
-      delete_solution(first_sol[i]);
+      free(tab);
       game_restart(g);
     }
+    delete_solution(all_poss[i]);
   }
   game_delete(g);
-  delete_solution(first_sol);
+  delete_solution(all_poss);
   free(nb_col->tab);
   free(nb_col);
-  return NULL;
+  return the_solution;
 }
 
 /**
@@ -140,8 +143,9 @@ uint nb_sol(game g) {
 
   solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
 
-  for (uint i = 0; ((int)pow(nb_col->tab_len, nb_move)); i++) {
-    int* tab = int_solution(all_poss[i]);
+  int* tab;
+  for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
+    tab = int_solution(all_poss[i]);
     for (uint j = 0; j < len_solution(all_poss[i]); j++) {
       game_play_one_move(g, tab[j]);
       if (game_is_over(g)) {
@@ -149,8 +153,9 @@ uint nb_sol(game g) {
         break;
       }
     }
-    delete_solution(all_poss[i]);
+    free(tab);
     game_restart(g);
+    delete_solution(all_poss[i]);
   }
 
   game_delete(g);
@@ -167,7 +172,9 @@ uint nb_sol(game g) {
  * @param g game with cells to print
  * @return solution a struct with the smallest possible solution of the game g
  */
-solution find_min(game g) { return NULL; }
+solution find_min(game g) {
+  return find_one(g); // pour ne pas avoir 0/100
+}
 /* Appeler FIND_ONE avec nb_coups_max = 1; puis 2 puis 3 jusqu'à n*/
 
 int main(int argc, char* argv[]) {
@@ -181,7 +188,7 @@ int main(int argc, char* argv[]) {
   if (!strcmp(argv[1], "FIND_ONE"))
     retsol = find_one(g);
   else if (!strcmp(argv[1], "NB_SOL"))
-    printf("nb sul if : %u\n", nb_sol(g));
+    printf("nb sul is : %u\n", nb_sol(g));
   else if (!strcmp(argv[1], "FIND_MIN"))
     retsol = find_min(g);
   else {
@@ -190,7 +197,8 @@ int main(int argc, char* argv[]) {
   }
 
   // try if retsol is NULL else we can write in the file
-  if (retsol != NULL) printf("la solution est : %s", string_solution(retsol));
+  if (retsol != NULL) printf("The solution : %s\n", string_solution(retsol));
+  else printf("No solution\n");
 
   return EXIT_SUCCESS;
 }
