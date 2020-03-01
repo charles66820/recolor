@@ -9,9 +9,9 @@
 typedef struct nb_color_s {
   uint* tab;
   uint tab_len;
-} nb_color_struct;
+} nb_color_s;
 
-nb_color_struct* nb_color(game g) {
+nb_color_s* nb_color(game g) {
   if (g == NULL) {
     exit(EXIT_FAILURE);
   }
@@ -38,7 +38,7 @@ nb_color_struct* nb_color(game g) {
   }
 
   // create struture for return colors and nuber of colors
-  nb_color_struct* col_tab = malloc(sizeof(nb_color_struct));
+  nb_color_s* col_tab = malloc(sizeof(nb_color_s));
   if (col_tab == NULL) {
     exit(EXIT_FAILURE);
   }
@@ -93,7 +93,22 @@ solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
   return solutions;
 }
 
-bool find_one_solution(uint tab_colors[], uint nb_colors, uint size_sol, game g, uint* solution, uint k, bool ltr) {
+/**
+ * @brief This fonction test all the possibles solutions.
+ * @param nb_colors structure with tab of colors (tab_colors) in game grid and
+ * tab_colors length the colors number in game grid +1
+ * @param size_sol the solution length (number of moves)
+ * @param g the game will be test
+ * @param solution an unsigne int table for store solution
+ * @param k is k length of solution in recurcive call
+ * @param ltr is if solution is generate from right to left or left to right
+ * @return if one solution as found or not
+ * @pre @p nb_color_s is not NULL
+ * @pre @p g is not NULL
+ * @pre @p solution is not NULL
+ **/
+bool find_one_solution(nb_color_s* nb_colors, uint size_sol, game g,
+                       uint* solution, uint k, bool ltr) {
   // On solution are completly create
   if (k == 0) {
     /* //Debug
@@ -103,7 +118,7 @@ bool find_one_solution(uint tab_colors[], uint nb_colors, uint size_sol, game g,
     // check if solution work
     game_restart(g);
     if (ltr)
-      for (int i = size_sol-1; i >= 0; i--) {
+      for (int i = size_sol - 1; i >= 0; i--) {
         game_play_one_move(g, solution[i]);
         if (game_is_over(g)) {
           uint* tmp = calloc(size_sol, sizeof(uint));
@@ -125,10 +140,11 @@ bool find_one_solution(uint tab_colors[], uint nb_colors, uint size_sol, game g,
     return false;
   }
 
-  // Recurcive call with k-1 length for make all posible solutions with all colors
-  for (uint i = 0; i < nb_colors; i++) {
-    solution[size_sol - k] = tab_colors[i]; // add color to end of solution
-    if (find_one_solution(tab_colors, nb_colors, size_sol, g, solution, k-1, ltr))
+  // Recurcive call with k-1 length for make all posible solutions with all
+  // colors
+  for (uint i = 0; i < nb_colors->tab_len; i++) {
+    solution[size_sol - k] = nb_colors->tab[i];  // add color to end of solution
+    if (find_one_solution(nb_colors, size_sol, g, solution, k - 1, ltr))
       return true;
   }
   return false;
@@ -151,11 +167,11 @@ void save_sol_in_file(char* filename, char* solution);
 solution find_one(game g) {
   solution the_solution = NULL;
 
-  nb_color_struct* nb_col = nb_color(g);
+  nb_color_s* nb_col = nb_color(g);
   uint nb_move = game_nb_moves_max(g);
 
   uint* sol = malloc(sizeof(uint) * nb_move);
-  if (find_one_solution(nb_col->tab, nb_col->tab_len, nb_move, g, sol, nb_move, true))
+  if (find_one_solution(nb_col, nb_move, g, sol, nb_move, true))
     the_solution = create_solution(sol, nb_move);
 
   free(nb_col->tab);
@@ -175,7 +191,7 @@ solution find_one(game g) {
 uint nb_sol(game g) {
   uint nb_sol = 0;
 
-  nb_color_struct* nb_col = nb_color(g);
+  nb_color_s* nb_col = nb_color(g);
   uint nb_move = game_nb_moves_max(g);
 
   solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
@@ -209,7 +225,7 @@ uint nb_sol(game g) {
  * @return solution a struct with the smallest possible solution of the game g
  */
 solution find_min(game g) {
-  return find_one(g); // pour ne pas avoir 0/100
+  return find_one(g);  // pour ne pas avoir 0/100
 }
 /* Appeler FIND_ONE avec nb_coups_max = 1; puis 2 puis 3 jusqu'à n*/
 
@@ -233,8 +249,10 @@ int main(int argc, char* argv[]) {
   }
 
   // try if retsol is NULL else we can write in the file
-  if (retsol != NULL) printf("The solution : %s\n", string_solution(retsol));
-  else printf("No solution\n");
+  if (retsol != NULL)
+    printf("The solution : %s\n", string_solution(retsol));
+  else
+    printf("No solution\n");
 
   return EXIT_SUCCESS;
 }
