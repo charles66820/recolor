@@ -17,7 +17,7 @@
             "type": "shell",
             "command": "mkdir build -p",
             "windows": {
-                "command": "mkdir build"
+                "command": "mkdir build -f"
             },
             "options": {
                 "cwd": "${workspaceRoot}"
