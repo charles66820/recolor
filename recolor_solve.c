@@ -117,7 +117,7 @@ solution find_one(game g) {
 
   solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
 
-  int* tab;
+  uint* tab;
   for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
     if (the_solution == NULL) {
       tab = int_solution(all_poss[i]);
@@ -132,7 +132,7 @@ solution find_one(game g) {
     delete_solution(all_poss[i]);
   }
   game_delete(g);
-  delete_solution(all_poss);
+  free(all_poss);
   free(nb_col->tab);
   free(nb_col);
   return the_solution;
@@ -152,7 +152,7 @@ uint nb_sol(game g) {
 
   solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
 
-  int* tab;
+  uint* tab;
   for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
     tab = int_solution(all_poss[i]);
     for (uint j = 0; j < len_solution(all_poss[i]); j++) {

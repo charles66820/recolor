@@ -34,7 +34,7 @@ char* string_solution(solution sol);
  * @param sol a struct solution
  * @return int* the table of int of the solution
  */
-int* int_solution(solution sol);
+uint* int_solution(solution sol);
 
 /**
  * @brief Create a solution object
