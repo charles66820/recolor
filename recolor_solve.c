@@ -21,12 +21,11 @@ nb_color_struct* nb_color(game g) {
     exit(EXIT_FAILURE);
   }
   uint cpt = 0;
-  bool exist;
 
   // I go through all the tab
   for (int i = 0; i < game_height(g) * game_width(g); i++) {
     // check if the color is already in the tab, we don't add it
-    exist = false;
+    bool exist = false;
     for (int y = 0; y < cpt; y++)
       if (colors_tab[y] == game_cell_current_color(g, i % 12, i / 12))
         exist = true;
@@ -65,7 +64,7 @@ nb_color_struct* nb_color(game g) {
  **/
 solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
   int nb_solutions = (int)pow(nb_colors, size_sol);
-  solution* solutions = malloc(sizeof(solutions) * nb_solutions);
+  solution* solutions = malloc(sizeof(solution) * nb_solutions);
   if (solutions == NULL) {
     exit(EXIT_FAILURE);
   }
@@ -107,12 +106,13 @@ bool find_one_solution(uint tab_colors[], uint nb_colors, uint size_sol, game g,
       for (int i = size_sol-1; i >= 0; i--) {
         game_play_one_move(g, solution[i]);
         if (game_is_over(g)) {
-          uint* tmp = malloc(sizeof(uint) * size_sol);
+          uint* tmp = calloc(size_sol, sizeof(uint));
           // revers solution
           uint j;
           for (j = 0; j < size_sol; j++) tmp[j] = solution[j];
           uint k = size_sol;
           for (j = 0; j < size_sol; j++) solution[--k] = tmp[j];
+          free(tmp);
           return true;
         }
       }
@@ -180,9 +180,8 @@ uint nb_sol(game g) {
 
   solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
 
-  uint* tab;
   for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
-    tab = int_solution(all_poss[i]);
+    uint* tab = int_solution(all_poss[i]);
     for (uint j = 0; j < len_solution(all_poss[i]); j++) {
       game_play_one_move(g, tab[j]);
       if (game_is_over(g)) {

@@ -51,7 +51,7 @@ char* string_solution(solution sol) {
 
   uint j = 0;
   for (uint i = 0; i < sol->tab_len; i++) {
-    if (sol->tab[i] >= 0 && sol->tab[i] <= 9) {
+    if (sol->tab[i] <= 9) {
       string[j] = int_to_char(sol->tab[i]);
       if (i < sol->tab_len - 1) string[j + 1] = ' ';
     } else if (sol->tab[i] >= 10 && sol->tab[i] < 16) {
