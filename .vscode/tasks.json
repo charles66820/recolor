@@ -30,6 +30,9 @@
             "label": "cmake",
             "type": "shell",
             "command": "cmake -DCMAKE_BUILD_TYPE=Debug ..",
+            "windows": {
+                "command": "cmake -DCMAKE_BUILD_TYPE=Debug -G \"MinGW Makefiles\" -DCMAKE_C_COMPILER=C:/TDM-GCC-32/bin/gcc.exe .."
+            },
             "options": {
                 "cwd": "${workspaceRoot}/build"
             },
