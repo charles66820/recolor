@@ -94,6 +94,46 @@ solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
   return solutions;
 }
 
+bool find_one_solution(uint tab_colors[], uint nb_colors, uint size_sol, game g, uint* solution, uint k, bool ltr) {
+  // On solution are completly create
+  if (k == 0) {
+    /* //Debug
+    printf("comb :");
+    for (uint i = 0; i < size_sol; i++) printf("%u", solution[i]);
+    printf("\n"); //*/
+    // check if solution work
+    game_restart(g);
+    if (ltr)
+      for (int i = size_sol-1; i >= 0; i--) {
+        game_play_one_move(g, solution[i]);
+        if (game_is_over(g)) {
+          uint* tmp = malloc(sizeof(uint) * size_sol);
+          // revers solution
+          uint j;
+          for (j = 0; j < size_sol; j++) tmp[j] = solution[j];
+          uint k = size_sol;
+          for (j = 0; j < size_sol; j++) solution[--k] = tmp[j];
+          return true;
+        }
+      }
+    else
+      for (uint i = 0; i < size_sol; i++) {
+        game_play_one_move(g, solution[i]);
+        if (game_is_over(g)) return true;
+      }
+
+    return false;
+  }
+
+  // Recurcive call with k-1 length for make all posible solutions with all colors
+  for (uint i = 0; i < nb_colors; i++) {
+    solution[size_sol - k] = tab_colors[i]; // add color to end of solution
+    if (find_one_solution(tab_colors, nb_colors, size_sol, g, solution, k-1, ltr))
+      return true;
+  }
+  return false;
+}
+
 /**
  * @brief This fonction write solution in file with a new line.
  * @param filename file will be generate with the solution
@@ -102,7 +142,6 @@ solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
  * @pre @p solution is not NULL
  **/
 void save_sol_in_file(char* filename, char* solution);
-
 /**
  * @brief find one possible solution and store it in the struct solution
  *
@@ -115,26 +154,15 @@ solution find_one(game g) {
   nb_color_struct* nb_col = nb_color(g);
   uint nb_move = game_nb_moves_max(g);
 
-  solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
+  uint* sol = malloc(sizeof(uint) * nb_move);
+  if (find_one_solution(nb_col->tab, nb_col->tab_len, nb_move, g, sol, nb_move, true))
+    the_solution = create_solution(sol, nb_move);
 
-  uint* tab;
-  for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
-    if (the_solution == NULL) {
-      tab = int_solution(all_poss[i]);
-      for (uint j = 0; j < len_solution(all_poss[i]); j++) {
-        game_play_one_move(g, tab[j]);
-        if (game_is_over(g))
-          the_solution = create_solution(tab, len_solution(all_poss[i]));
-      }
-      free(tab);
-      game_restart(g);
-    }
-    delete_solution(all_poss[i]);
-  }
-  game_delete(g);
-  free(all_poss);
   free(nb_col->tab);
   free(nb_col);
+  free(sol);
+  game_delete(g);
+
   return the_solution;
 }
 
