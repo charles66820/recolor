@@ -27,7 +27,7 @@ nb_color nb_colors(game g) {
   for (uint i = 0; i < game_height(g) * game_width(g); i++) {
     // check if the color is already in the tab, we don't add it
     bool exist = false;
-    for (int y = 0; y < cpt; y++)
+    for (uint y = 0; y < cpt; y++)
       if (colors_tab[y] ==
           game_cell_current_color(g, i % game_width(g), i / game_width(g)))
         exist = true;
