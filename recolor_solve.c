@@ -95,6 +95,15 @@ solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
 }
 
 /**
+ * @brief This fonction write solution in file with a new line.
+ * @param filename file will be generate with the solution
+ * @param solution the string with the solution
+ * @pre @p filename is not NULL
+ * @pre @p solution is not NULL
+ **/
+void save_sol_in_file(char* filename, char* solution);
+
+/**
  * @brief find one possible solution and store it in the struct solution
  *
  * @param g game with cells to print
