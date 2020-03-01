@@ -1,34 +1,36 @@
 # Repartition des fonctions de teste a coder
 
 ## implémentation
+
 > Victor ANDRAULT
-- truc
+
+- nothing
 
 > Arthur BLONDEAU
-- truc
+
+- nothing
 
 > Charles GOEDEFROIT
-- test
-```
-def ToutesSequencesBinairesRecT(n):
-    def aux(v, acc):
-      if v < 0:
-        return acc
-      return aux(v-1, acc + (EntierVersBinaire(n, v),))
-    return aux(2**n-1, ())
-```
+
+- nothing
 
 ## Tests
+
 > Victor ANDRAULT
-- truc
+
+- nothing
 
 > Arthur BLONDEAU
-- truc
+
+- nothing
 
 > Charles GOEDEFROIT
-- truc
 
+- nothing
 
-## todo :
-- solver bruteforce
-- solver complet
+## Todo
+
+- test int_solution
+- test FIND_ONE
+- test NB_SOL
+- test FIND_MIN
