@@ -51,7 +51,7 @@ solution find_one(game g) {
  * @param g game with cells to print
  */
 uint nb_sol(game g) { return 0; }
-
+  return sol;
 /**
  * @brief find the solution who require the smallest amount of moves
  *
