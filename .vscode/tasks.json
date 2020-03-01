@@ -1,7 +1,6 @@
 {
     "version": "2.0.0",
-    "tasks": [
-        {
+    "tasks": [{
             "label": "cppcheck",
             "type": "shell",
             "command": "cppcheck --enable=all --xml-version=2 -I ../include *.c 2> report.xml && cppcheck-htmlreport --source-dir=. --report-dir=report --file=report.xml && google-chrome report/index.html",
@@ -15,7 +14,7 @@
         {
             "label": "mkbuild",
             "type": "shell",
-            "command": "mkdir ${workspaceRoot}/build -p",
+            "command": "mkdir build -p",
             "options": {
                 "cwd": "${workspaceRoot}"
             },
@@ -26,7 +25,7 @@
         {
             "label": "cmake",
             "type": "shell",
-            "command": "cmake -DCMAKE_BUILD_TYPE=Debug ${workspaceRoot}",
+            "command": "cmake -DCMAKE_BUILD_TYPE=Debug ..",
             "options": {
                 "cwd": "${workspaceRoot}/build"
             },
@@ -58,7 +57,7 @@
                 "cwd": "${workspaceRoot}/build"
             },
             "presentation": {
-                "reveal": "silent"
+                "reveal": "always"
             },
             "group": {
                 "kind": "build",
