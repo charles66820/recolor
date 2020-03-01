@@ -28,9 +28,11 @@ enable_testing()
 ### Implementation of all executable
 # Creation of the library game
 add_library (game game.c game_io.c)
-target_link_libraries(game m)
+target_link_libraries(game m gl)
 
 add_library (sol solution.c)
+
+add_library (gl getline.c)
 
 # executable of the game
 add_executable (recolor_text recolor_text.c)

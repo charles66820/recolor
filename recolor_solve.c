@@ -55,7 +55,7 @@ nb_color_s* nb_color(game g) {
 }
 
 /**
- * @brief This fonction test all the possibles solutions.
+ * @brief This fonction create all the possibles solutions.
  * @param tab_colors an array of colors
  * @param nb_colors the colors number in game grid +1 (tab_colors length)
  * @param size_sol the solution length (number of moves)
