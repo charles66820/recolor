@@ -1,6 +1,7 @@
 {
     "version": "2.0.0",
-    "tasks": [{
+    "tasks": [
+        {
             "label": "cppcheck",
             "type": "shell",
             "command": "cppcheck --enable=all --xml-version=2 -I ../include *.c 2> report.xml && cppcheck-htmlreport --source-dir=. --report-dir=report --file=report.xml && google-chrome report/index.html",
@@ -15,6 +16,9 @@
             "label": "mkbuild",
             "type": "shell",
             "command": "mkdir build -p",
+            "windows": {
+                "command": "mkdir build"
+            },
             "options": {
                 "cwd": "${workspaceRoot}"
             },
