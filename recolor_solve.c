@@ -1,4 +1,5 @@
 #include <math.h>
+#include <libgen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -154,6 +155,8 @@ void save_sol_in_file(char* filename, char* solution){
     exit(EXIT_FAILURE);
   }
   uint filenamelen = (uint)strlen(filename) + 4;
+
+  char* dir = malloc(sizeof(char) * filenamelen);
   if (dir == NULL) {
     printf("Not enough memory!\n");
     exit(EXIT_FAILURE);
@@ -180,7 +183,10 @@ void save_sol_in_file(char* filename, char* solution){
     printf("The file couldn't be created\n");
     exit(EXIT_FAILURE);
   }
-  for (int i=0; i<)
+  else{
+    fprintf(savefile,"%s", solution);
+  }
+  fclose(savefile);
 }
 /**
  * @brief find one possible solution and store it in the struct solution
