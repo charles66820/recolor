@@ -1,5 +1,5 @@
-#include <math.h>
 #include <libgen.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -95,8 +95,8 @@ bool find_one_solution(nb_color nb_colors, uint size_sol, game g,
           // revers solution
           uint j;
           for (j = 0; j < size_sol; j++) tmp[j] = solution[j];
-          uint k = size_sol;
-          for (j = 0; j < size_sol; j++) solution[--k] = tmp[j];
+          uint w = size_sol;
+          for (j = 0; j < size_sol; j++) solution[--w] = tmp[j];
           free(tmp);
           return true;
         }
@@ -145,12 +145,12 @@ uint count_valid_solution(nb_color nb_colors, uint size_sol, game g,
 /**
  * @brief This fonction write solution in file with a new line.
  * @param filename file will be generate with the solution
- * @param solution the string with the solution
+ * @param responce the string with the solution or nb of solution
  * @pre @p filename is not NULL
  * @pre @p solution is not NULL
  **/
-void save_sol_in_file(char* filename, char* solution){
-  if (filename==NULL || solution==NULL){
+void save_sol_in_file(char* filename, char* responce) {
+  if (filename == NULL || responce == NULL) {
     printf("At least one of the pointers is invalid\n");
     exit(EXIT_FAILURE);
   }
@@ -182,12 +182,12 @@ void save_sol_in_file(char* filename, char* solution){
   if (savefile == NULL) {
     printf("The file couldn't be created\n");
     exit(EXIT_FAILURE);
-  }
-  else{
-    fprintf(savefile,"%s", solution);
+  } else {
+    fprintf(savefile, "%s\n", responce);
   }
   fclose(savefile);
 }
+
 /**
  * @brief find one possible solution and store it in the struct solution
  *
@@ -286,7 +286,7 @@ int main(int argc, char* argv[]) {
   else if (!strcmp(argv[1], "NB_SOL")) {
     char* buffer = malloc(sizeof(uint) * game_nb_moves_max(g));
     sprintf(buffer, "NB_SOL = %u", nb_sol(g));
-    save_sol_in_file(argv[3], buffer);
+    save_sol_in_file(strcat(argv[3], ".nbsol"), buffer);
     free(buffer);
     return EXIT_SUCCESS;
   } else if (!strcmp(argv[1], "FIND_MIN"))
@@ -299,11 +299,11 @@ int main(int argc, char* argv[]) {
   // try if retsol is NULL else we can write in the file
   if (retsol != NULL) {
     char* s_sol = string_solution(retsol);
-    save_sol_in_file(argv[3], s_sol);
+    save_sol_in_file(strcat(argv[3], ".sol"), s_sol);
     free(s_sol);
     delete_solution(retsol);
   } else
-    save_sol_in_file(argv[3], "NO SOLUTION");
+    save_sol_in_file(strcat(argv[3], ".sol"), "NO SOLUTION");
 
   return EXIT_SUCCESS;
 }

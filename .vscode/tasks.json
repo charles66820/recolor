@@ -101,7 +101,7 @@
         {
             "id": "debugBin",
             "description": "executable args:",
-            "default": "./generated/recolor_solve FIND_ONE data/default_game.rec solution.sol",
+            "default": "./generated/recolor_solve FIND_ONE data/default_game.rec solution",
             "type": "promptString"
         },
     ]

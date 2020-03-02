@@ -43,7 +43,7 @@
       "args": [
         "FIND_ONE",
         "data/default_game.rec",
-        "testone.sol"
+        "testone"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build",
@@ -68,7 +68,7 @@
       "args": [
         "NB_SOL",
         "data/default_game.rec",
-        "testnb.nbsol"
+        "testnb"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build",
@@ -91,9 +91,9 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/recolor_solve",
       "args": [
-        "FIND_ONE",
+        "FIND_MIN",
         "data/default_game.rec",
-        "testmin.sol"
+        "testmin"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build",
