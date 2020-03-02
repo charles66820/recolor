@@ -204,6 +204,9 @@ solution find_one(game g) {
   uint nb_move = game_nb_moves_max(g);
 
   uint* sol = malloc(sizeof(uint) * nb_move);
+  if (sol == NULL) {
+    exit(EXIT_FAILURE);
+  }
   if (find_one_solution(nb_col, nb_move, g, sol, nb_move, true))
     the_solution = create_solution(sol, nb_move);
 
@@ -231,6 +234,9 @@ uint nb_sol(game g) {
   uint nb_move = game_nb_moves_max(g);
 
   uint* sol = malloc(sizeof(uint) * nb_move);
+  if (sol == NULL) {
+    exit(EXIT_FAILURE);
+  }
   // for (uint i = 0; i <= nb_move; i++)
   nb_sol += count_valid_solution(nb_col, nb_move, g, sol, nb_move);
   free(sol);
@@ -258,6 +264,9 @@ solution find_min(game g) {
   uint nb_move = game_nb_moves_max(g);
 
   uint* sol = malloc(sizeof(uint) * nb_move);
+  if (sol == NULL) {
+    exit(EXIT_FAILURE);
+  }
   for (uint i = 0; i < nb_move; i++)
     if (find_one_solution(nb_col, i, g, sol, i, true)) {
       the_solution = create_solution(sol, i);
