@@ -63,45 +63,6 @@ nb_color nb_colors(game g) {
 }
 
 /**
- * @brief This fonction create all the possibles solutions.
- * @param tab_colors an array of colors
- * @param nb_colors the colors number in game grid +1 (tab_colors length)
- * @param size_sol the solution length (number of moves)
- * @return one array of solutions
- * @pre @p tab is not NULL
- **/
-solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
-  int nb_solutions = (int)pow(nb_colors, size_sol);
-  solution* solutions = malloc(sizeof(solution) * nb_solutions);
-  if (solutions == NULL) {
-    exit(EXIT_FAILURE);
-  }
-
-  // we create all the possibilities
-  for (int i = 0; i < nb_solutions; i++) {
-    // we create one possibilities
-    uint* x = malloc(sizeof(uint) * size_sol);
-    if (x == NULL) {
-      exit(EXIT_FAILURE);
-    }
-    int n = i;  // the solution number (solution index °~°. fist, second...)
-    for (uint j = size_sol; j > 0; j--) {  // form size_sol-1 to 0
-      int pv = (int)pow(nb_colors, j - 1);
-      if (n / pv > 0) {
-        x[j - 1] = tab_colors[(n / pv)];
-        n = n - pv;  // n*(n/pv)
-      } else {
-        x[j - 1] = tab_colors[0];
-      }
-    }
-
-    solutions[i] = create_solution(x, size_sol);
-    free(x);
-  }
-  return solutions;
-}
-
-/**
  * @brief This fonction test all the possibles solutions.
  * @param nb_colors structure with tab of colors (tab_colors) in game grid and
  * tab_colors length the colors number in game grid +1
@@ -263,25 +224,6 @@ uint nb_sol(game g) {
   nb_color nb_col = nb_colors(g);
   uint nb_move = game_nb_moves_max(g);
 
-  /*solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len,
-  nb_move);
-
-  for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
-    uint* tab = int_solution(all_poss[i]);
-    for (uint j = 0; j < len_solution(all_poss[i]); j++) {
-      game_play_one_move(g, tab[j]);
-      if (game_is_over(g)) {
-        nb_sol++;
-        break;
-      }
-    }
-    free(tab);
-    game_restart(g);
-    delete_solution(all_poss[i]);
-  }
-  free(all_poss);
-  */
-
   uint* sol = malloc(sizeof(uint) * nb_move);
   // for (uint i = 0; i <= nb_move; i++)
   nb_sol += count_valid_solution(nb_col, nb_move, g, sol, nb_move);
@@ -336,7 +278,10 @@ int main(int argc, char* argv[]) {
   if (!strcmp(argv[1], "FIND_ONE"))
     retsol = find_one(g);
   else if (!strcmp(argv[1], "NB_SOL")) {
-    printf("NB_SOL = %u\n", nb_sol(g));
+    char* buffer = malloc(sizeof(uint) * game_nb_moves_max(g));
+    sprintf(buffer, "NB_SOL = %u", nb_sol(g));
+    save_sol_in_file(argv[3], buffer);
+    free(buffer);
     return EXIT_SUCCESS;
   } else if (!strcmp(argv[1], "FIND_MIN"))
     retsol = find_min(g);
@@ -348,11 +293,11 @@ int main(int argc, char* argv[]) {
   // try if retsol is NULL else we can write in the file
   if (retsol != NULL) {
     char* s_sol = string_solution(retsol);
-    printf("%s\n", s_sol);
+    save_sol_in_file(argv[3], s_sol);
     free(s_sol);
     delete_solution(retsol);
   } else
-    printf("NO SOLUTION\n");
+    save_sol_in_file(argv[3], "NO SOLUTION");
 
   return EXIT_SUCCESS;
 }
