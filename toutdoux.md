@@ -34,3 +34,5 @@
 - test FIND_ONE
 - test NB_SOL
 - test FIND_MIN
+
+- see "branch and bound algorithm" for optimize solver

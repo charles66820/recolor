@@ -40,10 +40,14 @@ bool test_string_solution() {
     fprintf(stderr, "Error : invalid solution.\n");
     return false;
   }
-  if (strcmp(string_solution(sol), "1 2 3 4 5 6 7 8 9 A B C D E F")) {
+  char* ssol = string_solution(sol);
+  if (strcmp(ssol, "1 2 3 4 5 6 7 8 9 A B C D E F")) {
     fprintf(stderr, "Error : invalid string for solution.\n");
+    free(ssol);
+    delete_solution(sol);
     return false;
   }
+  free(ssol);
   delete_solution(sol);
   return true;
 }

@@ -9,41 +9,49 @@
 typedef struct nb_color_s {
   uint* tab;
   uint tab_len;
-} nb_color_s;
+} * nb_color;
 
-nb_color_s* nb_color(game g) {
+nb_color nb_colors(game g) {
   if (g == NULL) {
     exit(EXIT_FAILURE);
   }
 
   uint* colors_tab = (uint*)malloc(16 * sizeof(uint));
   if (colors_tab == NULL) {
+    game_delete(g);
     exit(EXIT_FAILURE);
   }
-  uint cpt = 0;
 
+  uint cpt = 0;
   // I go through all the tab
-  for (int i = 0; i < game_height(g) * game_width(g); i++) {
+  for (uint i = 0; i < game_height(g) * game_width(g); i++) {
     // check if the color is already in the tab, we don't add it
     bool exist = false;
-    for (int y = 0; y < cpt; y++)
-      if (colors_tab[y] == game_cell_current_color(g, i % 12, i / 12))
+    for (uint y = 0; y < cpt && y < 16; y++)  // (1)
+      if (colors_tab[y] ==
+          game_cell_current_color(g, i % game_width(g), i / game_width(g)))
         exist = true;
 
     // if the color isn't in the tab, we add it and we increment the cpt
     if (!exist) {
-      colors_tab[cpt] = game_cell_current_color(g, i % 12, i / 12);
+      colors_tab[cpt] =
+          game_cell_current_color(g, i % game_width(g), i / game_width(g));
       cpt++;
-    }  // We should do a realloc but It is not necessary in this exercise
+    }  // We should do a realloc but It is not necessary in this exercise (1)
   }
 
-  // create struture for return colors and nuber of colors
-  nb_color_s* col_tab = malloc(sizeof(nb_color_s));
+  // create struture for return colors and number nb_color *)of colors
+  nb_color col_tab = malloc(sizeof(struct nb_color_s));
   if (col_tab == NULL) {
+    game_delete(g);
+    free(colors_tab);
     exit(EXIT_FAILURE);
   }
-  uint* tab = (uint*)malloc(cpt + 1 * sizeof(uint));
+  uint* tab = (uint*)malloc((cpt + 1) * sizeof(uint));
   if (tab == NULL) {
+    game_delete(g);
+    free(colors_tab);
+    free(col_tab);
     exit(EXIT_FAILURE);
   }
 
@@ -103,11 +111,11 @@ solution* all_possibilities(uint tab_colors[], uint nb_colors, uint size_sol) {
  * @param k is k length of solution in recurcive call
  * @param ltr is if solution is generate from right to left or left to right
  * @return if one solution as found or not
- * @pre @p nb_color_s is not NULL
+ * @pre @p nb_color is not NULL
  * @pre @p g is not NULL
  * @pre @p solution is not NULL
  **/
-bool find_one_solution(nb_color_s* nb_colors, uint size_sol, game g,
+bool find_one_solution(nb_color nb_colors, uint size_sol, game g,
                        uint* solution, uint k, bool ltr) {
   // On solution are completly create
   if (k == 0) {
@@ -150,6 +158,28 @@ bool find_one_solution(nb_color_s* nb_colors, uint size_sol, game g,
   return false;
 }
 
+uint count_valid_solution(nb_color nb_colors, uint size_sol, game g,
+                          uint* solution, uint k) {
+  // On solution are completly create
+
+  // check if solution work
+  game_restart(g);
+  for (uint i = 0; i < size_sol - k; i++) {
+    game_play_one_move(g, solution[i]);
+    if (game_is_over(g)) return 1;
+  }
+  if (k == 0) return 0;  // TODO: 66
+
+  // Recurcive call with k-1 length for make all posible solutions with all
+  // colors
+  uint nb = 0;
+  for (uint i = 0; i < nb_colors->tab_len; i++) {
+    solution[size_sol - k] = nb_colors->tab[i];  // add color to end of solution
+    nb += count_valid_solution(nb_colors, size_sol, g, solution, k - 1);
+  }
+  return nb;
+}
+
 /**
  * @brief This fonction write solution in file with a new line.
  * @param filename file will be generate with the solution
@@ -165,9 +195,12 @@ void save_sol_in_file(char* filename, char* solution);
  * @return solution a struct with the solution or the msg "NO SOLUTION"
  */
 solution find_one(game g) {
+  if (g == NULL) {
+    exit(EXIT_FAILURE);
+  }
   solution the_solution = NULL;
 
-  nb_color_s* nb_col = nb_color(g);
+  nb_color nb_col = nb_colors(g);
   uint nb_move = game_nb_moves_max(g);
 
   uint* sol = malloc(sizeof(uint) * nb_move);
@@ -189,12 +222,16 @@ solution find_one(game g) {
  * @return uint the number of solutions for the game g
  */
 uint nb_sol(game g) {
+  if (g == NULL) {
+    exit(EXIT_FAILURE);
+  }
   uint nb_sol = 0;
 
-  nb_color_s* nb_col = nb_color(g);
+  nb_color nb_col = nb_colors(g);
   uint nb_move = game_nb_moves_max(g);
 
-  solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
+  /*solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len,
+  nb_move);
 
   for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
     uint* tab = int_solution(all_poss[i]);
@@ -209,9 +246,15 @@ uint nb_sol(game g) {
     game_restart(g);
     delete_solution(all_poss[i]);
   }
+  free(all_poss);
+  */
+
+  uint* sol = malloc(sizeof(uint) * nb_move);
+  // for (uint i = 0; i <= nb_move; i++)
+  nb_sol += count_valid_solution(nb_col, nb_move, g, sol, nb_move);
+  free(sol);
 
   game_delete(g);
-  free(all_poss);
   free(nb_col->tab);
   free(nb_col);
 
@@ -225,7 +268,27 @@ uint nb_sol(game g) {
  * @return solution a struct with the smallest possible solution of the game g
  */
 solution find_min(game g) {
-  return find_one(g);  // pour ne pas avoir 0/100
+  if (g == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  solution the_solution = NULL;
+
+  nb_color nb_col = nb_colors(g);
+  uint nb_move = game_nb_moves_max(g);
+
+  uint* sol = malloc(sizeof(uint) * nb_move);
+  for (uint i = 0; i < nb_move; i++)
+    if (find_one_solution(nb_col, i, g, sol, i, true)) {
+      the_solution = create_solution(sol, i);
+      break;
+    }
+
+  free(nb_col->tab);
+  free(nb_col);
+  free(sol);
+  game_delete(g);
+
+  return the_solution;
 }
 /* Appeler FIND_ONE avec nb_coups_max = 1; puis 2 puis 3 jusqu'à n*/
 
@@ -239,9 +302,10 @@ int main(int argc, char* argv[]) {
   game g = game_load(argv[2]);
   if (!strcmp(argv[1], "FIND_ONE"))
     retsol = find_one(g);
-  else if (!strcmp(argv[1], "NB_SOL"))
-    printf("nb sul is : %u\n", nb_sol(g));
-  else if (!strcmp(argv[1], "FIND_MIN"))
+  else if (!strcmp(argv[1], "NB_SOL")) {
+    printf("NB_SOL = %u\n", nb_sol(g));
+    return EXIT_SUCCESS;
+  } else if (!strcmp(argv[1], "FIND_MIN"))
     retsol = find_min(g);
   else {
     fprintf(stderr, "Error:  \"%s\" doesn't exist!\n", argv[1]);
@@ -249,10 +313,13 @@ int main(int argc, char* argv[]) {
   }
 
   // try if retsol is NULL else we can write in the file
-  if (retsol != NULL)
-    printf("The solution : %s\n", string_solution(retsol));
-  else
-    printf("No solution\n");
+  if (retsol != NULL) {
+    char* s_sol = string_solution(retsol);
+    printf("%s\n", s_sol);
+    free(s_sol);
+    delete_solution(retsol);
+  } else
+    printf("NO SOLUTION\n");
 
   return EXIT_SUCCESS;
 }

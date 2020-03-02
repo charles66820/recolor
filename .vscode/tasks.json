@@ -13,6 +13,28 @@
             }
         },
         {
+            "label": "valgrind",
+            "type": "shell",
+            "command": "valgrind --leak-check=full -v ${input:debugBin}",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "valgrind callgrind",
+            "type": "shell",
+            "command": "valgrind --tool=callgrind ${input:debugBin}",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
             "label": "mkbuild",
             "type": "shell",
             "command": "mkdir build -p",
@@ -74,5 +96,13 @@
                 "make"
             ]
         }
+    ],
+    "inputs": [
+        {
+            "id": "debugBin",
+            "description": "executable args:",
+            "default": "./generated/recolor_solve FIND_ONE data/default_game.rec solution.sol",
+            "type": "promptString"
+        },
     ]
 }
