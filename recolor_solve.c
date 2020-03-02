@@ -303,7 +303,7 @@ int main(int argc, char* argv[]) {
   if (!strcmp(argv[1], "FIND_ONE"))
     retsol = find_one(g);
   else if (!strcmp(argv[1], "NB_SOL")) {
-    printf("nb sul is : %u\n", nb_sol(g));
+    printf("NB_SOL = %u\n", nb_sol(g));
     return EXIT_SUCCESS;
   } else if (!strcmp(argv[1], "FIND_MIN"))
     retsol = find_min(g);
@@ -315,7 +315,7 @@ int main(int argc, char* argv[]) {
   // try if retsol is NULL else we can write in the file
   if (retsol != NULL) {
     char* s_sol = string_solution(retsol);
-    printf("The solution : %s\n", s_sol);
+    printf("%s\n", s_sol);
     free(s_sol);
     delete_solution(retsol);
   } else
