@@ -187,7 +187,40 @@ uint count_valid_solution(nb_color nb_colors, uint size_sol, game g,
  * @pre @p filename is not NULL
  * @pre @p solution is not NULL
  **/
-void save_sol_in_file(char* filename, char* solution);
+void save_sol_in_file(char* filename, char* solution){
+  if (filename==NULL || solution==NULL){
+    printf("At least one of the pointers is invalid\n");
+    exit(EXIT_FAILURE);
+  }
+  uint filenamelen = (uint)strlen(filename) + 4;
+  if (dir == NULL) {
+    printf("Not enough memory!\n");
+    exit(EXIT_FAILURE);
+  }
+  strcpy(dir, filename);
+
+  dirname(dir);
+  if (strcmp(".", dir) && strcmp(filename, dir)) {
+    char* mkcmd = malloc(sizeof(char) * filenamelen);
+    if (mkcmd == NULL) {
+      printf("Not enough memory!\n");
+      free(dir);
+      exit(EXIT_FAILURE);
+    }
+    sprintf(mkcmd, "mkdir -p %s", dir);
+    system(mkcmd);
+    free(mkcmd);
+  }
+  free(dir);
+
+  FILE* savefile;
+  savefile = fopen(filename, "w");
+  if (savefile == NULL) {
+    printf("The file couldn't be created\n");
+    exit(EXIT_FAILURE);
+  }
+  for (int i=0; i<)
+}
 /**
  * @brief find one possible solution and store it in the struct solution
  *
