@@ -159,7 +159,7 @@ bool find_one_solution(nb_color nb_colors, uint size_sol, game g,
 }
 
 uint count_valid_solution(nb_color nb_colors, uint size_sol, game g,
-                       uint* solution, uint k) {
+                          uint* solution, uint k) {
   // On solution are completly create
 
   // check if solution work
@@ -168,7 +168,7 @@ uint count_valid_solution(nb_color nb_colors, uint size_sol, game g,
     game_play_one_move(g, solution[i]);
     if (game_is_over(g)) return 1;
   }
-  if (k == 0) return 0; //TODO: 66
+  if (k == 0) return 0;  // TODO: 66
 
   // Recurcive call with k-1 length for make all posible solutions with all
   // colors
@@ -230,7 +230,8 @@ uint nb_sol(game g) {
   nb_color nb_col = nb_colors(g);
   uint nb_move = game_nb_moves_max(g);
 
-  /*solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len, nb_move);
+  /*solution* all_poss = all_possibilities(nb_col->tab, nb_col->tab_len,
+  nb_move);
 
   for (uint i = 0; i < ((int)pow(nb_col->tab_len, nb_move)); i++) {
     uint* tab = int_solution(all_poss[i]);
@@ -249,7 +250,7 @@ uint nb_sol(game g) {
   */
 
   uint* sol = malloc(sizeof(uint) * nb_move);
-  //for (uint i = 0; i <= nb_move; i++)
+  // for (uint i = 0; i <= nb_move; i++)
   nb_sol += count_valid_solution(nb_col, nb_move, g, sol, nb_move);
   free(sol);
 
@@ -270,7 +271,24 @@ solution find_min(game g) {
   if (g == NULL) {
     exit(EXIT_FAILURE);
   }
-  return find_one(g);  // pour ne pas avoir 0/100
+  solution the_solution = NULL;
+
+  nb_color nb_col = nb_colors(g);
+  uint nb_move = game_nb_moves_max(g);
+
+  uint* sol = malloc(sizeof(uint) * nb_move);
+  for (uint i = 0; i < nb_move; i++)
+    if (find_one_solution(nb_col, i, g, sol, i, true)) {
+      the_solution = create_solution(sol, i);
+      break;
+    }
+
+  free(nb_col->tab);
+  free(nb_col);
+  free(sol);
+  game_delete(g);
+
+  return the_solution;
 }
 /* Appeler FIND_ONE avec nb_coups_max = 1; puis 2 puis 3 jusqu'à n*/
 
@@ -284,11 +302,10 @@ int main(int argc, char* argv[]) {
   game g = game_load(argv[2]);
   if (!strcmp(argv[1], "FIND_ONE"))
     retsol = find_one(g);
-  else if (!strcmp(argv[1], "NB_SOL")){
+  else if (!strcmp(argv[1], "NB_SOL")) {
     printf("nb sul is : %u\n", nb_sol(g));
     return EXIT_SUCCESS;
-  }
-  else if (!strcmp(argv[1], "FIND_MIN"))
+  } else if (!strcmp(argv[1], "FIND_MIN"))
     retsol = find_min(g);
   else {
     fprintf(stderr, "Error:  \"%s\" doesn't exist!\n", argv[1]);
