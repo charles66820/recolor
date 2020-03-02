@@ -30,6 +30,4 @@
 
 ## Todo
 
-- test int_solution
-
 - see "branch and bound algorithm" for optimize solver

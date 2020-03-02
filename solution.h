@@ -29,14 +29,6 @@ uint len_solution(solution sol);
 char* string_solution(solution sol);
 
 /**
- * @brief this function return an array of int
- *
- * @param sol a struct solution
- * @return int* the table of int of the solution
- */
-uint* int_solution(solution sol);
-
-/**
  * @brief Create a solution object
  *
  * @param tab an array of uint
