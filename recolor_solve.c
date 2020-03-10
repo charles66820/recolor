@@ -79,27 +79,30 @@ nb_color nb_colors(game g) {
  **/
 bool find_min_solution(nb_color nb_colors, uint size_sol, game g,
                        uint* solution, uint k) {
-  // On solution are completly create
-  if (k == 0) {
-    /* //Debug
-    printf("comb :");
-    for (uint i = 0; i < size_sol; i++) printf("%u", solution[i]);
-    printf("\n"); //*/
-    // check if solution work
-    game_restart(g);
-    for (uint i = 0; i < size_sol; i++) {
-      game_play_one_move(g, solution[i]);
-      if (game_is_over(g)) return true;
-    }
-
-    return false;
-  }
-
   // Recurcive call with k-1 length for make all posible solutions with all
   // colors
   for (uint i = 0; i < nb_colors->tab_len; i++) {
     solution[size_sol - k] = nb_colors->tab[i];  // add color to end of solution
-    if (find_min_solution(nb_colors, size_sol, g, solution, k - 1)) return true;
+
+    // check if solution work
+    game gc = game_copy(g);
+    game_play_one_move(gc, solution[size_sol - k]);
+    if (game_is_over(gc)) {
+      game_delete(gc);
+      /* //Debug
+      printf("comb :");
+      for (uint i = 0; i < size_sol; i++) printf("%u", solution[i]);
+      printf("\n"); //*/
+      return true;
+    }
+
+    // On solution are completly create
+    if (k != 0)
+      if (find_min_solution(nb_colors, size_sol, gc, solution, k - 1)) {
+        game_delete(gc);
+        return true;
+      }
+    game_delete(gc);
   }
   return false;
 }
