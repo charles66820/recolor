@@ -319,7 +319,7 @@ solution find_min(game g) {
   }
   for (uint i = 0; i < nb_move; i++)
     if (find_min_solution(nb_col, i, g, sol, i)) {
-      the_solution = create_solution(sol, i);
+      the_solution = create_solution(sol, i+1);
       break;
     }
 
