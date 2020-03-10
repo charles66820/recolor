@@ -64,21 +64,21 @@ nb_color nb_colors(game g) {
 }
 
 /**
- * @brief This fonction test all the possibles solutions.
+ * @brief This fonction test all the possibles solutions for find the minimql
+ *solution.
  * @param nb_colors structure with tab of colors (tab_colors) in game grid and
  * tab_colors length the colors number in game grid +1
  * @param size_sol the solution length (number of moves)
  * @param g the game will be test
  * @param solution an unsigne int table for store solution
  * @param k is k length of solution in recurcive call
- * @param ltr is if solution is generate from right to left or left to right
  * @return if one solution as found or not
  * @pre @p nb_color is not NULL
  * @pre @p g is not NULL
  * @pre @p solution is not NULL
  **/
-bool find_one_solution(nb_color nb_colors, uint size_sol, game g,
-                       uint* solution, uint k, bool ltr) {
+bool find_min_solution(nb_color nb_colors, uint size_sol, game g,
+                       uint* solution, uint k) {
   // On solution are completly create
   if (k == 0) {
     /* //Debug
@@ -87,25 +87,10 @@ bool find_one_solution(nb_color nb_colors, uint size_sol, game g,
     printf("\n"); //*/
     // check if solution work
     game_restart(g);
-    if (ltr)
-      for (int i = size_sol - 1; i >= 0; i--) {
-        game_play_one_move(g, solution[i]);
-        if (game_is_over(g)) {
-          uint* tmp = calloc(size_sol, sizeof(uint));
-          // revers solution
-          uint j;
-          for (j = 0; j < size_sol; j++) tmp[j] = solution[j];
-          uint w = size_sol;
-          for (j = 0; j < size_sol; j++) solution[--w] = tmp[j];
-          free(tmp);
-          return true;
-        }
-      }
-    else
-      for (uint i = 0; i < size_sol; i++) {
-        game_play_one_move(g, solution[i]);
-        if (game_is_over(g)) return true;
-      }
+    for (uint i = 0; i < size_sol; i++) {
+      game_play_one_move(g, solution[i]);
+      if (game_is_over(g)) return true;
+    }
 
     return false;
   }
@@ -114,30 +99,75 @@ bool find_one_solution(nb_color nb_colors, uint size_sol, game g,
   // colors
   for (uint i = 0; i < nb_colors->tab_len; i++) {
     solution[size_sol - k] = nb_colors->tab[i];  // add color to end of solution
-    if (find_one_solution(nb_colors, size_sol, g, solution, k - 1, ltr))
+    if (find_min_solution(nb_colors, size_sol, g, solution, k - 1)) return true;
+  }
+  return false;
+}
+
+/**
+ * @brief This fonction test all the possibles solutions for found on solution.
+ * @param nb_colors structure with tab of colors (tab_colors) in game grid and
+ * tab_colors length the colors number in game grid +1
+ * @param size_sol the solution length (number of moves)
+ * @param g the game will be test
+ * @param solution an unsigne int table for store solution
+ * @param k is k length of solution in recurcive call
+ * @return if one solution as found or not
+ * @pre @p nb_color is not NULL
+ * @pre @p g is not NULL
+ * @pre @p solution is not NULL
+ **/
+bool find_one_solution(nb_color nb_colors, uint size_sol, game g,
+                       uint* solution, uint k) {
+  // Recurcive call with k-1 length for make all posible solutions with all
+  // colors
+  for (uint i = 0; i < nb_colors->tab_len; i++) {
+    solution[size_sol - k] = nb_colors->tab[i];  // add color to end of solution
+
+    // check if solution work
+    game gc = game_copy(g);
+    game_play_one_move(gc, solution[size_sol - k]);
+    if (game_is_over(gc)) {
+      game_delete(gc);
+      /* //Debug
+      printf("comb :");
+      for (uint i = 0; i < size_sol; i++) printf("%u", solution[i]);
+      printf("\n"); //*/
       return true;
+    }
+
+    // try next move
+    if (k != 0)
+      if (find_one_solution(nb_colors, size_sol, gc, solution, k - 1)){
+        game_delete(gc);
+        return true;
+      }
+    game_delete(gc);
   }
   return false;
 }
 
 uint count_valid_solution(nb_color nb_colors, uint size_sol, game g,
                           uint* solution, uint k) {
-  // On solution are completly create
-
-  // check if solution work
-  game_restart(g);
-  for (uint i = 0; i < size_sol - k; i++) {
-    game_play_one_move(g, solution[i]);
-    if (game_is_over(g)) return 1;
-  }
+  // On solution are completly create °~°
   if (k == 0) return 0;  // TODO: 66
-
   // Recurcive call with k-1 length for make all posible solutions with all
   // colors
   uint nb = 0;
   for (uint i = 0; i < nb_colors->tab_len; i++) {
     solution[size_sol - k] = nb_colors->tab[i];  // add color to end of solution
-    nb += count_valid_solution(nb_colors, size_sol, g, solution, k - 1);
+
+    // check if solution work
+    game gc = game_copy(g);
+    game_play_one_move(gc, solution[size_sol - k]);
+    if (game_is_over(gc)) {
+      game_delete(gc);
+      return 1;
+    }
+
+    // try next move
+    nb += count_valid_solution(nb_colors, size_sol, gc, solution, k - 1);
+    game_delete(gc);
   }
   return nb;
 }
@@ -207,8 +237,17 @@ solution find_one(game g) {
   if (sol == NULL) {
     exit(EXIT_FAILURE);
   }
-  if (find_one_solution(nb_col, nb_move, g, sol, nb_move, true))
-    the_solution = create_solution(sol, nb_move);
+
+  #pragma region reverse color for fun
+  uint* tmp = malloc(nb_col->tab_len * sizeof(uint));
+  for (uint i = 0; i < nb_col->tab_len; i++) tmp[i] = nb_col->tab[i];
+  for (uint i = 0; i < nb_col->tab_len; i++)
+    nb_col->tab[i] = tmp[nb_col->tab_len - 1 - i];
+  free(tmp);
+  #pragma endregion
+
+  if (find_one_solution(nb_col, nb_move, g, sol, nb_move))
+  the_solution = create_solution(sol, nb_move);
 
   free(nb_col->tab);
   free(nb_col);
@@ -263,12 +302,20 @@ solution find_min(game g) {
   nb_color nb_col = nb_colors(g);
   uint nb_move = game_nb_moves_max(g);
 
+  #pragma region reverse color for fun
+  uint* tmp = malloc(nb_col->tab_len * sizeof(uint));
+  for (uint i = 0; i < nb_col->tab_len; i++) tmp[i] = nb_col->tab[i];
+  for (uint i = 0; i < nb_col->tab_len; i++)
+    nb_col->tab[i] = tmp[nb_col->tab_len - 1 - i];
+  free(tmp);
+  #pragma endregion
+
   uint* sol = malloc(sizeof(uint) * nb_move);
   if (sol == NULL) {
     exit(EXIT_FAILURE);
   }
   for (uint i = 0; i < nb_move; i++)
-    if (find_one_solution(nb_col, i, g, sol, i, true)) {
+    if (find_min_solution(nb_col, i, g, sol, i)) {
       the_solution = create_solution(sol, i);
       break;
     }

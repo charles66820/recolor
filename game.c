@@ -59,7 +59,9 @@ uint game_nb_moves_max(cgame g) {
 }
 
 color game_cell_current_color(cgame g, uint x, uint y) {
-  if (g == NULL || x >= g->width || y >= g->height) {
+  check_pointer(
+      g, "g parameter on the function game_cell_current_color is null.\n");
+  if (x >= g->width || y >= g->height) {
     exit(EXIT_FAILURE);
   }
   return (color) g->tab[x + y * g->width];
