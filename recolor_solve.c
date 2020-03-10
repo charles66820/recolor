@@ -302,13 +302,13 @@ solution find_min(game g) {
   nb_color nb_col = nb_colors(g);
   uint nb_move = game_nb_moves_max(g);
 
-  #pragma region reverse color for fun
+ /*  #pragma region reverse color for fun
   uint* tmp = malloc(nb_col->tab_len * sizeof(uint));
   for (uint i = 0; i < nb_col->tab_len; i++) tmp[i] = nb_col->tab[i];
   for (uint i = 0; i < nb_col->tab_len; i++)
     nb_col->tab[i] = tmp[nb_col->tab_len - 1 - i];
   free(tmp);
-  #pragma endregion
+  #pragma endregion */
 
   uint* sol = malloc(sizeof(uint) * nb_move);
   if (sol == NULL) {
