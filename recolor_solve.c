@@ -22,14 +22,12 @@ nb_color nb_colors(game g) {
     game_delete(g);
     exit(EXIT_FAILURE);
   }
-  uint* colors_ordre = (uint*)malloc(16 * sizeof(uint));
+  uint* colors_ordre = (uint*)calloc(sizeof(uint), 16);
   if (colors_ordre == NULL) {
     game_delete(g);
     exit(EXIT_FAILURE);
   }
-  for (uint i=0; i<16; i++){
-    colors_ordre[i]=0;
-  }
+
   uint cpt = 0;
   // I go through all the tab
   for (uint i = 0; i < game_height(g) * game_width(g); i++) {
@@ -52,7 +50,7 @@ nb_color nb_colors(game g) {
   }
   for(uint i=0;i<cpt;i++){
     for(uint j=i+1;j<cpt;j++){
-        if ( colors_ordre[i] > colors_ordre[j] ) {
+        if ( colors_ordre[i] < colors_ordre[j] ) {
             uint c = colors_ordre[i];
             colors_ordre[i] = colors_ordre[j];
             colors_ordre[j] = c;
@@ -263,13 +261,13 @@ solution find_one(game g) {
     exit(EXIT_FAILURE);
   }
 
-  #pragma region reverse color for fun
+  /* #pragma region reverse color for fun
   uint* tmp = malloc(nb_col->tab_len * sizeof(uint));
   for (uint i = 0; i < nb_col->tab_len; i++) tmp[i] = nb_col->tab[i];
   for (uint i = 0; i < nb_col->tab_len; i++)
     nb_col->tab[i] = tmp[nb_col->tab_len - 1 - i];
   free(tmp);
-  #pragma endregion
+  #pragma endregion */
 
   if (find_one_solution(nb_col, nb_move, g, sol, nb_move))
   the_solution = create_solution(sol, nb_move);
