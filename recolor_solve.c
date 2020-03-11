@@ -22,7 +22,14 @@ nb_color nb_colors(game g) {
     game_delete(g);
     exit(EXIT_FAILURE);
   }
-
+  uint* colors_ordre = (uint*)malloc(16 * sizeof(uint));
+  if (colors_ordre == NULL) {
+    game_delete(g);
+    exit(EXIT_FAILURE);
+  }
+  for (uint i=0; i<16; i++){
+    colors_ordre[i]=0;
+  }
   uint cpt = 0;
   // I go through all the tab
   for (uint i = 0; i < game_height(g) * game_width(g); i++) {
@@ -30,15 +37,30 @@ nb_color nb_colors(game g) {
     bool exist = false;
     for (uint y = 0; y < cpt && y < 16; y++)  // (1)
       if (colors_tab[y] ==
-          game_cell_current_color(g, i % game_width(g), i / game_width(g)))
+          game_cell_current_color(g, i % game_width(g), i / game_width(g))){
         exist = true;
+        colors_ordre[y]+=1;
+        }
 
     // if the color isn't in the tab, we add it and we increment the cpt
     if (!exist) {
       colors_tab[cpt] =
           game_cell_current_color(g, i % game_width(g), i / game_width(g));
       cpt++;
+      colors_ordre[cpt]=1;
     }  // We should do a realloc but It is not necessary in this exercise (1)
+  }
+  for(uint i=0;i<cpt;i++){
+    for(uint j=i+1;j<cpt;j++){
+        if ( colors_ordre[i] > colors_ordre[j] ) {
+            uint c = colors_ordre[i];
+            colors_ordre[i] = colors_ordre[j];
+            colors_ordre[j] = c;
+            c = colors_tab[i];
+            colors_tab[i] = colors_tab[j];
+            colors_tab[j] = c;
+        }
+    }
   }
 
   // create struture for return colors and number nb_color *)of colors
