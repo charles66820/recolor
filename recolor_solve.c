@@ -62,7 +62,7 @@ nb_color nb_colors(game g) {
         }
     }
   }
-
+  free(colors_ordre);
   // create struture for return colors and number nb_color *)of colors
   nb_color col_tab = malloc(sizeof(struct nb_color_s));
   if (col_tab == NULL) {
