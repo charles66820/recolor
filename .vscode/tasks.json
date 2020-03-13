@@ -1,0 +1,108 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cppcheck",
+            "type": "shell",
+            "command": "cppcheck --enable=all --xml-version=2 -I ../include *.c 2> report.xml && cppcheck-htmlreport --source-dir=. --report-dir=report --file=report.xml && google-chrome report/index.html",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "valgrind",
+            "type": "shell",
+            "command": "valgrind --leak-check=full -v ${input:debugBin}",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "valgrind callgrind",
+            "type": "shell",
+            "command": "valgrind --tool=callgrind ${input:debugBin}",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "mkbuild",
+            "type": "shell",
+            "command": "mkdir build -p",
+            "windows": {
+                "command": "mkdir build -f"
+            },
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "cmake",
+            "type": "shell",
+            "command": "cmake -DCMAKE_BUILD_TYPE=Debug ..",
+            "windows": {
+                "command": "cmake -DCMAKE_BUILD_TYPE=Debug -G \"MinGW Makefiles\" -DCMAKE_C_COMPILER=C:/TDM-GCC-32/bin/gcc.exe .."
+            },
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "dependsOn": [
+                "mkbuild"
+            ]
+        },
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "make",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "dependsOn": [
+                "cmake"
+            ]
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "make"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "debugBin",
+            "description": "executable args:",
+            "default": "./generated/recolor_solve FIND_ONE data/default_game.rec solution",
+            "type": "promptString"
+        },
+    ]
+}
