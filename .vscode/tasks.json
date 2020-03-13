@@ -2,6 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "clean",
+            "type": "shell",
+            "command": "rm -rf build report report.xml",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
             "label": "cppcheck",
             "type": "shell",
             "command": "cppcheck --enable=all --xml-version=2 -I ../include *.c 2> report.xml && cppcheck-htmlreport --source-dir=. --report-dir=report --file=report.xml && google-chrome report/index.html",
