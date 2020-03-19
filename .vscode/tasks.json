@@ -2,6 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "alias",
+            "type": "shell",
+            "command": "echo \"alias poule='git pull'\" >> ~/.bash_aliases && echo fini",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
             "label": "clean",
             "type": "shell",
             "command": "rm -rf build report report.xml",
