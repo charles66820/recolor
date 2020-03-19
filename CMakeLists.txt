@@ -22,9 +22,6 @@ set(EXECUTABLE_OUTPUT_PATH "generated")
 # copy data folder to generated folder
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-include(CTest)
-enable_testing()
-
 ### Implementation of all executable
 # Creation of the library game
 add_library (game game.c game_io.c)
@@ -56,6 +53,10 @@ target_link_libraries (test_game_vandrault game)
 
 add_executable(test_solution_arblondeau test_solution_arblondeau.c)
 target_link_libraries (test_solution_arblondeau game sol)
+
+### Tests
+include(CTest)
+enable_testing()
 
 # Those line launch the test to find the bug
 add_test(test_vandrault_new generated/test_game_vandrault new)
