@@ -16,6 +16,7 @@
 ## Overview
 
 This is the readme file about the game recolor.
+
 It use SDL.
 
 ## Compilation
@@ -44,7 +45,7 @@ It use SDL.
 
 - On linux :
 
-    ```bsah
+    ```bash
     mkdir build && cd build/
     cmake ..
     make
