@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 2.6)
 option(ENABLE_DEBUG "debug options" ON)
 
 # The project name followed by the programming language use
-project (recolor_text C)
+project ("Recolor" LANGUAGES C)
 
 # Compile all the files without any particular specification
 set(CMAKE_C_FLAGS "-std=c99 -Wall")
@@ -13,14 +13,32 @@ set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG --coverage")
 # Compile all the file on the release mode (optimise version of the compilation faster than the normal version)
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 
+# for SDL2
+IF (WIN32)
+    set(SDL2_ALL_LIBS mingw32 SDL2main SDL2 SDL2_image SDL2_ttf)
+    set(SDL2_ALL_INC C:/TDM-GCC-32/include/SDL2)
+
+ELSE()
+    # pkg-config --list-all  | grep -i sdl2
+    include(FindPkgConfig)
+    pkg_search_module(SDL2 REQUIRED sdl2)
+    pkg_search_module(SDL2_IMG REQUIRED SDL2_image)
+    pkg_search_module(SDL2_TTF REQUIRED SDL2_ttf)
+    set(SDL2_ALL_LIBS ${SDL2_LIBRARIES} ${SDL2_IMG_LIBRARIES} ${SDL2_TTF_LIBRARIES})
+    set(SDL2_ALL_INC ${SDL2_INCLUDE_DIRS} ${SDL2_IMG_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})
+ENDIF()
+
+include_directories(${SDL2_ALL_INC})
+
 # for generate bin and lib files in generated folder
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "generated")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "generated")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "generated")
 set(EXECUTABLE_OUTPUT_PATH "generated")
 
-# copy data folder to generated folder
+# copy data and assets folders to generated folder
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ### Implementation of all executable
 # Creation of the library game
@@ -40,6 +58,9 @@ target_link_libraries (recolor_text game)
 
 add_executable(recolor_solve recolor_solve.c)
 target_link_libraries (recolor_solve pthread game m sol)
+
+add_executable(recolor_sdl main_sdl.c recolor_sdl.c)
+target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} m)
 
 # executable of the bug finder
 add_executable (test_game_arblondeau test_game_arblondeau.c)
