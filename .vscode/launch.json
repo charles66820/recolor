@@ -15,10 +15,42 @@
       "preLaunchTask": "build"
     },
     {
+      "name": "(run) Recolor sdl",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/generated/recolor_sdl",
+      "args": [],
+      "cwd": "${workspaceFolder}/build",
+      "environment": [],
+      "externalConsole": false,
+      "preLaunchTask": "build"
+    },
+    {
       "name": "(gdb) Recolor text",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/recolor_text",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build",
+      "environment": [],
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "(gdb) Recolor sdl",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/generated/recolor_sdl",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build",

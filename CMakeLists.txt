@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 2.6)
 option(ENABLE_DEBUG "debug options" ON)
 
 # The project name followed by the programming language use
-project ("Recolor" LANGUAGES C)
+project("Recolor" LANGUAGES C)
 
 # Compile all the files without any particular specification
 set(CMAKE_C_FLAGS "-std=c99 -Wall")
@@ -14,7 +14,7 @@ set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG --coverage")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 
 # for SDL2
-IF (WIN32)
+IF(WIN32)
     set(SDL2_ALL_LIBS mingw32 SDL2main SDL2 SDL2_image SDL2_ttf)
     set(SDL2_ALL_INC C:/TDM-GCC-32/include/SDL2)
 
