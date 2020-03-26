@@ -42,15 +42,24 @@ It use SDL.
 
 ### Compile
 
+> Replace `Release` by `Debug` for debug mode
+
 - On linux :
 
     ```bsah
     mkdir build && cd build/
-    cmake ..
+    cmake -DCMAKE_BUILD_TYPE=Release ..
     make
     ```
 
 - On Windows follow [this tutorial](https://docs.google.com/document/d/1J9hmYZqJWYl5cPZbsa-0SUxm3aK9p-revsMnifJJuv4/edit?usp=sharing) at the part "install SDL2, SDL2_IMG and SDL2_TTF".
+
+    ```bsah
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" -DCMAKE_C_COMPILER=C:/TDM-GCC-32/bin/gcc.exe ..
+    make
+    ```
 
 > The generated binary / executable is in `generated` folder
 
