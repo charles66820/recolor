@@ -1,35 +1,74 @@
-# === Recolor via SDL ===
+# Recolor
 
-- This is the readme file about the game recolor.
+## Table of Contents
+
+- [Recolor](#recolor)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Compilation](#compilation)
+    - [Prerequisite](#prerequisite)
+    - [Dependencies](#dependencies)
+    - [Compile](#compile)
+  - [Installation](#installation)
+  - [Features](#features)
+  - [Team](#team)
+
+## Overview
+
+This is the readme file about the game recolor.
 It use SDL.
+
+## Compilation
+
+### Prerequisite
+
+- Install gcc, make and cmake :
+  - On Ubuntu :
+
+    ```bash
+    sudo apt update
+    sudo apt install gcc make cmake
+    ```
+
+  - On windows follow [this tutorial](https://docs.google.com/document/d/1J9hmYZqJWYl5cPZbsa-0SUxm3aK9p-revsMnifJJuv4/edit?usp=sharing)
 
 ### Dependencies
 
-On Linux :
+- Install all dependencies on Ubuntu :
 
-- $ sudo apt-get install libsdl2-dev libsdl2-image-dev  libsdl2-ttf-dev
+    ```bash
+    sudo apt install libsdl2-dev libsdl2-image-dev  libsdl2-ttf-dev
+    ```
 
-### Compilation
+### Compile
 
-With CMake :
+- On linux :
 
-- $ cd build/ ; cmake .. ; make
+    ```bsah
+    mkdir build && cd build/
+    cmake ..
+    make
+    ```
 
-Without CMake :
+- On Windows follow [this tutorial](https://docs.google.com/document/d/1J9hmYZqJWYl5cPZbsa-0SUxm3aK9p-revsMnifJJuv4/edit?usp=sharing) at the part "install SDL2, SDL2_IMG and SDL2_TTF".
 
-- $ gcc -std=c99 -03 -Wall -c -o main_sdl.o main_sdl.c
+> The generated binary / executable is in `generated` folder
 
-- $ gcc -std=c99 -03 -Wall -c -o recolor_sdl.o recolor_sdl.c
+## Installation
 
-- $ gcc -rdynamic -lm -lSDL2_ttf -lSDL2_image recolor_sdl.o main_sdl.o -o recolor_sdl
+```bash
+make install
+```
 
-### Run the game
+## Features
 
-- $ ./recolor_sdl
+- Recolor text version (recolor_text or recolor_text.exe)
+    Description of recolor version text
 
-When the game is launch, choose a color to modify the game. Press r to restart or q to quit the game.
+- Recolor graphic version (recolor_sdl or recolor_sdl.exe)
+    When the game is launch, choose a color to modify the game. Press r to restart or q to quit the game.
 
---
+## Team
 
 This version of the game was made by:
 
