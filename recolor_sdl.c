@@ -44,11 +44,34 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
 void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   // set background color
-  SDL_SetRenderDrawColor(ren, 160, 160, 160, 255);
+  SDL_SetRenderDrawColor(ren, 250, 250, 250, 255);
   SDL_RenderClear(ren);
 
-  // Draw background
+  // Draw background image
   SDL_RenderCopy(ren, env->background, NULL, NULL);
+
+  // Local vars
+  int winW = SCREEN_WIDTH;
+  int winH = SCREEN_HEIGHT;
+
+  SDL_GetWindowSize(win, &winW, &winH);
+
+  int xMarging = winW * 8 / 100;
+  int yMarging = winH * 8 / 100;
+
+  // Draw div rectangle
+  int divW = winW - xMarging * 2;
+  int divH = winH - yMarging * 2;
+
+  SDL_Rect rec = {xMarging, yMarging, divW, divH};
+  SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+  SDL_RenderDrawRect(ren, &rec);
+  SDL_RenderFillRect(ren, &rec);
+
+  // Draw line
+  SDL_SetRenderDrawColor(ren, 42, 42, 42, 255);
+  SDL_RenderDrawLine(ren, 0, winH - yMarging, winW, winH - yMarging);
+
 
 }
 

@@ -24,6 +24,8 @@ int main(int argc, char* argv[]) {
       win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (!ren) ERROR("Error: SDL_CreateRenderer (%s)", SDL_GetError());
 
+  SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_BLEND);
+
   // Initialize your environment
   Env* env = init(win, ren, argc, argv);
 
