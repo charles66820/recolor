@@ -16,14 +16,19 @@ int main(int argc, char* argv[]) {
   // create window and renderer
   SDL_Window* win = SDL_CreateWindow(
       APP_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-      SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+      SCREEN_HEIGHT, SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE);
   if (!win) ERROR("Error: SDL_CreateWindow (%s)", SDL_GetError());
+
+  // SDL_RENDERER_ACCELERATED to SDL_RENDERER_SOFTWARE if CREMI
   SDL_Renderer* ren = SDL_CreateRenderer(
       win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (!ren) ERROR("Error: SDL_CreateRenderer (%s)", SDL_GetError());
 
   // Initialize your environment
   Env* env = init(win, ren, argc, argv);
+
+  // Show window
+  SDL_ShowWindow(win);
 
   // main render loop
   SDL_Event e;
@@ -35,10 +40,6 @@ int main(int argc, char* argv[]) {
       quit = process(win, ren, env, &e);
       if (quit) break;
     }
-
-    // background in gray
-    SDL_SetRenderDrawColor(ren, 0xA0, 0xA0, 0xA0, 0xFF);
-    SDL_RenderClear(ren);
 
     // render all what you want
     render(win, ren, env);

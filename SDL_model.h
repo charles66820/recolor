@@ -18,7 +18,7 @@ typedef struct Env_t Env;
 #define APP_NAME "Recolor"
 #define SCREEN_WIDTH 600
 #define SCREEN_HEIGHT 600
-#define DELAY 100
+#define DELAY 1000/60
 
 Env * init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]);
 void render(SDL_Window* win, SDL_Renderer* ren, Env * env);
