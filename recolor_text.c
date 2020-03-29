@@ -50,7 +50,7 @@ int charToInt(char c) { return c - '0'; }
 
 int main(int argc, char* argv[]) {
   // Init game vars
-  bool pl = true;
+  bool pl = true; // lose
   game g = NULL;
 
   if (argc > 1) {
@@ -113,7 +113,7 @@ int main(int argc, char* argv[]) {
       printf("\n");
     }
 
-    // If the game is lost
+    // If the game is lose
     if (game_nb_moves_cur(g) >= game_nb_moves_max(g) && !game_is_over(g) &&
         pl) {
       printf("DOMMAGE\n");
