@@ -8,21 +8,21 @@
 int main(int argc, char* argv[]) {
   // Initialize SDL2 and some extensions
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    ERROR("Error: SDL_Init VIDEO (%s)", SDL_GetError());
+    ERRORLOG("Error: SDL_Init VIDEO (%s)\n", SDL_GetError());
   if (IMG_Init(IMG_INIT_PNG & IMG_INIT_PNG) != IMG_INIT_PNG)
-    ERROR("Error: IMG_Init PNG (%s)", SDL_GetError());
-  if (TTF_Init() != 0) ERROR("Error: TTF_Init (%s)", SDL_GetError());
+    ERRORLOG("Error: IMG_Init PNG (%s)", SDL_GetError());
+  if (TTF_Init() != 0) ERRORLOG("Error: TTF_Init (%s)\n", SDL_GetError());
 
   // create window and renderer
   SDL_Window* win = SDL_CreateWindow(
       APP_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
       SCREEN_HEIGHT, SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE);
-  if (!win) ERROR("Error: SDL_CreateWindow (%s)", SDL_GetError());
+  if (!win) ERRORLOG("Error: SDL_CreateWindow (%s)\n", SDL_GetError());
 
   // SDL_RENDERER_ACCELERATED to SDL_RENDERER_SOFTWARE if CREMI
   SDL_Renderer* ren = SDL_CreateRenderer(
       win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-  if (!ren) ERROR("Error: SDL_CreateRenderer (%s)", SDL_GetError());
+  if (!ren) ERROR("Error", "Error: SDL_CreateRenderer (%s)\n", SDL_GetError());
 
   SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_BLEND);
 

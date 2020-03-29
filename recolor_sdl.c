@@ -61,45 +61,32 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
   // Load background texture
   env->background = IMG_LoadTexture(ren, BACKGROUND);
-  if (!env->background) {
-    ERROR("IMG_LoadTexture: %s\n", BACKGROUND);
-    SDL_ShowSimpleMessageBox(0, "IMG_LoadTexture", SDL_GetError(), win);
-  }
+  if (!env->background)
+    ERROR("SDL error", "Error: IMG_LoadTexture (%s)\n", SDL_GetError());
 
   // Load icon
   env->icon = IMG_Load(ICON);
-  if (!env->icon) {
-    ERROR("IMG_Load: %s\n", ICON);
-    SDL_ShowSimpleMessageBox(0, "IMG_Load", SDL_GetError(), win);
-  }
+  if (!env->icon) ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
 
   // Load shadows
   env->sShadowBox0 = IMG_Load(SHADOWBOX0);
-  if (!env->sShadowBox0) {
-    ERROR("IMG_Load: %s\n", ICON);
-    SDL_ShowSimpleMessageBox(0, "IMG_Load", SDL_GetError(), win);
-  }
+  if (!env->sShadowBox0)
+    ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
   env->shadowBox0 = SDL_CreateTextureFromSurface(ren, env->sShadowBox0);
 
   env->sShadowBox1 = IMG_Load(SHADOWBOX1);
-  if (!env->sShadowBox1) {
-    ERROR("IMG_Load: %s\n", ICON);
-    SDL_ShowSimpleMessageBox(0, "IMG_Load", SDL_GetError(), win);
-  }
+  if (!env->sShadowBox1)
+    ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
   env->shadowBox1 = SDL_CreateTextureFromSurface(ren, env->sShadowBox1);
 
   env->sShadowBox2 = IMG_Load(SHADOWBOX2);
-  if (!env->sShadowBox2) {
-    ERROR("IMG_Load: %s\n", ICON);
-    SDL_ShowSimpleMessageBox(0, "IMG_Load", SDL_GetError(), win);
-  }
+  if (!env->sShadowBox2)
+    ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
   env->shadowBox2 = SDL_CreateTextureFromSurface(ren, env->sShadowBox2);
 
   env->sShadowBox3 = IMG_Load(SHADOWBOX3);
-  if (!env->sShadowBox3) {
-    ERROR("IMG_Load: %s\n", ICON);
-    SDL_ShowSimpleMessageBox(0, "IMG_Load", SDL_GetError(), win);
-  }
+  if (!env->sShadowBox3)
+    ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
   env->shadowBox3 = SDL_CreateTextureFromSurface(ren, env->sShadowBox3);
 
   // Set icon
