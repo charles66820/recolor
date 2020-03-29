@@ -4,7 +4,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "SDL_model.h"
+#include "game.h"
+#include "game_io.h"
 
 // Games assets
 #define FONT "assets/Roboto-Regular.ttf"  // TEMP: see for multiple fonts
@@ -27,10 +30,34 @@ struct Env_t {
   SDL_Texture* shadowBox1;
   SDL_Texture* shadowBox2;
   SDL_Texture* shadowBox3;
+  game g;
 };
 
 Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   Env* env = malloc(sizeof(struct Env_t));
+
+  // Init game
+  if (argc > 1) {
+    env->g = game_load(argv[1]);
+    if (env->g == NULL)
+      ERROR("Game error", "Error on game load : The default game as load\n");
+  }
+
+  if (argc == 1 || env->g == NULL) {  // if game is launch without arguments or
+                                      // if game is null we create new game
+    int nbMaxHit = 12;
+
+    color cells[SIZE * SIZE] = {
+        0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
+        1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
+        2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
+        1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
+        0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
+        1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
+
+    // Create new game
+    env->g = game_new(cells, nbMaxHit);
+  }
 
   // Load background texture
   env->background = IMG_LoadTexture(ren, BACKGROUND);
@@ -137,5 +164,6 @@ void clean(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   SDL_DestroyTexture(env->shadowBox1);
   SDL_DestroyTexture(env->shadowBox2);
   SDL_DestroyTexture(env->shadowBox3);
+  game_delete(env->g);
   free(env);
 }

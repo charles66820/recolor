@@ -60,7 +60,7 @@ add_executable(recolor_solve recolor_solve.c)
 target_link_libraries (recolor_solve pthread game m sol)
 
 add_executable(recolor_sdl main_sdl.c recolor_sdl.c)
-target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} m)
+target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m)
 
 # executable of the bug finder
 add_executable (test_game_arblondeau test_game_arblondeau.c)
