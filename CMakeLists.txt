@@ -28,7 +28,7 @@ ELSE()
     set(SDL2_ALL_INC ${SDL2_INCLUDE_DIRS} ${SDL2_IMG_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})
 ENDIF()
 
-include_directories(${SDL2_ALL_INC})
+include_directories(${SDL2_ALL_INC} include)
 
 # for generate bin and lib files in generated folder
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "generated")
@@ -42,15 +42,15 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_
 
 ### Implementation of all executable
 # Creation of the library game
-add_library (game game.c game_io.c)
+add_library (game lib/game.c lib/game_io.c)
 IF (WIN32)
-    add_library (gl getline.c)
+    add_library (gl lib/getline.c)
   target_link_libraries(game m gl)
 ELSE()
   target_link_libraries(game m)
 ENDIF()
 
-add_library (sol solution.c)
+add_library (sol lib/solution.c)
 
 # executable of the game
 add_executable (recolor_text recolor_text.c)
@@ -63,16 +63,16 @@ add_executable(recolor_sdl main_sdl.c recolor_sdl.c)
 target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m)
 
 # executable of the bug finder
-add_executable (test_game_arblondeau test_game_arblondeau.c)
+add_executable (test_game_arblondeau tests/test_game_arblondeau.c)
 target_link_libraries (test_game_arblondeau game)
 
-add_executable (test_game_cgoedefroit test_game_cgoedefroit.c)
+add_executable (test_game_cgoedefroit tests/test_game_cgoedefroit.c)
 target_link_libraries (test_game_cgoedefroit game)
 
-add_executable (test_game_vandrault test_game_vandrault.c)
+add_executable (test_game_vandrault tests/test_game_vandrault.c)
 target_link_libraries (test_game_vandrault game)
 
-add_executable(test_solution_arblondeau test_solution_arblondeau.c)
+add_executable(test_solution_arblondeau tests/test_solution_arblondeau.c)
 target_link_libraries (test_solution_arblondeau game sol)
 
 ### Tests
