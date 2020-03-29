@@ -19,6 +19,18 @@
 #define SHADOWBOX2 "assets/shadowBox2.png"
 #define SHADOWBOX3 "assets/shadowBox3.png"
 
+typedef struct color_box {
+  SDL_Rect rect;
+  color color;
+} COLOR_Box;
+
+typedef struct button {
+  SDL_Rect rect;
+  color color;
+  bool pressed;
+  bool clicked;
+} BUTTON;
+
 struct Env_t {
   SDL_Texture* background;
   SDL_Surface* icon;
@@ -106,30 +118,45 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   // Local vars
   int winW = SCREEN_WIDTH;
   int winH = SCREEN_HEIGHT;
+  int gameW = game_width(env->g);
+  int gameH = game_height(env->g);
 
   SDL_GetWindowSize(win, &winW, &winH);
 
-  int xMarging = winW * 8 / 100;
-  int yMarging = winH * 4 / 100;
+  int xWinPadding = winW * 8 / 100;
+  int yWinPadding = winH * 4 / 100;
+
+  int gridMaxW = winW - xWinPadding * 2;
+  int gridMaxH = winH - yWinPadding * 4;
+
+  int cellSize =
+      gridMaxW / gameW > gridMaxH / gameH ? gridMaxH / gameH : gridMaxW / gameW;
+
+  int gridW = cellSize * gameW;
+  int gridH = cellSize * gameH;
 
   // Draw rounded surface for the color grid
-  int gridMaxW = winW - xMarging * 2;
-  int gridMaxH = winH - yMarging * 4;
-
-  int gridSize = gridMaxW > gridMaxH ? gridMaxH : gridMaxW;
-
-  SDL_Rect rec = {(winW - gridSize) / 2, (winH - yMarging * 3 - gridSize) / 2,
-                  gridSize, gridSize};
-  SDL_RenderCopy(ren, env->shadowBox1, NULL, &rec);
+  SDL_Rect rect = {(winW - gridW) / 2, (winH - yWinPadding * 3 - gridH) / 2,
+                   gridW, gridH};
+  SDL_RenderCopy(ren, env->shadowBox1, NULL, &rect);
 
   // Draw grid
+  for (int y = 0; y < gameH; y++)
+    for (int x = 0; x < gameW; x++) {
+      rect.x = cellSize * x + 4;
+      rect.y = cellSize * y + 4;
+      rect.w = cellSize;
+      rect.h = cellSize;
+      COLOR_Box cb = {rect, game_cell_current_color(env->g, x, y)};
+    }
   // SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
-  // SDL_RenderDrawRect(ren, &rec);
-  // SDL_RenderFillRect(ren, &rec);
+  // SDL_RenderDrawRect(ren, &rect);
+  // SDL_RenderFillRect(ren, &rect);
 
   // Draw line
   SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
-  SDL_RenderDrawLine(ren, 0, winH - yMarging * 3, winW, winH - yMarging * 3);
+  SDL_RenderDrawLine(ren, 0, winH - yWinPadding * 3, winW,
+                     winH - yWinPadding * 3);
 }
 
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
