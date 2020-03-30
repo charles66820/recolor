@@ -129,7 +129,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   }
 
   if (argc == 1 || !env->g) {  // if game is launch without arguments or
-                                      // if game is null we create new game
+                               // if game is null we create new game
     int nbMaxHit = 12;
 
     color cells[SIZE * SIZE] = {
@@ -333,37 +333,17 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   env->btnRestart.rect.w = 100;
   env->btnRestart.rect.h = 20;
   env->btnRestart.rect.x =
-      winW - xWinPadding / 2 - env->btnRestart.rect.w - env->btnRestart.rect.w;
+      winW - xWinPadding / 2 - env->btnRestart.rect.w - env->btnQuit.rect.w;
   env->btnRestart.rect.y = winH - yWinPadding * 3 + rect.h;
   // Select btn sprite state
   rs.x = env->btnRestart.pressed ? rs.h * 2 : env->btnRestart.hover ? rs.h : 0;
   SDL_RenderCopy(ren, env->button, &rs, &env->btnRestart.rect);
-
-  // if ((mouse.x > env->btnRestart.rect.x &&
-  //        mouse.y > env->btnRestart.rect.y &&
-  //        mouse.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
-  //        mouse.y < env->btnRestart.rect.y + env->btnRestart.rect.h) /*||
-  //       (e->tfinger.x > env->btnRestart.rect.x &&
-  //        e->tfinger.y > env->btnRestart.rect.y &&
-  //        e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
-  //        e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h)*/)
-  //   env->btnRestart.hover = true;
-  // if ((
-  //        mouse.x > env->btnQuit.rect.x &&
-  //        mouse.y > env->btnQuit.rect.y &&
-  //        mouse.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-  //        mouse.y < env->btnQuit.rect.y + env->btnQuit.rect.h) /*||
-  //       (e->tfinger.x > env->btnQuit.rect.x &&
-  //        e->tfinger.y > env->btnQuit.rect.y &&
-  //        e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-  //        e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h)*/)
-  //   env->btnQuit.hover = true;
 }
 
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
   env->btnRestart.pressed = false;
   env->btnQuit.pressed = false;
-  env->btnQuit.hover = false;
+  env->btnRestart.hover = false;
   env->btnQuit.hover = false;
 
   switch (e->type) {
@@ -381,8 +361,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
            e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
            e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
         env->btnRestart.hover = true;
-      if ((e->button.button == SDL_BUTTON_LEFT &&
-           e->button.x > env->btnQuit.rect.x &&
+      if ((e->button.x > env->btnQuit.rect.x &&
            e->button.y > env->btnQuit.rect.y &&
            e->button.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
            e->button.y < env->btnQuit.rect.y + env->btnQuit.rect.h) ||
@@ -425,7 +404,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
            e->tfinger.y > env->btnQuit.rect.y &&
            e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
            e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h))
-        game_restart(env->g);
+        return true;
       break;
     case SDL_MOUSEBUTTONDOWN:
     case SDL_FINGERDOWN:
