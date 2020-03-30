@@ -15,6 +15,7 @@
 #define FONT_OPENDYSLEXIC "assets/OpenDyslexic-Regular.otf"
 #define FONTSIZE 12
 #define BACKGROUND "assets/background.png"
+#define BUTTON_SPRITE "assets/button.png"
 #define ICON "assets/icon.png"
 #define SHADOWBOX0 "assets/shadowBox0.png"
 #define SHADOWBOX1 "assets/shadowBox1.png"
@@ -85,9 +86,8 @@ SDL_Color getColorFromGameColor(color c) {
 
 typedef struct button {
   SDL_Rect rect;
-  color color;
+  bool hover;
   bool pressed;
-  bool clicked;
 } BUTTON;
 
 struct Env_t {
@@ -96,6 +96,7 @@ struct Env_t {
   bool allowDyslexic;
   SDL_Texture* background;
   SDL_Surface* icon;
+  SDL_Texture* button;
   TTF_Font* font;
   SDL_Surface* sShadowBox0;
   SDL_Surface* sShadowBox1;
@@ -107,11 +108,14 @@ struct Env_t {
   SDL_Texture* shadowBox3;
   game g;
   COLOR_Cell* cells;
-  BUTTON btn;
+  BUTTON btnRestart;
+  BUTTON btnQuit;
 };
 
 Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   Env* env = malloc(sizeof(struct Env_t));
+  if (!env) ERROR("Game error", "Error: malloc (Not enought memory)\n");
+
   // Settings
   env->allowBackground = true;
   env->allowDyslexic = false;
@@ -120,11 +124,11 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   // Init game
   if (argc > 1) {
     env->g = game_load(argv[1]);
-    if (env->g == NULL)
+    if (!env->g)
       ERROR("Game error", "Error on game load : The default game as load\n");
   }
 
-  if (argc == 1 || env->g == NULL) {  // if game is launch without arguments or
+  if (argc == 1 || !env->g) {  // if game is launch without arguments or
                                       // if game is null we create new game
     int nbMaxHit = 12;
 
@@ -149,6 +153,12 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   env->icon = IMG_Load(ICON);
   if (!env->icon) ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
 
+  // Load button texture
+  env->button = IMG_LoadTexture(ren, BUTTON_SPRITE);
+  if (!env->button)
+    ERROR("SDL error", "Error: IMG_LoadTexture (%s)\n", SDL_GetError());
+
+  // Load font
   env->font = TTF_OpenFont(env->allowDyslexic ? FONT_OPENDYSLEXIC : FONT_ROBOTO,
                            FONTSIZE);
   if (!env->font)
@@ -197,6 +207,9 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   int winH = SCREEN_HEIGHT;
   int gameW = game_width(env->g);
   int gameH = game_height(env->g);
+
+  SDL_Point mouse;
+  SDL_GetMouseState(&mouse.x, &mouse.y);
 
   SDL_GetWindowSize(win, &winW, &winH);
 
@@ -266,6 +279,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   // Draw game stats
   TTF_SetFontStyle(env->font, TTF_STYLE_BOLD);
   char* msg = malloc((50 + 78 * 2) * sizeof(char));
+  if (!msg) ERROR("Game error", "Error: malloc (Not enought memory)\n");
   // 50 char in format + max char in uint * 2 uint
   sprintf(msg, "Nombre de coups joués / coups max: %u / %u",
           game_nb_moves_cur(env->g), game_nb_moves_max(env->g));
@@ -281,7 +295,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   SDL_DestroyTexture(text);
   free(msg);
 
-  // Print on game is lose or win
+  // Draw when game is lose or win
   if (game_nb_moves_cur(env->g) >= game_nb_moves_max(env->g) &&
       !game_is_over(env->g)) {
     s = TTF_RenderUTF8_Blended(env->font, "DOMMAGE",
@@ -300,29 +314,124 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
     SDL_RenderCopy(ren, text, NULL, &rect);
     SDL_DestroyTexture(text);
   }
+
+  // Draw buttons
+  SDL_Rect rs = {0, 0, 0, 0};
+  SDL_QueryTexture(env->button, NULL, NULL, &rs.w, &rs.h);
+  rs.h = rs.h / 3;
+
+  // Draw quit button
+  env->btnQuit.rect.w = 100;
+  env->btnQuit.rect.h = 20;
+  env->btnQuit.rect.x = winW - xWinPadding / 2 - env->btnQuit.rect.w;
+  env->btnQuit.rect.y = winH - yWinPadding * 3 + rect.h;
+  // Select btn sprite state
+  rs.x = env->btnQuit.pressed ? rs.h * 2 : env->btnQuit.hover ? rs.h : 0;
+  SDL_RenderCopy(ren, text, &rs, &env->btnQuit.rect);
+
+  // Draw restart button
+  env->btnRestart.rect.w = 100;
+  env->btnRestart.rect.h = 20;
+  env->btnRestart.rect.x =
+      winW - xWinPadding / 2 - env->btnRestart.rect.w - env->btnQuit.rect.w;
+  env->btnRestart.rect.y = winH - yWinPadding * 3 + rect.h;
+  // Select btn sprite state
+  rs.x = env->btnRestart.pressed ? rs.h * 2 : env->btnRestart.hover ? rs.h : 0;
+  SDL_RenderCopy(ren, text, &rs, &env->btnRestart.rect);
+
+  /*mouse.x > env->btnQuit.rect.x &&
+    mouse.y > env->btnQuit.rect.y &&
+    mouse.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
+    mouse.y < env->btnQuit.rect.y + env->btnQuit.rect.h */
 }
 
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
+  env->btnRestart.pressed = false;
+  env->btnQuit.pressed = false;
+
   switch (e->type) {
     case SDL_QUIT:
       return true;
       break;
+    case SDL_MOUSEMOTION:
+    case SDL_FINGERMOTION:
+      if ((e->button.x > env->btnRestart.rect.x &&
+           e->button.y > env->btnRestart.rect.y &&
+           e->button.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
+           e->button.y < env->btnRestart.rect.y + env->btnRestart.rect.h) ||
+          (e->tfinger.x > env->btnRestart.rect.x &&
+           e->tfinger.y > env->btnRestart.rect.y &&
+           e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
+           e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
+        env->btnRestart.hover = true;
+      if ((e->button.button == SDL_BUTTON_LEFT &&
+           e->button.x > env->btnQuit.rect.x &&
+           e->button.y > env->btnQuit.rect.y &&
+           e->button.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
+           e->button.y < env->btnQuit.rect.y + env->btnQuit.rect.h) ||
+          (e->tfinger.x > env->btnQuit.rect.x &&
+           e->tfinger.y > env->btnQuit.rect.y &&
+           e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
+           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h))
+        env->btnQuit.hover = true;
+      break;
     case SDL_MOUSEBUTTONUP:
     case SDL_FINGERUP:
       for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
-        if (e->button.button == SDL_BUTTON_LEFT &&
-            e->button.x > env->cells[i].rect.x &&
-            e->button.y > env->cells[i].rect.y &&
-            e->button.x < env->cells[i].rect.x + env->cells[i].rect.w &&
-            e->button.y < env->cells[i].rect.y + env->cells[i].rect.h) {
+        if ((e->button.button == SDL_BUTTON_LEFT &&
+             e->button.x > env->cells[i].rect.x &&
+             e->button.y > env->cells[i].rect.y &&
+             e->button.x < env->cells[i].rect.x + env->cells[i].rect.w &&
+             e->button.y < env->cells[i].rect.y + env->cells[i].rect.h) ||
+            (e->tfinger.x > env->cells[i].rect.x &&
+             e->tfinger.y > env->cells[i].rect.y &&
+             e->tfinger.x < env->cells[i].rect.x + env->cells[i].rect.w &&
+             e->tfinger.y < env->cells[i].rect.y + env->cells[i].rect.h))
           if (env->cells[0].color != env->cells[i].color)
             game_play_one_move(env->g, env->cells[i].color);
-        } else if (e->tfinger.x > env->cells[i].rect.x &&
-                   e->tfinger.y > env->cells[i].rect.y &&
-                   e->tfinger.x < env->cells[i].rect.x + env->cells[i].rect.w &&
-                   e->tfinger.y < env->cells[i].rect.y + env->cells[i].rect.h)
-          if (env->cells[0].color != env->cells[i].color)
-            game_play_one_move(env->g, env->cells[i].color);
+      if ((e->button.button == SDL_BUTTON_LEFT &&
+           e->button.x > env->btnRestart.rect.x &&
+           e->button.y > env->btnRestart.rect.y &&
+           e->button.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
+           e->button.y < env->btnRestart.rect.y + env->btnRestart.rect.h) ||
+          (e->tfinger.x > env->btnRestart.rect.x &&
+           e->tfinger.y > env->btnRestart.rect.y &&
+           e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
+           e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
+        game_restart(env->g);
+      if ((e->button.button == SDL_BUTTON_LEFT &&
+           e->button.x > env->btnQuit.rect.x &&
+           e->button.y > env->btnQuit.rect.y &&
+           e->button.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
+           e->button.y < env->btnQuit.rect.y + env->btnQuit.rect.h) ||
+          (e->tfinger.x > env->btnQuit.rect.x &&
+           e->tfinger.y > env->btnQuit.rect.y &&
+           e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
+           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h))
+        game_restart(env->g);
+      break;
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_FINGERDOWN:
+      if ((e->button.button == SDL_BUTTON_LEFT &&
+           e->button.x > env->btnRestart.rect.x &&
+           e->button.y > env->btnRestart.rect.y &&
+           e->button.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
+           e->button.y < env->btnRestart.rect.y + env->btnRestart.rect.h) ||
+          (e->tfinger.x > env->btnRestart.rect.x &&
+           e->tfinger.y > env->btnRestart.rect.y &&
+           e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
+           e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
+        env->btnRestart.pressed = true;
+      if ((e->button.button == SDL_BUTTON_LEFT &&
+           e->button.x > env->btnQuit.rect.x &&
+           e->button.y > env->btnQuit.rect.y &&
+           e->button.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
+           e->button.y < env->btnQuit.rect.y + env->btnQuit.rect.h) ||
+          (e->tfinger.x > env->btnQuit.rect.x &&
+           e->tfinger.y > env->btnQuit.rect.y &&
+           e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
+           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h))
+        env->btnQuit.pressed = true;
       break;
     case SDL_KEYDOWN:
       switch (e->key.keysym.sym) {
