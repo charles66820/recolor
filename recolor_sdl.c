@@ -25,13 +25,6 @@ typedef struct color_cell {
   color color;
 } COLOR_Cell;
 
-void freeColorCell(COLOR_Cell* cell) {
-  if (cell) {
-    //if (cell->rect) SDL_free(cell->rect);
-    free(cell);
-  }
-}
-
 SDL_Color getColorFromGameColor(color c) {
   switch (c) {
     case 0:
@@ -192,10 +185,8 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 
   SDL_GetWindowSize(win, &winW, &winH);
 
-  int xWinPadding = winW * 8 / 100;
+  int xWinPadding = winW * 4 / 100;
   int yWinPadding = winH * 4 / 100;
-
-  int gridPadding = 18;
 
   int gridMaxW = winW - xWinPadding * 2;
   int gridMaxH = winH - yWinPadding * 4;
@@ -206,9 +197,12 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   int gridW = cellSize * gameW;
   int gridH = cellSize * gameH;
 
+  int gridXPadding = gridW * 3 / 100;
+  int gridYPadding = gridH * 3 / 100;
+
   cellSize = gridMaxW / gameW > gridMaxH / gameH
-                 ? (gridMaxH - gridPadding * 2) / gameH
-                 : (gridMaxW - gridPadding * 2) / gameW;
+                 ? (gridMaxH - gridYPadding * 2) / gameH
+                 : (gridMaxW - gridXPadding * 2) / gameW;
 
   int gridX = (winW - gridW) / 2;
   int gridY = (winH - yWinPadding * 3 - gridH) / 2;
@@ -221,14 +215,13 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 
   // Remove last cells
   for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
-    freeColorCell(env->cells[i]);
+    free(env->cells[i]);
 
   // Create new cells
   for (int y = 0; y < gameH; y++)
     for (int x = 0; x < gameW; x++) {
-      // SDL_Rect* rect = SDL_malloc(sizeof(SDL_Rect));
-      rect.x = cellSize * x + gridX + gridPadding;
-      rect.y = cellSize * y + gridY + gridPadding;
+      rect.x = cellSize * x + gridX + gridXPadding;
+      rect.y = cellSize * y + gridY + gridYPadding;
       rect.w = cellSize;
       rect.h = cellSize;
       COLOR_Cell* cell = malloc(sizeof(COLOR_Cell));
@@ -249,22 +242,29 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 }
 
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
-  if (e->type == SDL_QUIT) {
-    return true;
-  }
-  if (e->type == SDL_MOUSEBUTTONUP || e->type == SDL_FINGERUP) {
-    for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
-      if (e->button.button == SDL_BUTTON_LEFT &&
-          e->button.x > env->cells[i]->rect.x &&
-          e->button.y > env->cells[i]->rect.y &&
-          e->button.x < env->cells[i]->rect.x + env->cells[i]->rect.w &&
-          e->button.y < env->cells[i]->rect.y + env->cells[i]->rect.h) {
-        game_play_one_move(env->g, env->cells[i]->color);
-      } else if (e->tfinger.x > env->cells[i]->rect.x &&
-          e->tfinger.y > env->cells[i]->rect.y &&
-          e->tfinger.x < env->cells[i]->rect.x + env->cells[i]->rect.w &&
-          e->tfinger.y < env->cells[i]->rect.y + env->cells[i]->rect.h)
-        game_play_one_move(env->g, env->cells[i]->color);
+  switch (e->type) {
+    case SDL_QUIT:
+      return true;
+      break;
+    case SDL_MOUSEBUTTONUP:
+    case SDL_FINGERUP:
+      for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
+        if (e->button.button == SDL_BUTTON_LEFT &&
+            e->button.x > env->cells[i]->rect.x &&
+            e->button.y > env->cells[i]->rect.y &&
+            e->button.x < env->cells[i]->rect.x + env->cells[i]->rect.w &&
+            e->button.y < env->cells[i]->rect.y + env->cells[i]->rect.h) {
+          game_play_one_move(env->g, env->cells[i]->color);
+        } else if (e->tfinger.x > env->cells[i]->rect.x &&
+                   e->tfinger.y > env->cells[i]->rect.y &&
+                   e->tfinger.x <
+                       env->cells[i]->rect.x + env->cells[i]->rect.w &&
+                   e->tfinger.y < env->cells[i]->rect.y + env->cells[i]->rect.h)
+          game_play_one_move(env->g, env->cells[i]->color);
+      break;
+
+    default:
+      break;
   }
 
   return false;
