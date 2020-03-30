@@ -326,7 +326,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   env->btnQuit.rect.x = winW - xWinPadding / 2 - env->btnQuit.rect.w;
   env->btnQuit.rect.y = winH - yWinPadding * 3 + rect.h;
   // Select btn sprite state
-  rs.x = env->btnQuit.pressed ? rs.h * 2 : env->btnQuit.hover ? rs.h : 0;
+  rs.y = env->btnQuit.pressed ? rs.h * 2 : env->btnQuit.hover ? rs.h : 0;
   SDL_RenderCopy(ren, env->button, &rs, &env->btnQuit.rect);
 
   // Draw restart button
@@ -336,7 +336,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
       winW - xWinPadding / 2 - env->btnRestart.rect.w - env->btnQuit.rect.w;
   env->btnRestart.rect.y = winH - yWinPadding * 3 + rect.h;
   // Select btn sprite state
-  rs.x = env->btnRestart.pressed ? rs.h * 2 : env->btnRestart.hover ? rs.h : 0;
+  rs.y = env->btnRestart.pressed ? rs.h * 2 : env->btnRestart.hover ? rs.h : 0;
   SDL_RenderCopy(ren, env->button, &rs, &env->btnRestart.rect);
 }
 
