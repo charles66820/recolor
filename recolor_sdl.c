@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,10 +20,74 @@
 #define SHADOWBOX2 "assets/shadowBox2.png"
 #define SHADOWBOX3 "assets/shadowBox3.png"
 
-typedef struct color_box {
+typedef struct color_cell {
   SDL_Rect rect;
   color color;
-} COLOR_Box;
+} COLOR_Cell;
+
+void freeColorCell(COLOR_Cell* cell) {
+  if (cell) {
+    //if (cell->rect) SDL_free(cell->rect);
+    free(cell);
+  }
+}
+
+SDL_Color getColorFromGameColor(color c) {
+  switch (c) {
+    case 0:
+      return (SDL_Color){255, 0, 0, 1};
+      break;
+    case 1:
+      return (SDL_Color){0, 255, 0, 1};
+      break;
+    case 2:
+      return (SDL_Color){0, 0, 255, 1};
+      break;
+    case 3:
+      return (SDL_Color){255, 255, 0, 1};
+      break;
+    case 4:
+      return (SDL_Color){255, 0, 255, 1};
+      break;
+    case 5:
+      return (SDL_Color){0, 255, 255, 1};
+      break;
+    case 6:
+      return (SDL_Color){255, 153, 0, 1};
+      break;
+    case 7:
+      return (SDL_Color){255, 0, 153, 1};
+      break;
+    case 8:
+      return (SDL_Color){153, 255, 0, 1};
+      break;
+    case 9:
+      return (SDL_Color){153, 0, 255, 1};
+      break;
+    case 10:
+      return (SDL_Color){0, 153, 255, 1};
+      break;
+    case 11:
+      return (SDL_Color){0, 255, 153, 1};
+      break;
+    case 12:
+      return (SDL_Color){153, 255, 153, 1};
+      break;
+    case 13:
+      return (SDL_Color){255, 153, 153, 1};
+      break;
+    case 14:
+      return (SDL_Color){153, 153, 255, 1};
+      break;
+    case 15:
+      return (SDL_Color){255, 255, 255, 1};
+      break;
+
+    default:
+      return (SDL_Color){0, 0, 0, 1};
+      break;
+  }
+}
 
 typedef struct button {
   SDL_Rect rect;
@@ -43,6 +108,7 @@ struct Env_t {
   SDL_Texture* shadowBox2;
   SDL_Texture* shadowBox3;
   game g;
+  COLOR_Cell** cells;
 };
 
 Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
@@ -104,6 +170,9 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   // Set icon
   SDL_SetWindowIcon(win, env->icon);
 
+  env->cells =
+      calloc(game_height(env->g) * game_width(env->g), sizeof(COLOR_Cell*));
+
   return env;
 }
 
@@ -126,6 +195,8 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   int xWinPadding = winW * 8 / 100;
   int yWinPadding = winH * 4 / 100;
 
+  int gridPadding = 18;
+
   int gridMaxW = winW - xWinPadding * 2;
   int gridMaxH = winH - yWinPadding * 4;
 
@@ -135,23 +206,41 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   int gridW = cellSize * gameW;
   int gridH = cellSize * gameH;
 
+  cellSize = gridMaxW / gameW > gridMaxH / gameH
+                 ? (gridMaxH - gridPadding * 2) / gameH
+                 : (gridMaxW - gridPadding * 2) / gameW;
+
+  int gridX = (winW - gridW) / 2;
+  int gridY = (winH - yWinPadding * 3 - gridH) / 2;
+
   // Draw rounded surface for the color grid
-  SDL_Rect rect = {(winW - gridW) / 2, (winH - yWinPadding * 3 - gridH) / 2,
-                   gridW, gridH};
+  SDL_Rect rect = {gridX, gridY, gridW, gridH};
   SDL_RenderCopy(ren, env->shadowBox1, NULL, &rect);
 
   // Draw grid
+
+  // Remove last cells
+  for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
+    freeColorCell(env->cells[i]);
+
+  // Create new cells
   for (int y = 0; y < gameH; y++)
     for (int x = 0; x < gameW; x++) {
-      rect.x = cellSize * x + 4;
-      rect.y = cellSize * y + 4;
+      // SDL_Rect* rect = SDL_malloc(sizeof(SDL_Rect));
+      rect.x = cellSize * x + gridX + gridPadding;
+      rect.y = cellSize * y + gridY + gridPadding;
       rect.w = cellSize;
       rect.h = cellSize;
-      COLOR_Box cb = {rect, game_cell_current_color(env->g, x, y)};
+      COLOR_Cell* cell = malloc(sizeof(COLOR_Cell));
+      cell->rect = rect;
+      cell->color = game_cell_current_color(env->g, x, y);
+      env->cells[(y * gameW) + x] = cell;
+
+      SDL_Color c = getColorFromGameColor(cell->color);
+
+      SDL_SetRenderDrawColor(ren, c.r, c.g, c.b, 200);
+      SDL_RenderFillRect(ren, &rect);
     }
-  // SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
-  // SDL_RenderDrawRect(ren, &rect);
-  // SDL_RenderFillRect(ren, &rect);
 
   // Draw line
   SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
@@ -162,6 +251,20 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
   if (e->type == SDL_QUIT) {
     return true;
+  }
+  if (e->type == SDL_MOUSEBUTTONUP || e->type == SDL_FINGERUP) {
+    for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
+      if (e->button.button == SDL_BUTTON_LEFT &&
+          e->button.x > env->cells[i]->rect.x &&
+          e->button.y > env->cells[i]->rect.y &&
+          e->button.x < env->cells[i]->rect.x + env->cells[i]->rect.w &&
+          e->button.y < env->cells[i]->rect.y + env->cells[i]->rect.h) {
+        game_play_one_move(env->g, env->cells[i]->color);
+      } else if (e->tfinger.x > env->cells[i]->rect.x &&
+          e->tfinger.y > env->cells[i]->rect.y &&
+          e->tfinger.x < env->cells[i]->rect.x + env->cells[i]->rect.w &&
+          e->tfinger.y < env->cells[i]->rect.y + env->cells[i]->rect.h)
+        game_play_one_move(env->g, env->cells[i]->color);
   }
 
   return false;
@@ -178,6 +281,7 @@ void clean(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   SDL_DestroyTexture(env->shadowBox1);
   SDL_DestroyTexture(env->shadowBox2);
   SDL_DestroyTexture(env->shadowBox3);
+  free(env->cells);
   game_delete(env->g);
   free(env);
 }
