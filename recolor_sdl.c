@@ -101,7 +101,8 @@ struct Env_t {
   SDL_Texture* shadowBox2;
   SDL_Texture* shadowBox3;
   game g;
-  COLOR_Cell** cells;
+  COLOR_Cell* cells;
+  BUTTON btn;
 };
 
 Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
@@ -164,7 +165,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   SDL_SetWindowIcon(win, env->icon);
 
   env->cells =
-      calloc(game_height(env->g) * game_width(env->g), sizeof(COLOR_Cell*));
+      calloc(game_height(env->g) * game_width(env->g), sizeof(COLOR_Cell));
 
   return env;
 }
@@ -211,25 +212,19 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   SDL_Rect rect = {gridX, gridY, gridW, gridH};
   SDL_RenderCopy(ren, env->shadowBox1, NULL, &rect);
 
-  // Draw grid
-
-  // Remove last cells
-  for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
-    free(env->cells[i]);
-
-  // Create new cells
+  // Create and draw grid cells
   for (int y = 0; y < gameH; y++)
     for (int x = 0; x < gameW; x++) {
       rect.x = cellSize * x + gridX + gridXPadding;
       rect.y = cellSize * y + gridY + gridYPadding;
       rect.w = cellSize;
       rect.h = cellSize;
-      COLOR_Cell* cell = malloc(sizeof(COLOR_Cell));
-      cell->rect = rect;
-      cell->color = game_cell_current_color(env->g, x, y);
+      COLOR_Cell cell;
+      cell.rect = rect;
+      cell.color = game_cell_current_color(env->g, x, y);
       env->cells[(y * gameW) + x] = cell;
 
-      SDL_Color c = getColorFromGameColor(cell->color);
+      SDL_Color c = getColorFromGameColor(cell.color);
 
       SDL_SetRenderDrawColor(ren, c.r, c.g, c.b, 200);
       SDL_RenderFillRect(ren, &rect);
@@ -250,17 +245,17 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
     case SDL_FINGERUP:
       for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
         if (e->button.button == SDL_BUTTON_LEFT &&
-            e->button.x > env->cells[i]->rect.x &&
-            e->button.y > env->cells[i]->rect.y &&
-            e->button.x < env->cells[i]->rect.x + env->cells[i]->rect.w &&
-            e->button.y < env->cells[i]->rect.y + env->cells[i]->rect.h) {
-          game_play_one_move(env->g, env->cells[i]->color);
-        } else if (e->tfinger.x > env->cells[i]->rect.x &&
-                   e->tfinger.y > env->cells[i]->rect.y &&
+            e->button.x > env->cells[i].rect.x &&
+            e->button.y > env->cells[i].rect.y &&
+            e->button.x < env->cells[i].rect.x + env->cells[i].rect.w &&
+            e->button.y < env->cells[i].rect.y + env->cells[i].rect.h) {
+          game_play_one_move(env->g, env->cells[i].color);
+        } else if (e->tfinger.x > env->cells[i].rect.x &&
+                   e->tfinger.y > env->cells[i].rect.y &&
                    e->tfinger.x <
-                       env->cells[i]->rect.x + env->cells[i]->rect.w &&
-                   e->tfinger.y < env->cells[i]->rect.y + env->cells[i]->rect.h)
-          game_play_one_move(env->g, env->cells[i]->color);
+                       env->cells[i].rect.x + env->cells[i].rect.w &&
+                   e->tfinger.y < env->cells[i].rect.y + env->cells[i].rect.h)
+          game_play_one_move(env->g, env->cells[i].color);
       break;
 
     default:
