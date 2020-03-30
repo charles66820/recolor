@@ -11,10 +11,11 @@
 #include "game_io.h"
 
 // Games assets
-#define FONT "assets/Roboto-Regular.ttf"  // TEMP: see for multiple fonts
-#define FONTSIZE 36
-#define BACKGROUND "assets/nodejs.svg"  // TEMP: change with real bg
-#define ICON "assets/129Magikarp.png"   // TEMP: change with real icon
+#define FONT_ROBOTO "assets/Roboto-Regular.ttf"
+#define FONT_OPENDYSLEXIC "assets/OpenDyslexic-Regular.otf"
+#define FONTSIZE 12
+#define BACKGROUND "assets/background.png"
+#define ICON "assets/icon.png"
 #define SHADOWBOX0 "assets/shadowBox0.png"
 #define SHADOWBOX1 "assets/shadowBox1.png"
 #define SHADOWBOX2 "assets/shadowBox2.png"
@@ -28,56 +29,56 @@ typedef struct color_cell {
 SDL_Color getColorFromGameColor(color c) {
   switch (c) {
     case 0:
-      return (SDL_Color){255, 0, 0, 1};
+      return (SDL_Color){255, 0, 0, SDL_ALPHA_OPAQUE};
       break;
     case 1:
-      return (SDL_Color){0, 255, 0, 1};
+      return (SDL_Color){0, 255, 0, SDL_ALPHA_OPAQUE};
       break;
     case 2:
-      return (SDL_Color){0, 0, 255, 1};
+      return (SDL_Color){0, 0, 255, SDL_ALPHA_OPAQUE};
       break;
     case 3:
-      return (SDL_Color){255, 255, 0, 1};
+      return (SDL_Color){255, 255, 0, SDL_ALPHA_OPAQUE};
       break;
     case 4:
-      return (SDL_Color){255, 0, 255, 1};
+      return (SDL_Color){255, 0, 255, SDL_ALPHA_OPAQUE};
       break;
     case 5:
-      return (SDL_Color){0, 255, 255, 1};
+      return (SDL_Color){0, 255, 255, SDL_ALPHA_OPAQUE};
       break;
     case 6:
-      return (SDL_Color){255, 153, 0, 1};
+      return (SDL_Color){255, 153, 0, SDL_ALPHA_OPAQUE};
       break;
     case 7:
-      return (SDL_Color){255, 0, 153, 1};
+      return (SDL_Color){255, 0, 153, SDL_ALPHA_OPAQUE};
       break;
     case 8:
-      return (SDL_Color){153, 255, 0, 1};
+      return (SDL_Color){153, 255, 0, SDL_ALPHA_OPAQUE};
       break;
     case 9:
-      return (SDL_Color){153, 0, 255, 1};
+      return (SDL_Color){153, 0, 255, SDL_ALPHA_OPAQUE};
       break;
     case 10:
-      return (SDL_Color){0, 153, 255, 1};
+      return (SDL_Color){0, 153, 255, SDL_ALPHA_OPAQUE};
       break;
     case 11:
-      return (SDL_Color){0, 255, 153, 1};
+      return (SDL_Color){0, 255, 153, SDL_ALPHA_OPAQUE};
       break;
     case 12:
-      return (SDL_Color){153, 255, 153, 1};
+      return (SDL_Color){153, 255, 153, SDL_ALPHA_OPAQUE};
       break;
     case 13:
-      return (SDL_Color){255, 153, 153, 1};
+      return (SDL_Color){255, 153, 153, SDL_ALPHA_OPAQUE};
       break;
     case 14:
-      return (SDL_Color){153, 153, 255, 1};
+      return (SDL_Color){153, 153, 255, SDL_ALPHA_OPAQUE};
       break;
     case 15:
-      return (SDL_Color){255, 255, 255, 1};
+      return (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE};
       break;
 
     default:
-      return (SDL_Color){0, 0, 0, 1};
+      return (SDL_Color){0, 0, 0, SDL_ALPHA_OPAQUE};
       break;
   }
 }
@@ -90,8 +91,12 @@ typedef struct button {
 } BUTTON;
 
 struct Env_t {
+  bool allowTransparency;
+  bool allowBackground;
+  bool allowDyslexic;
   SDL_Texture* background;
   SDL_Surface* icon;
+  TTF_Font* font;
   SDL_Surface* sShadowBox0;
   SDL_Surface* sShadowBox1;
   SDL_Surface* sShadowBox2;
@@ -107,6 +112,10 @@ struct Env_t {
 
 Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   Env* env = malloc(sizeof(struct Env_t));
+  // Settings
+  env->allowBackground = true;
+  env->allowDyslexic = false;
+  env->allowTransparency = true;
 
   // Init game
   if (argc > 1) {
@@ -140,6 +149,11 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   env->icon = IMG_Load(ICON);
   if (!env->icon) ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
 
+  env->font = TTF_OpenFont(env->allowDyslexic ? FONT_OPENDYSLEXIC : FONT_ROBOTO,
+                           FONTSIZE);
+  if (!env->font)
+    ERROR("TTF error", "Error: TTF_OpenFont (%s)\n", SDL_GetError());
+
   // Load shadows
   env->sShadowBox0 = IMG_Load(SHADOWBOX0);
   if (!env->sShadowBox0)
@@ -172,13 +186,13 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
 void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   // set background color
-  SDL_SetRenderDrawColor(ren, 250, 250, 250, 255);
+  SDL_SetRenderDrawColor(ren, 250, 250, 250, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(ren);
 
-  // Draw background image
-  // SDL_RenderCopy(ren, env->background, NULL, NULL);
-
   // Local vars
+  SDL_Texture* text;
+  SDL_Surface* s;
+  SDL_Rect rect;
   int winW = SCREEN_WIDTH;
   int winH = SCREEN_HEIGHT;
   int gameW = game_width(env->g);
@@ -208,8 +222,21 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   int gridX = (winW - gridW) / 2;
   int gridY = (winH - yWinPadding * 3 - gridH) / 2;
 
+  // Draw background image
+  if (env->allowBackground) {
+    rect.x = 0;
+    rect.y = 0;
+    rect.w = winW;
+    rect.h = winH - yWinPadding * 3;
+    SDL_RenderCopy(ren, env->background, NULL, &rect);
+  }
+
   // Draw rounded surface for the color grid
-  SDL_Rect rect = {gridX, gridY, gridW, gridH};
+  if (env->allowTransparency) SDL_SetTextureAlphaMod(env->shadowBox1, 175);
+  rect.x = gridX;
+  rect.y = gridY;
+  rect.w = gridW;
+  rect.h = gridH;
   SDL_RenderCopy(ren, env->shadowBox1, NULL, &rect);
 
   // Create and draw grid cells
@@ -226,14 +253,53 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 
       SDL_Color c = getColorFromGameColor(cell.color);
 
-      SDL_SetRenderDrawColor(ren, c.r, c.g, c.b, 200);
+      SDL_SetRenderDrawColor(ren, c.r, c.g, c.b,
+                             env->allowTransparency ? 175 : SDL_ALPHA_OPAQUE);
       SDL_RenderFillRect(ren, &rect);
     }
 
   // Draw line
-  SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+  SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderDrawLine(ren, 0, winH - yWinPadding * 3, winW,
                      winH - yWinPadding * 3);
+
+  // Draw game stats
+  TTF_SetFontStyle(env->font, TTF_STYLE_BOLD);
+  char* msg = malloc((50 + 78 * 2) * sizeof(char));
+  // 50 char in format + max char in uint * 2 uint
+  sprintf(msg, "Nombre de coups joués / coups max: %u / %u",
+          game_nb_moves_cur(env->g), game_nb_moves_max(env->g));
+
+  s = TTF_RenderUTF8_Blended(env->font, msg,
+                             (SDL_Color){61, 133, 198, SDL_ALPHA_OPAQUE});
+  text = SDL_CreateTextureFromSurface(ren, s);
+  SDL_FreeSurface(s);
+  rect.x = xWinPadding / 2;
+  rect.y = winH - yWinPadding * 3;
+  SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
+  SDL_RenderCopy(ren, text, NULL, &rect);
+  SDL_DestroyTexture(text);
+  free(msg);
+
+  // Print on game is lose or win
+  if (game_nb_moves_cur(env->g) >= game_nb_moves_max(env->g) &&
+      !game_is_over(env->g)) {
+    s = TTF_RenderUTF8_Blended(env->font, "DOMMAGE",
+                               (SDL_Color){255, 0, 0, SDL_ALPHA_OPAQUE});
+    goto prinLoseWin;
+  }
+  if (game_is_over(env->g)) {
+    s = TTF_RenderUTF8_Blended(env->font, "BRAVO",
+                               (SDL_Color){0, 255, 0, SDL_ALPHA_OPAQUE});
+  prinLoseWin:
+    text = SDL_CreateTextureFromSurface(ren, s);
+    SDL_FreeSurface(s);
+    rect.x = xWinPadding / 2;
+    rect.y = winH - yWinPadding * 3 + rect.h;
+    SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
+    SDL_RenderCopy(ren, text, NULL, &rect);
+    SDL_DestroyTexture(text);
+  }
 }
 
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
@@ -249,13 +315,34 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
             e->button.y > env->cells[i].rect.y &&
             e->button.x < env->cells[i].rect.x + env->cells[i].rect.w &&
             e->button.y < env->cells[i].rect.y + env->cells[i].rect.h) {
-          game_play_one_move(env->g, env->cells[i].color);
+          if (env->cells[0].color != env->cells[i].color)
+            game_play_one_move(env->g, env->cells[i].color);
         } else if (e->tfinger.x > env->cells[i].rect.x &&
                    e->tfinger.y > env->cells[i].rect.y &&
-                   e->tfinger.x <
-                       env->cells[i].rect.x + env->cells[i].rect.w &&
+                   e->tfinger.x < env->cells[i].rect.x + env->cells[i].rect.w &&
                    e->tfinger.y < env->cells[i].rect.y + env->cells[i].rect.h)
-          game_play_one_move(env->g, env->cells[i].color);
+          if (env->cells[0].color != env->cells[i].color)
+            game_play_one_move(env->g, env->cells[i].color);
+      break;
+    case SDL_KEYDOWN:
+      switch (e->key.keysym.sym) {
+        case SDLK_r:
+          game_restart(env->g);
+          break;
+        case SDLK_q:
+          return true;
+          break;
+        case SDLK_s:
+          // char fileName[251];
+          // printf("Saisiser le nom du fichier où sera enregistré le jeu : ");
+          // scanf("%250s", fileName);
+          // strcat(fileName, ".rec");
+          game_save(env->g, "data/defaultName.rec");
+          // printf("Partie enregistré dans le fichier %s!\n", fileName);
+          break;
+        default:
+          break;
+      }
       break;
 
     default:
@@ -268,6 +355,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
 void clean(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   SDL_DestroyTexture(env->background);
   SDL_FreeSurface(env->icon);
+  TTF_CloseFont(env->font);
   SDL_FreeSurface(env->sShadowBox0);
   SDL_FreeSurface(env->sShadowBox1);
   SDL_FreeSurface(env->sShadowBox2);
