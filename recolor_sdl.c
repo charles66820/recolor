@@ -51,10 +51,10 @@ SDL_Color getColorFromGameColor(color c) {
       return (SDL_Color){255, 153, 0, SDL_ALPHA_OPAQUE};
       break;
     case 7:
-      return (SDL_Color){255, 0, 153, SDL_ALPHA_OPAQUE};
+      return (SDL_Color){153, 51, 0, SDL_ALPHA_OPAQUE};
       break;
     case 8:
-      return (SDL_Color){153, 255, 0, SDL_ALPHA_OPAQUE};
+      return (SDL_Color){153, 204, 0, SDL_ALPHA_OPAQUE};
       break;
     case 9:
       return (SDL_Color){153, 0, 255, SDL_ALPHA_OPAQUE};
@@ -327,27 +327,44 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   env->btnQuit.rect.y = winH - yWinPadding * 3 + rect.h;
   // Select btn sprite state
   rs.x = env->btnQuit.pressed ? rs.h * 2 : env->btnQuit.hover ? rs.h : 0;
-  SDL_RenderCopy(ren, text, &rs, &env->btnQuit.rect);
+  SDL_RenderCopy(ren, env->button, &rs, &env->btnQuit.rect);
 
   // Draw restart button
   env->btnRestart.rect.w = 100;
   env->btnRestart.rect.h = 20;
   env->btnRestart.rect.x =
-      winW - xWinPadding / 2 - env->btnRestart.rect.w - env->btnQuit.rect.w;
+      winW - xWinPadding / 2 - env->btnRestart.rect.w - env->btnRestart.rect.w;
   env->btnRestart.rect.y = winH - yWinPadding * 3 + rect.h;
   // Select btn sprite state
   rs.x = env->btnRestart.pressed ? rs.h * 2 : env->btnRestart.hover ? rs.h : 0;
-  SDL_RenderCopy(ren, text, &rs, &env->btnRestart.rect);
+  SDL_RenderCopy(ren, env->button, &rs, &env->btnRestart.rect);
 
-  /*mouse.x > env->btnQuit.rect.x &&
-    mouse.y > env->btnQuit.rect.y &&
-    mouse.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-    mouse.y < env->btnQuit.rect.y + env->btnQuit.rect.h */
+  // if ((mouse.x > env->btnRestart.rect.x &&
+  //        mouse.y > env->btnRestart.rect.y &&
+  //        mouse.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
+  //        mouse.y < env->btnRestart.rect.y + env->btnRestart.rect.h) /*||
+  //       (e->tfinger.x > env->btnRestart.rect.x &&
+  //        e->tfinger.y > env->btnRestart.rect.y &&
+  //        e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
+  //        e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h)*/)
+  //   env->btnRestart.hover = true;
+  // if ((
+  //        mouse.x > env->btnQuit.rect.x &&
+  //        mouse.y > env->btnQuit.rect.y &&
+  //        mouse.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
+  //        mouse.y < env->btnQuit.rect.y + env->btnQuit.rect.h) /*||
+  //       (e->tfinger.x > env->btnQuit.rect.x &&
+  //        e->tfinger.y > env->btnQuit.rect.y &&
+  //        e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
+  //        e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h)*/)
+  //   env->btnQuit.hover = true;
 }
 
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
   env->btnRestart.pressed = false;
   env->btnQuit.pressed = false;
+  env->btnQuit.hover = false;
+  env->btnQuit.hover = false;
 
   switch (e->type) {
     case SDL_QUIT:
