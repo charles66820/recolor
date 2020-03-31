@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
   // Initialize SDL2 and some extensions
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
     ERRORLOG("Error: SDL_Init VIDEO (%s)\n", SDL_GetError());
-  //IMG_INIT_PNG & IMG_INIT_PNG
+  // IMG_INIT_PNG & IMG_INIT_PNG
   if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG)
     ERRORLOG("Error: IMG_Init PNG (%s)", SDL_GetError());
   if (TTF_Init() != 0) ERRORLOG("Error: TTF_Init (%s)\n", SDL_GetError());
@@ -21,9 +21,9 @@ int main(int argc, char* argv[]) {
       SCREEN_HEIGHT, SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE);
   if (!win) ERRORLOG("Error: SDL_CreateWindow (%s)\n", SDL_GetError());
 
-  // SDL_RENDERER_ACCELERATED to SDL_RENDERER_SOFTWARE if CREMI
   SDL_Renderer* ren = SDL_CreateRenderer(
       win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  if (!ren) ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
   if (!ren) ERROR("Error", "Error: SDL_CreateRenderer (%s)\n", SDL_GetError());
 
   SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_BLEND);
