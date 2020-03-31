@@ -75,18 +75,21 @@ make install
 ## Features
 
 - Recolor text version (recolor_text or recolor_text.exe)
-  ```
+
+  ```text
   This version of the game work on your terminal, it work with number, each number means one color.
   ```
 
 - Recolor solve (recolor_solve or recolor_solve.exe)
-  ```
+
+  ```text
   this file solve one already existing game, you can search for 1 possible answer, the shortest answer, or the numbers of total possible answer.
   ```
 
 - Recolor graphic version (recolor_sdl or recolor_sdl.exe)
   When the game is launch, choose a color to modify the game. Press r to restart or q to quit the game.
-  ```
+
+  ```text
   This is the graphic version of the game, it launch an executable who let you start a game, choose a color to make a move.
   ```
 
