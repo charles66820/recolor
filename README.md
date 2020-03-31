@@ -17,7 +17,7 @@
 
 This is the readme file about the game recolor.
 
-// TODO: add game presentation
+Recolor is a game where you have to recolor the game until there is only one color left. you can change the color of the top-left square to propagate your color, everytime you change color, you add one move to the game, and all the color of the previous move change to the new color move.
 
 It use SDL.
 
@@ -75,14 +75,20 @@ make install
 ## Features
 
 - Recolor text version (recolor_text or recolor_text.exe)
-  // TODO: description of recolor version text
+  ```
+  This version of the game work on your terminal, it work with number, each number means one color.
+  ```
 
 - Recolor solve (recolor_solve or recolor_solve.exe)
-  // TODO: description of recolor solver
+  ```
+  this file solve one already existing game, you can search for 1 possible answer, the shortest answer, or the numbers of total possible answer.
+  ```
 
 - Recolor graphic version (recolor_sdl or recolor_sdl.exe)
   When the game is launch, choose a color to modify the game. Press r to restart or q to quit the game.
-  // TODO: complete description
+  ```
+  This is the graphic version of the game, it launch an executable who let you start a game, choose a color to make a move.
+  ```
 
 ## Team
 
