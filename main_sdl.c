@@ -3,6 +3,7 @@
 #include <SDL_ttf.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "SDL_model.h"
 
 int main(int argc, char* argv[]) {
