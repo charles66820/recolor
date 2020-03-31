@@ -9,7 +9,7 @@
       "program": "${workspaceFolder}/build/generated/recolor_text",
       // "program": "${fileDirname}/${fileBasenameNoExtension}",
       "args": [],
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "externalConsole": false,
       "preLaunchTask": "build"
@@ -20,7 +20,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/recolor_sdl",
       "args": [],
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "externalConsole": false,
       "preLaunchTask": "build"
@@ -32,7 +32,7 @@
       "program": "${workspaceFolder}/build/generated/recolor_text",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "setupCommands": [
         {
@@ -52,10 +52,10 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/recolor_sdl",
       "args": [
-        "data/horizontal_game2S.rec"
+        "../data/horizontal_game2S.rec"
       ],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "setupCommands": [
         {
@@ -76,11 +76,11 @@
       "program": "${workspaceFolder}/build/generated/recolor_solve",
       "args": [
         "FIND_ONE",
-        "data/default_game.rec",
+        "../data/default_game.rec",
         "testone"
       ],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "setupCommands": [
         {
@@ -101,11 +101,11 @@
       "program": "${workspaceFolder}/build/generated/recolor_solve",
       "args": [
         "NB_SOL",
-        "data/default_game.rec",
+        "../data/default_game.rec",
         "testnb"
       ],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "setupCommands": [
         {
@@ -126,11 +126,11 @@
       "program": "${workspaceFolder}/build/generated/recolor_solve",
       "args": [
         "FIND_MIN",
-        "data/default_game.rec",
+        "../data/default_game.rec",
         "testmin"
       ],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "setupCommands": [
         {
@@ -151,7 +151,7 @@
       "program": "${workspaceFolder}/build/generated/test_game_cgoedefroit",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "setupCommands": [
         {
@@ -172,7 +172,7 @@
       "program": "${workspaceFolder}/build/generated/test_game_arblondeau",
       "args": [],
       "stopAtEntry": true,
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
@@ -192,7 +192,7 @@
       "program": "${workspaceFolder}/build/generated/test_game_vandrault",
       "args": [],
       "stopAtEntry": true,
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
@@ -212,7 +212,7 @@
       "program": "${workspaceFolder}/build/generated/test_solution_arblondeau",
       "args": [],
       "stopAtEntry": true,
-      "cwd": "${workspaceFolder}/build",
+      "cwd": "${workspaceFolder}/build/generated",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",

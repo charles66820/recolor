@@ -38,7 +38,7 @@ set(EXECUTABLE_OUTPUT_PATH "generated")
 
 # copy data and assets folders to generated folder
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${EXECUTABLE_OUTPUT_PATH})
 
 ### Implementation of all executable
 # Creation of the library game
@@ -52,6 +52,7 @@ ENDIF()
 
 add_library (sol lib/solution.c)
 add_library (rand lib/game_rand.c)
+
 # executable of the game
 add_executable (recolor_text recolor_text.c)
 target_link_libraries (recolor_text game)
