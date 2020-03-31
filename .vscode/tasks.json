@@ -48,7 +48,7 @@
         {
             "label": "valgrind callgrind",
             "type": "shell",
-            "command": "valgrind --tool=callgrind ${input:debugBin}",
+            "command": "valgrind --tool=callgrind ${input:debugBin} && echo 'use kcachegrind'",
             "options": {
                 "cwd": "${workspaceRoot}/build"
             },
@@ -123,7 +123,7 @@
         {
             "id": "debugBin",
             "description": "executable args:",
-            "default": "./generated/recolor_solve FIND_ONE data/default_game.rec solution",
+            "default": "./generated/recolor_sdl data/horizontal_game2S.rec",
             "type": "promptString"
         },
     ]

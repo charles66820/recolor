@@ -51,7 +51,9 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/generated/recolor_sdl",
-      "args": [],
+      "args": [
+        "data/horizontal_game2S.rec"
+      ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build",
       "environment": [],

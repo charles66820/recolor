@@ -9,7 +9,8 @@ int main(int argc, char* argv[]) {
   // Initialize SDL2 and some extensions
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
     ERRORLOG("Error: SDL_Init VIDEO (%s)\n", SDL_GetError());
-  if (IMG_Init(IMG_INIT_PNG & IMG_INIT_PNG) != IMG_INIT_PNG)
+  //IMG_INIT_PNG & IMG_INIT_PNG
+  if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG)
     ERRORLOG("Error: IMG_Init PNG (%s)", SDL_GetError());
   if (TTF_Init() != 0) ERRORLOG("Error: TTF_Init (%s)\n", SDL_GetError());
 
