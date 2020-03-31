@@ -14,7 +14,7 @@
  * @return a random game.
  * @post the result is a game. This game doesn't necessarily admit a solution.
  **/
-game game_random_ext(uint width, uint height, bool is_wrapping, uint max_color,
-                     uint nb_max_moves);
+game game_random_ext(uint width, uint height, uint nb_max_moves, uint max_color,
+                     bool is_wrapping);
 
 #endif  // GAME_RAND
