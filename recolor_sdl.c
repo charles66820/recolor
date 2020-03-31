@@ -321,8 +321,8 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   rs.h = rs.h / 3;
 
   // Draw quit button
-  env->btnQuit.rect.w = 100;
-  env->btnQuit.rect.h = 20;
+  env->btnQuit.rect.w = 150;
+  env->btnQuit.rect.h = 40;
   env->btnQuit.rect.x = winW - xWinPadding / 2 - env->btnQuit.rect.w;
   env->btnQuit.rect.y = winH - yWinPadding * 3 + rect.h;
   // Select btn sprite state
@@ -330,8 +330,8 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   SDL_RenderCopy(ren, env->button, &rs, &env->btnQuit.rect);
 
   // Draw restart button
-  env->btnRestart.rect.w = 100;
-  env->btnRestart.rect.h = 20;
+  env->btnRestart.rect.w = 150;
+  env->btnRestart.rect.h = 40;
   env->btnRestart.rect.x =
       winW - xWinPadding / 2 - env->btnRestart.rect.w - env->btnQuit.rect.w;
   env->btnRestart.rect.y = winH - yWinPadding * 3 + rect.h;
@@ -341,8 +341,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 }
 
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
-  env->btnRestart.pressed = false;
-  env->btnQuit.pressed = false;
+  // Set buttons attributes to default value
   env->btnRestart.hover = false;
   env->btnQuit.hover = false;
 
@@ -352,6 +351,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       break;
     case SDL_MOUSEMOTION:
     case SDL_FINGERMOTION:
+      // When button restart is hover the hover attribute is set to true
       if ((e->button.x > env->btnRestart.rect.x &&
            e->button.y > env->btnRestart.rect.y &&
            e->button.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
@@ -361,6 +361,8 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
            e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
            e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
         env->btnRestart.hover = true;
+
+      // When button quit is hover the hover attribute is set to true
       if ((e->button.x > env->btnQuit.rect.x &&
            e->button.y > env->btnQuit.rect.y &&
            e->button.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
@@ -373,6 +375,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       break;
     case SDL_MOUSEBUTTONUP:
     case SDL_FINGERUP:
+      // When color cell is clicked this color is play
       for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
         if ((e->button.button == SDL_BUTTON_LEFT &&
              e->button.x > env->cells[i].rect.x &&
@@ -385,6 +388,8 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
              e->tfinger.y < env->cells[i].rect.y + env->cells[i].rect.h))
           if (env->cells[0].color != env->cells[i].color)
             game_play_one_move(env->g, env->cells[i].color);
+
+      // When button restart is clicked the game is restart
       if ((e->button.button == SDL_BUTTON_LEFT &&
            e->button.x > env->btnRestart.rect.x &&
            e->button.y > env->btnRestart.rect.y &&
@@ -395,6 +400,8 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
            e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
            e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
         game_restart(env->g);
+
+      // When button quit is clicked the game is quit
       if ((e->button.button == SDL_BUTTON_LEFT &&
            e->button.x > env->btnQuit.rect.x &&
            e->button.y > env->btnQuit.rect.y &&
@@ -405,9 +412,14 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
            e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
            e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h))
         return true;
+
+      // Set buttons pressed attribute to default value
+      env->btnRestart.pressed = false;
+      env->btnQuit.pressed = false;
       break;
     case SDL_MOUSEBUTTONDOWN:
     case SDL_FINGERDOWN:
+      // When button restart is pressed the pressed attribute is set to true
       if ((e->button.button == SDL_BUTTON_LEFT &&
            e->button.x > env->btnRestart.rect.x &&
            e->button.y > env->btnRestart.rect.y &&
@@ -418,6 +430,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
            e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
            e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
         env->btnRestart.pressed = true;
+      // When button quit is pressed the pressed attribute is set to true
       if ((e->button.button == SDL_BUTTON_LEFT &&
            e->button.x > env->btnQuit.rect.x &&
            e->button.y > env->btnQuit.rect.y &&

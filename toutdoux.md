@@ -35,3 +35,4 @@
 
 - see "branch and bound algorithm" for optimize solver
 - add install in CMakeList.txt
+- if __WINDOWS__ hide cmd
