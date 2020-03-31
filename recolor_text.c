@@ -7,6 +7,7 @@
 #include <string.h>
 #include "game.h"
 #include "game_io.h"
+#include "game_rand.h"
 
 /**
  * @brief Print cells in stdout
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
   bool pl = true; // lose
   game g = NULL;
 
-  if (argc > 1) {
+  if (argc == 2) {
     g = game_load(argv[1]);
     if (g == NULL) printf("Error on game load : The default game as load\n");
   }
@@ -72,6 +73,24 @@ int main(int argc, char* argv[]) {
 
     // Create new game
     g = game_new(cells, nbMaxHit);
+  }
+
+  if (argc == 4){
+    g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+  }
+  if (argc == 5){
+    if (argv[4] == "N"){
+      g = game_random_ext(argv[1], argv[2], argv[3], 4, false);
+    }
+    else if (argv[4] == "S"){
+      g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+    }
+    else{
+      g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
+    }
+  }
+  if (argc == 6){
+    g = game_random_ext(argv[1], argv[2], argv[3], argv[4], argv[5]);
   }
 
   // Show the game for the first time
