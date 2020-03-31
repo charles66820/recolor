@@ -59,21 +59,7 @@ int main(int argc, char* argv[]) {
     if (g == NULL) printf("Error on game load : The default game as load\n");
   }
 
-  if (argc == 1 || g == NULL) {  // if game is launch without arguments or if
-                                 // game is null we create new game
-    int nbMaxHit = 12;
-
-    color cells[SIZE * SIZE] = {
-        0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
-        1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
-        2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
-        1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
-        0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
-        1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
-
-    // Create new game
-    g = game_new(cells, nbMaxHit);
-  }
+  
 
   if (argc == 4){
     g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
@@ -91,6 +77,22 @@ int main(int argc, char* argv[]) {
   }
   if (argc == 6){
     g = game_random_ext(argv[1], argv[2], argv[3], argv[4], argv[5]);
+  }
+
+  if (argc == 1 || g == NULL) {  // if game is launch without arguments or if
+                                 // game is null we create new game
+    int nbMaxHit = 12;
+
+    color cells[SIZE * SIZE] = {
+        0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
+        1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
+        2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
+        1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
+        0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
+        1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
+
+    // Create new game
+    g = game_new(cells, nbMaxHit);
   }
 
   // Show the game for the first time

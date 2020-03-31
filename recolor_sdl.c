@@ -129,6 +129,25 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
       ERROR("Game error", "Error on game load : The default game as load\n");
   }
 
+  
+  if (argc == 4){
+    env->g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+  }
+  if (argc == 5){
+    if (argv[4] == 'N'){
+      env->g = game_random_ext(argv[1], argv[2], argv[3], 4, false);
+    }
+    else if (argv[4] == 'S'){
+      env->g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+    }
+    else{
+      env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
+    }
+  }
+  if (argc == 6){
+    env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], argv[5]);
+  }
+
   if (argc == 1 || !env->g) {  // if game is launch without arguments or
                                // if game is null we create new game
     int nbMaxHit = 12;
@@ -143,23 +162,6 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
     // Create new game
     env->g = game_new(cells, nbMaxHit);
-  }
-  if (argc == 4){
-    g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
-  }
-  if (argc == 5){
-    if (argv[4] == 'N'){
-      g = game_random_ext(argv[1], argv[2], argv[3], 4, false);
-    }
-    else if (argv[4] == 'S'){
-      g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
-    }
-    else{
-      g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
-    }
-  }
-  if (argc == 6){
-    g = game_random_ext(argv[1], argv[2], argv[3], argv[4], argv[5]);
   }
 
   // Load background texture
