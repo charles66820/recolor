@@ -352,6 +352,16 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   // Select btn sprite state
   rs.y = env->btnQuit.pressed ? rs.h * 2 : env->btnQuit.hover ? rs.h : 0;
   SDL_RenderCopy(ren, env->button, &rs, &env->btnQuit.rect);
+  // Daw button text
+  s = TTF_RenderUTF8_Blended(env->font, "Quit",
+                             (SDL_Color){230, 92, 0, SDL_ALPHA_OPAQUE});
+  text = SDL_CreateTextureFromSurface(ren, s);
+  SDL_FreeSurface(s);
+  SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
+  rect.x = env->btnQuit.rect.x + ((env->btnQuit.rect.w - rect.w) / 2);
+  rect.y = env->btnQuit.rect.y + ((env->btnQuit.rect.h - rect.h) / 2);
+  SDL_RenderCopy(ren, text, NULL, &rect);
+  SDL_DestroyTexture(text);
 
   // Draw restart button
   env->btnRestart.rect.w = 150;
@@ -362,6 +372,16 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   // Select btn sprite state
   rs.y = env->btnRestart.pressed ? rs.h * 2 : env->btnRestart.hover ? rs.h : 0;
   SDL_RenderCopy(ren, env->button, &rs, &env->btnRestart.rect);
+  // Daw button text
+  s = TTF_RenderUTF8_Blended(env->font, "Restart",
+                             (SDL_Color){153, 51, 255, SDL_ALPHA_OPAQUE});
+  text = SDL_CreateTextureFromSurface(ren, s);
+  SDL_FreeSurface(s);
+  SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
+  rect.x = env->btnRestart.rect.x + ((env->btnRestart.rect.w - rect.w) / 2);
+  rect.y = env->btnRestart.rect.y + ((env->btnRestart.rect.h - rect.h) / 2);
+  SDL_RenderCopy(ren, text, NULL, &rect);
+  SDL_DestroyTexture(text);
 }
 
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
