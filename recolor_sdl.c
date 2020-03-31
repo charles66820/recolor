@@ -145,7 +145,12 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
     }
   }
   if (argc == 6){
-    env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], argv[5]);
+    if (argv[4] == 'N'){
+      env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], false);
+    }
+    else{
+      env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
+    }  
   }
 
   if (argc == 1 || !env->g) {  // if game is launch without arguments or

@@ -76,7 +76,12 @@ int main(int argc, char* argv[]) {
     }
   }
   if (argc == 6){
-    g = game_random_ext(argv[1], argv[2], argv[3], argv[4], argv[5]);
+    if (argv[4] == 'N'){
+      g = game_random_ext(argv[1], argv[2], argv[3], argv[4], false);
+    }
+    else{
+      g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
+    }  
   }
 
   if (argc == 1 || g == NULL) {  // if game is launch without arguments or if

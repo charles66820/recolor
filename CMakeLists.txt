@@ -55,13 +55,13 @@ add_library (rand lib/game_rand.c)
 
 # executable of the game
 add_executable (recolor_text recolor_text.c)
-target_link_libraries (recolor_text game)
+target_link_libraries (recolor_text game rand)
 
 add_executable(recolor_solve recolor_solve.c)
 target_link_libraries (recolor_solve pthread game m sol)
 
 add_executable(recolor_sdl main_sdl.c recolor_sdl.c)
-target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m)
+target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m rand)
 
 # executable of the bug finder
 add_executable (test_game_arblondeau tests/test_game_arblondeau.c)
