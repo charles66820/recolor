@@ -17,6 +17,8 @@
 
 This is the readme file about the game recolor.
 
+// TODO: add game presentation
+
 It use SDL.
 
 ## Compilation
@@ -73,10 +75,14 @@ make install
 ## Features
 
 - Recolor text version (recolor_text or recolor_text.exe)
-    Description of recolor version text
+  // TODO: description of recolor version text
+
+- Recolor solve (recolor_solve or recolor_solve.exe)
+  // TODO: description of recolor solver
 
 - Recolor graphic version (recolor_sdl or recolor_sdl.exe)
-    When the game is launch, choose a color to modify the game. Press r to restart or q to quit the game.
+  When the game is launch, choose a color to modify the game. Press r to restart or q to quit the game.
+  // TODO: complete description
 
 ## Team
 
