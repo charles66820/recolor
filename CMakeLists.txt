@@ -51,7 +51,7 @@ ELSE()
 ENDIF()
 
 add_library (sol lib/solution.c)
-
+add_library (rand lib/game_rand.c)
 # executable of the game
 add_executable (recolor_text recolor_text.c)
 target_link_libraries (recolor_text game)
