@@ -9,6 +9,7 @@
 #include "SDL_model.h"
 #include "game.h"
 #include "game_io.h"
+#include "game_rand.h"
 
 // Games assets
 #define FONT_ROBOTO "assets/Roboto-Regular.ttf"
@@ -122,7 +123,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   env->allowTransparency = true;
 
   // Init game
-  if (argc > 1) {
+  if (argc == 2) {
     env->g = game_load(argv[1]);
     if (!env->g)
       ERROR("Game error", "Error on game load : The default game as load\n");
@@ -142,6 +143,23 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
     // Create new game
     env->g = game_new(cells, nbMaxHit);
+  }
+  if (argc == 4){
+    g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+  }
+  if (argc == 5){
+    if (argv[4] == 'N'){
+      g = game_random_ext(argv[1], argv[2], argv[3], 4, false);
+    }
+    else if (argv[4] == 'S'){
+      g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+    }
+    else{
+      g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
+    }
+  }
+  if (argc == 6){
+    g = game_random_ext(argv[1], argv[2], argv[3], argv[4], argv[5]);
   }
 
   // Load background texture
