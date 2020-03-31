@@ -129,28 +129,24 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
       ERROR("Game error", "Error on game load : The default game as load\n");
   }
 
-  
-  if (argc == 4){
+  if (argc == 4) {
     env->g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
   }
-  if (argc == 5){
-    if (argv[4] == 'N'){
+  if (argc == 5) {
+    if (argv[4] == 'N') {
       env->g = game_random_ext(argv[1], argv[2], argv[3], 4, false);
-    }
-    else if (argv[4] == 'S'){
+    } else if (argv[4] == 'S') {
       env->g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
-    }
-    else{
+    } else {
       env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
     }
   }
-  if (argc == 6){
-    if (argv[4] == 'N'){
+  if (argc == 6) {
+    if (argv[4] == 'N') {
       env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], false);
-    }
-    else{
+    } else {
       env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
-    }  
+    }
   }
 
   if (argc == 1 || !env->g) {  // if game is launch without arguments or
@@ -212,6 +208,9 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
   // Set icon
   SDL_SetWindowIcon(win, env->icon);
+
+  // SDL_SetColorKey(env->icon, SDL_PIXELFORMAT_RGBA32,
+  //                 SDL_MapRGB(env->icon->format, 255, 0, 255));
 
   env->cells =
       calloc(game_height(env->g) * game_width(env->g), sizeof(COLOR_Cell));

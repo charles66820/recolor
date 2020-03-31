@@ -60,7 +60,12 @@ target_link_libraries (recolor_text game rand)
 add_executable(recolor_solve recolor_solve.c)
 target_link_libraries (recolor_solve pthread game m sol)
 
-add_executable(recolor_sdl main_sdl.c recolor_sdl.c)
+IF(WIN32)
+    add_executable(recolor_sdl WIN32 main_sdl.c recolor_sdl.c assets/ressourses.rc)
+    target_compile_options(recolor_sdl INTERFACE "-mwindows")
+ELSE()
+    add_executable(recolor_sdl main_sdl.c recolor_sdl.c assets/ressourses.rc)
+ENDIF()
 target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m rand)
 
 # executable of the bug finder
