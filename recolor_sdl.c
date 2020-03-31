@@ -148,12 +148,11 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
     g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
   }
   if (argc == 5){
-    if (argv[4] == "N"){
+    if (argv[4] == 'N'){
       g = game_random_ext(argv[1], argv[2], argv[3], 4, false);
     }
-    else if (argv[4] == "S"){
+    else if (argv[4] == 'S'){
       g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
-
     }
     else{
       g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
