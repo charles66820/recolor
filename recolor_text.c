@@ -62,25 +62,37 @@ int main(int argc, char* argv[]) {
   
 
   if (argc == 4){
-    g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+    int width = atoi(argv[1]);
+    int height = atoi(argv[2]);
+    int nb_moves_max = atoi(argv[3]);
+    g = game_random_ext(width, height, nb_moves_max, 4, true);
   }
   if (argc == 5){
+    int width = atoi(argv[1]);
+    int height = atoi(argv[2]);
+    int nb_moves_max = atoi(argv[3]);
     if (argv[4] == 'N'){
-      g = game_random_ext(argv[1], argv[2], argv[3], 4, false);
+      g = game_random_ext(width, height, nb_moves_max, 4, false);
     }
     else if (argv[4] == 'S'){
-      g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+      g = game_random_ext(width, height, nb_moves_max, 4, true);
     }
     else{
-      g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
+      int nb_colors = atoi(argv[4]);
+      g = game_random_ext(width, height, nb_moves_max, nb_colors, true);
     }
   }
   if (argc == 6){
-    if (argv[4] == 'N'){
-      g = game_random_ext(argv[1], argv[2], argv[3], argv[4], false);
+    int width = atoi(argv[1]);
+    int height = atoi(argv[2]);
+    int nb_moves_max = atoi(argv[3]);
+    int nb_colors = atoi(argv[4]);
+    int wrapping = atoi(argv[5];
+    if (wrapping == 'N'){
+      g = game_random_ext(width, height, nb_moves_max, nb_colors, false);
     }
     else{
-      g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
+      g = game_random_ext(width, height, nb_moves_max, nb_colors, true);
     }  
   }
 

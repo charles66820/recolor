@@ -215,22 +215,35 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   }
 
   if (argc == 4) {
-    env->g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+    int width = atoi(argv[1]);
+    int height = atoi(argv[2]);
+    int nb_moves_max = atoi(argv[3]);
+    env->g = game_random_ext(width, height, nb_moves_max, 4, true);
   }
   if (argc == 5) {
-    if (argv[4] == 'N') {
-      env->g = game_random_ext(argv[1], argv[2], argv[3], 4, false);
-    } else if (argv[4] == 'S') {
-      env->g = game_random_ext(argv[1], argv[2], argv[3], 4, true);
+    int width = atoi(argv[1]);
+    int height = atoi(argv[2]);
+    int nb_moves_max = atoi(argv[3]);
+    int wrapping = atoi(argv[4]);
+    if (wrapping == 'N') {
+      env->g = game_random_ext(width, height, nb_moves_max, 4, false);
+    } else if (wrapping == 'S') {
+      env->g = game_random_ext(width, height, nb_moves_max, 4, true);
     } else {
-      env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
+      int nb_colors = atoi(argv[4]);
+      env->g = game_random_ext(width, height, nb_moves_max, nb_colors, true);
     }
   }
   if (argc == 6) {
-    if (argv[4] == 'N') {
-      env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], false);
+    int width = atoi(argv[1]);
+    int height = atoi(argv[2]);
+    int nb_moves_max = atoi(argv[3]);
+    int nb_colors = atoi(argv[4]);
+    int wrapping = atoi(argv[5]);
+    if (wrapping == 'N') {
+      env->g = game_random_ext(width, height, nb_moves_max, nb_colors, false);
     } else {
-      env->g = game_random_ext(argv[1], argv[2], argv[3], argv[4], true);
+      env->g = game_random_ext(width, height, nb_moves_max, nb_colors, true);
     }
   }
 
