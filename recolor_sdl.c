@@ -134,6 +134,35 @@ typedef struct button {
   bool pressed;
 } BUTTON;
 
+bool requestQuit(SDL_Window* win) {
+  const SDL_MessageBoxButtonData buttons[] = {
+      {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Quitter"},
+      {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 2, "Annuler"},
+  };
+
+  const SDL_MessageBoxColorScheme colorScheme = {
+      {{250, 250, 250}, {40, 40, 40}, {0, 0, 0}, {255, 255, 255}, {0, 0, 0}}};
+
+  const SDL_MessageBoxData messageboxdata = {
+      SDL_MESSAGEBOX_WARNING,
+      win,
+      "Quitter ?",
+      "Vous êtes sur de vouloirs quitté, notre super jeu recolor ? :'(",
+      SDL_arraysize(buttons),
+      buttons,
+      &colorScheme};
+
+  int buttonid;
+  if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0)
+    ERROR("SDL error", "Error: SDL_ShowMessageBox (%s)\n", SDL_GetError());
+
+  if (buttonid == -1 || buttonid == 2) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 struct Env_t {
   bool allowBackground;
   bool allowCursor;
@@ -453,7 +482,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
 
   switch (e->type) {
     case SDL_QUIT:
-      return true;
+      return requestQuit(win);
       break;
     case SDL_MOUSEMOTION:
     case SDL_FINGERMOTION:
@@ -557,8 +586,10 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
           (e->tfinger.x > env->btnQuit.rect.x &&
            e->tfinger.y > env->btnQuit.rect.y &&
            e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h))
-        return true;
+           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h)) {
+        env->btnQuit.pressed = false;
+        return requestQuit(win);
+      }
 
       // Set buttons pressed attribute to default value
       env->btnRestart.pressed = false;
@@ -595,7 +626,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
           game_restart(env->g);
           break;
         case SDLK_q:
-          return true;
+          return requestQuit(win);
           break;
         case SDLK_s:
           game_save(env->g, "data/quickSave.rec");
