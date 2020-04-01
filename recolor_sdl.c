@@ -12,6 +12,15 @@
 #include "game_rand.h"
 
 // Games assets
+#ifdef __WINDOWS__
+// See for install dir
+#endif
+#ifdef __LINUX__
+// See for install dir
+#else
+// Default dir
+#endif
+
 #define FONT_ROBOTO "assets/Roboto-Regular.ttf"
 #define FONT_OPENDYSLEXIC "assets/OpenDyslexic-Regular.otf"
 #define FONTSIZE 12
