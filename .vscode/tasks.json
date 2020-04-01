@@ -24,6 +24,17 @@
             }
         },
         {
+            "label": "run Android",
+            "type": "shell",
+            "command": "~/Android/Sdk/emulator/emulator -avd Nexus_5X_API_28 -netdelay none -netspeed full",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
             "label": "cppcheck",
             "type": "shell",
             "command": "cppcheck --check-config --project=Recolor --enable=all --suppress=missingIncludeSystem --xml-version=2 -Iinclude *.c lib/*.c tests/*.c 2> report.xml && cppcheck-htmlreport --source-dir=. --report-dir=report --file=report.xml --title=Recolor && google-chrome report/index.html",
