@@ -10,11 +10,10 @@
 
 > Arthur BLONDEAU
 
-- Completer le README.md avec la description des binaires et du jeu
+- Tester la demo pour le portage sous Android
 
 > Charles GOEDEFROIT
 
-- Finir de coder le fichier recolor_sdl.c
 - Integration Android (je pense que je m'en occuperer `charles`)
 
 ## Tests
@@ -34,5 +33,3 @@
 ## Todo
 
 - see "branch and bound algorithm" for optimize solver
-- add install in CMakeList.txt
-- if __WINDOWS__ hide cmd
