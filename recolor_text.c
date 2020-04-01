@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
     int width = atoi(argv[1]);
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
-    int wrapping = atoi(argv[5]);
+    char wrapping = argv[5][0];
     if (wrapping == 'N'){
       g = game_random_ext(width, height, nb_moves_max, 4, false);
     }
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
     int nb_colors = atoi(argv[4]);
-    char wrapping = argv[5];
+    char wrapping = argv[5][0];
     if ((wrapping == 'N' || wrapping == 'S') && nb_colors <= 16 && nb_colors > 1){ //if the parameters are invalid, we load te default game
     
       if (wrapping == 'S'){

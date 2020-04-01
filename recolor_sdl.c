@@ -397,7 +397,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
     int width = atoi(argv[1]);
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
-    int wrapping = argv[4][0];
+    char wrapping = argv[4][0];
     if (wrapping == 'N') {
       env->g = game_random_ext(width, height, nb_moves_max, 4, false);
     } else if (wrapping == 'S') {
