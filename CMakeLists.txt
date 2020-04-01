@@ -53,7 +53,7 @@ endif()
 
 ### Implementation of all executable
 # Creation of the library game
-add_library (game lib/game.c lib/game_io.c)
+add_library (game lib/game.c lib/game_io.c lib/game_rand.c)
 IF (WIN32)
     add_library (gl lib/getline.c)
   target_link_libraries(game m gl)
@@ -62,11 +62,10 @@ ELSE()
 ENDIF()
 
 add_library (sol lib/solution.c)
-add_library (rand lib/game_rand.c)
 
 # executable of the game
 add_executable (recolor_text recolor_text.c)
-target_link_libraries (recolor_text game rand)
+target_link_libraries (recolor_text game)
 
 add_executable(recolor_solve recolor_solve.c)
 target_link_libraries (recolor_solve pthread game m sol)
@@ -77,7 +76,7 @@ IF(WIN32)
 ELSE()
     add_executable(recolor_sdl main_sdl.c recolor_sdl.c assets/ressourses.rc)
 ENDIF()
-target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m rand)
+target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m)
 
 # executable of the bug finder
 add_executable (test_game_arblondeau tests/test_game_arblondeau.c)
