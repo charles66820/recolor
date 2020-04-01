@@ -28,10 +28,7 @@
 #define BACKGROUND "assets/background.png"
 #define BUTTON_SPRITE "assets/button.png"
 #define ICON "assets/icon.png"
-#define SHADOWBOX0 "assets/shadowBox0.png"
 #define SHADOWBOX1 "assets/shadowBox1.png"
-#define SHADOWBOX2 "assets/shadowBox2.png"
-#define SHADOWBOX3 "assets/shadowBox3.png"
 
 typedef struct color_cell {
   SDL_Rect rect;
@@ -314,6 +311,16 @@ typedef struct button {
   bool pressed;
 } BUTTON;
 
+bool btnIsMouseHover(SDL_Event* e, SDL_Rect r) {
+  return e->button.x >= r.x && e->button.y >= r.y && e->button.x < r.x + r.w &&
+         e->button.y < r.y + r.h;
+}
+
+bool btnIsFingerHover(SDL_Event* e, SDL_Rect r) {
+  return e->tfinger.x >= r.x && e->tfinger.y >= r.y &&
+         e->tfinger.x < r.x + r.w && e->tfinger.y < r.y + r.h;
+}
+
 bool requestQuit(SDL_Window* win) {
   const SDL_MessageBoxButtonData buttons[] = {
       {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Quitter"},
@@ -354,14 +361,7 @@ struct Env_t {
   SDL_Surface* icon;
   SDL_Texture* button;
   TTF_Font* font;
-  SDL_Surface* sShadowBox0;
-  SDL_Surface* sShadowBox1;
-  SDL_Surface* sShadowBox2;
-  SDL_Surface* sShadowBox3;
-  SDL_Texture* shadowBox0;
   SDL_Texture* shadowBox1;
-  SDL_Texture* shadowBox2;
-  SDL_Texture* shadowBox3;
   game g;
   COLOR_Cell* cells;
   BUTTON btnRestart;
@@ -459,25 +459,9 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
     ERROR("TTF error", "Error: TTF_OpenFont (%s)\n", SDL_GetError());
 
   // Load shadows
-  env->sShadowBox0 = IMG_Load(SHADOWBOX0);
-  if (!env->sShadowBox0)
+  env->shadowBox1 = IMG_LoadTexture(ren, SHADOWBOX1);
+  if (!env->shadowBox1)
     ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
-  env->shadowBox0 = SDL_CreateTextureFromSurface(ren, env->sShadowBox0);
-
-  env->sShadowBox1 = IMG_Load(SHADOWBOX1);
-  if (!env->sShadowBox1)
-    ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
-  env->shadowBox1 = SDL_CreateTextureFromSurface(ren, env->sShadowBox1);
-
-  env->sShadowBox2 = IMG_Load(SHADOWBOX2);
-  if (!env->sShadowBox2)
-    ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
-  env->shadowBox2 = SDL_CreateTextureFromSurface(ren, env->sShadowBox2);
-
-  env->sShadowBox3 = IMG_Load(SHADOWBOX3);
-  if (!env->sShadowBox3)
-    ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
-  env->shadowBox3 = SDL_CreateTextureFromSurface(ren, env->sShadowBox3);
 
   // Set icon
   SDL_SetWindowIcon(win, env->icon);
@@ -685,10 +669,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       if (env->allowCursor) {
         bool onGrid = false;
         for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
-          if (e->button.x > env->cells[i].rect.x &&
-              e->button.y > env->cells[i].rect.y &&
-              e->button.x <= env->cells[i].rect.x + env->cells[i].rect.w &&
-              e->button.y <= env->cells[i].rect.y + env->cells[i].rect.h) {
+          if (btnIsMouseHover(e, env->cells[i].rect)) {
             SDL_SetCursor(env->tempCursor);
             SDL_FreeCursor(env->cursor);
             env->cursor = createPaintBucket(env->cells[i].color);
@@ -703,14 +684,8 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       }
 
       // When button restart is hover the hover attribute is set to true
-      if ((e->button.x > env->btnRestart.rect.x &&
-           e->button.y > env->btnRestart.rect.y &&
-           e->button.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
-           e->button.y < env->btnRestart.rect.y + env->btnRestart.rect.h) ||
-          (e->tfinger.x > env->btnRestart.rect.x &&
-           e->tfinger.y > env->btnRestart.rect.y &&
-           e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
-           e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h)) {
+      if (btnIsMouseHover(e, env->btnRestart.rect) ||
+          btnIsFingerHover(e, env->btnRestart.rect)) {
         if (env->allowCursor) {
           SDL_FreeCursor(env->cursor);
           env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
@@ -721,14 +696,8 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       }
 
       // When button quit is hover the hover attribute is set to true
-      if ((e->button.x > env->btnQuit.rect.x &&
-           e->button.y > env->btnQuit.rect.y &&
-           e->button.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-           e->button.y < env->btnQuit.rect.y + env->btnQuit.rect.h) ||
-          (e->tfinger.x > env->btnQuit.rect.x &&
-           e->tfinger.y > env->btnQuit.rect.y &&
-           e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h)) {
+      if (btnIsMouseHover(e, env->btnQuit.rect) ||
+          btnIsFingerHover(e, env->btnQuit.rect)) {
         if (env->allowCursor) {
           SDL_FreeCursor(env->cursor);
           env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
@@ -749,39 +718,21 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       // When color cell is clicked this color is play
       for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
         if ((e->button.button == SDL_BUTTON_LEFT &&
-             e->button.x > env->cells[i].rect.x &&
-             e->button.y > env->cells[i].rect.y &&
-             e->button.x <= env->cells[i].rect.x + env->cells[i].rect.w &&
-             e->button.y <= env->cells[i].rect.y + env->cells[i].rect.h) ||
-            (e->tfinger.x > env->cells[i].rect.x &&
-             e->tfinger.y > env->cells[i].rect.y &&
-             e->tfinger.x <= env->cells[i].rect.x + env->cells[i].rect.w &&
-             e->tfinger.y <= env->cells[i].rect.y + env->cells[i].rect.h))
+             btnIsMouseHover(e, env->cells[i].rect)) ||
+            btnIsFingerHover(e, env->cells[i].rect))
           if (env->cells[0].color != env->cells[i].color)
             game_play_one_move(env->g, env->cells[i].color);
 
       // When button restart is clicked the game is restart
       if ((e->button.button == SDL_BUTTON_LEFT &&
-           e->button.x > env->btnRestart.rect.x &&
-           e->button.y > env->btnRestart.rect.y &&
-           e->button.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
-           e->button.y < env->btnRestart.rect.y + env->btnRestart.rect.h) ||
-          (e->tfinger.x > env->btnRestart.rect.x &&
-           e->tfinger.y > env->btnRestart.rect.y &&
-           e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
-           e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
+           btnIsMouseHover(e, env->btnRestart.rect)) ||
+          btnIsFingerHover(e, env->btnRestart.rect))
         game_restart(env->g);
 
       // When button quit is clicked the game is quit
       if ((e->button.button == SDL_BUTTON_LEFT &&
-           e->button.x > env->btnQuit.rect.x &&
-           e->button.y > env->btnQuit.rect.y &&
-           e->button.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-           e->button.y < env->btnQuit.rect.y + env->btnQuit.rect.h) ||
-          (e->tfinger.x > env->btnQuit.rect.x &&
-           e->tfinger.y > env->btnQuit.rect.y &&
-           e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h)) {
+           btnIsMouseHover(e, env->btnQuit.rect)) ||
+          btnIsFingerHover(e, env->btnQuit.rect)) {
         env->btnQuit.pressed = false;
         return requestQuit(win);
       }
@@ -794,25 +745,13 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
     case SDL_FINGERDOWN:
       // When button restart is pressed the pressed attribute is set to true
       if ((e->button.button == SDL_BUTTON_LEFT &&
-           e->button.x > env->btnRestart.rect.x &&
-           e->button.y > env->btnRestart.rect.y &&
-           e->button.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
-           e->button.y < env->btnRestart.rect.y + env->btnRestart.rect.h) ||
-          (e->tfinger.x > env->btnRestart.rect.x &&
-           e->tfinger.y > env->btnRestart.rect.y &&
-           e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
-           e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
+           btnIsMouseHover(e, env->btnRestart.rect)) ||
+          btnIsFingerHover(e, env->btnRestart.rect))
         env->btnRestart.pressed = true;
       // When button quit is pressed the pressed attribute is set to true
       if ((e->button.button == SDL_BUTTON_LEFT &&
-           e->button.x > env->btnQuit.rect.x &&
-           e->button.y > env->btnQuit.rect.y &&
-           e->button.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-           e->button.y < env->btnQuit.rect.y + env->btnQuit.rect.h) ||
-          (e->tfinger.x > env->btnQuit.rect.x &&
-           e->tfinger.y > env->btnQuit.rect.y &&
-           e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h))
+           btnIsMouseHover(e, env->btnQuit.rect)) ||
+          btnIsFingerHover(e, env->btnQuit.rect))
         env->btnQuit.pressed = true;
       break;
     case SDL_KEYDOWN:
@@ -845,14 +784,7 @@ void clean(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   SDL_FreeSurface(env->icon);
   SDL_DestroyTexture(env->button);
   TTF_CloseFont(env->font);
-  SDL_FreeSurface(env->sShadowBox0);
-  SDL_FreeSurface(env->sShadowBox1);
-  SDL_FreeSurface(env->sShadowBox2);
-  SDL_FreeSurface(env->sShadowBox3);
-  SDL_DestroyTexture(env->shadowBox0);
   SDL_DestroyTexture(env->shadowBox1);
-  SDL_DestroyTexture(env->shadowBox2);
-  SDL_DestroyTexture(env->shadowBox3);
   free(env->cells);
   game_delete(env->g);
   free(env);
