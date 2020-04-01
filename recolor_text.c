@@ -71,10 +71,11 @@ int main(int argc, char* argv[]) {
     int width = atoi(argv[1]);
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
-    if (argv[4] == 'N'){
+    int wrapping = atoi(argv[5]);
+    if (wrapping == 'N'){
       g = game_random_ext(width, height, nb_moves_max, 4, false);
     }
-    else if (argv[4] == 'S'){
+    else if (wrapping == 'S'){
       g = game_random_ext(width, height, nb_moves_max, 4, true);
     }
     else{
@@ -87,7 +88,7 @@ int main(int argc, char* argv[]) {
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
     int nb_colors = atoi(argv[4]);
-    int wrapping = atoi(argv[5];
+    int wrapping = atoi(argv[5]);
     if (wrapping == 'N'){
       g = game_random_ext(width, height, nb_moves_max, nb_colors, false);
     }
