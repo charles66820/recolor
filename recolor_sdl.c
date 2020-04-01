@@ -28,7 +28,7 @@ typedef struct color_cell {
   color color;
 } COLOR_Cell;
 
-SDL_Color getColorFromGameColor(color c) {
+static SDL_Color getColorFromGameColor(color c) {
   switch (c) {
     case 0:
       return (SDL_Color){255, 0, 0, SDL_ALPHA_OPAQUE};
@@ -85,6 +85,90 @@ SDL_Color getColorFromGameColor(color c) {
   }
 }
 
+/* XPM */
+static const char *paintBucket[] = {
+  /* width height num_colors chars_per_pixel */
+  "    32    32        3            1",
+  /* colors */
+  "X c #000000",
+  ". c #ffffff",
+  "  c None",
+  /* pixels */
+  "X                               ",
+  "XX                              ",
+  "X.X                             ",
+  "X.......X                       ",
+  "X.......X                       ",
+  "X.......X                       ",
+  "X.......X                       ",
+  "X.......X                       ",
+  "X.......X                       ",
+  "X........X                      ",
+  "X.....XXXXX                     ",
+  "X..X..X                         ",
+  "X.X X..X                        ",
+  "XX  X..X                        ",
+  "X    X..X                       ",
+  "     X..X                       ",
+  "      X..X                      ",
+  "      X..X                      ",
+  "       XX                       ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "                                ",
+  "0,0"
+};
+
+static SDL_Cursor* createCursor(const char* image[]) {
+  int i, row, col;
+  Uint8 data[4 * 32];
+  Uint8 mask[4 * 32];
+  int hot_x, hot_y;
+
+  i = -1;
+  for (row = 0; row < 32; ++row) {
+    for (col = 0; col < 32; ++col) {
+      if (col % 8) {
+        data[i] <<= 1;
+        mask[i] <<= 1;
+      } else {
+        ++i;
+        data[i] = mask[i] = 0;
+      }
+      switch (image[4 + row][col]) {
+        case 'X':
+          data[i] |= 0x01;
+          mask[i] |= 0x01;
+          break;
+        case '.':
+          mask[i] |= 0x01;
+          break;
+        case ' ':
+          break;
+      }
+    }
+  }
+  sscanf(image[4 + row], "%d,%d", &hot_x, &hot_y);
+  return SDL_CreateCursor(data, mask, 32, 32, hot_x, hot_y);
+}
+
+static SDL_Cursor* createPaintBucket(color c) {
+  //SDL_Color rgbColor = getColorFromGameColor(c);
+  // Change color of cursor
+
+  return createCursor(paintBucket);
+}
+
 typedef struct button {
   SDL_Rect rect;
   bool hover;
@@ -92,10 +176,12 @@ typedef struct button {
 } BUTTON;
 
 struct Env_t {
-  bool allowTransparency;
   bool allowBackground;
+  bool allowCursor;
   bool allowDyslexic;
+  bool allowTransparency;
   SDL_Texture* background;
+  SDL_Cursor* cursor;
   SDL_Surface* icon;
   SDL_Texture* button;
   TTF_Font* font;
@@ -119,6 +205,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
   // Settings
   env->allowBackground = true;
+  env->allowCursor = true;
   env->allowDyslexic = false;
   env->allowTransparency = true;
 
@@ -166,9 +253,11 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   }
 
   // Load background texture
-  env->background = IMG_LoadTexture(ren, BACKGROUND);
-  if (!env->background)
-    ERROR("SDL error", "Error: IMG_LoadTexture (%s)\n", SDL_GetError());
+  if (env->allowBackground) {
+    env->background = IMG_LoadTexture(ren, BACKGROUND);
+    if (!env->background)
+      ERROR("SDL error", "Error: IMG_LoadTexture (%s)\n", SDL_GetError());
+  }
 
   // Load icon
   env->icon = IMG_Load(ICON);
@@ -209,11 +298,20 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   // Set icon
   SDL_SetWindowIcon(win, env->icon);
 
-  // SDL_SetColorKey(env->icon, SDL_PIXELFORMAT_RGBA32,
-  //                 SDL_MapRGB(env->icon->format, 255, 0, 255));
-
+  // Init color grid cells
   env->cells =
       calloc(game_height(env->g) * game_width(env->g), sizeof(COLOR_Cell));
+
+  if (env->allowCursor) {
+    env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+    SDL_SetCursor(env->cursor);
+  }
+
+  // Set buttons attribute to default value
+  env->btnRestart.pressed = false;
+  env->btnRestart.hover = false;
+  env->btnQuit.pressed = false;
+  env->btnQuit.hover = false;
 
   return env;
 }
@@ -395,6 +493,26 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       break;
     case SDL_MOUSEMOTION:
     case SDL_FINGERMOTION:
+      // When color cell is hover change cursor to this color
+      if (env->allowCursor) {
+        bool onGrid = false;
+        for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
+          if (e->button.x > env->cells[i].rect.x &&
+               e->button.y > env->cells[i].rect.y &&
+               e->button.x < env->cells[i].rect.x + env->cells[i].rect.w &&
+               e->button.y < env->cells[i].rect.y + env->cells[i].rect.h) {
+                SDL_FreeCursor(env->cursor);
+                env->cursor = createPaintBucket(env->cells[i].color);
+                if (!env->cursor)
+                  ERROR("SDL error", "Error: createPaintBucket (%s)\n",
+                        SDL_GetError());
+                SDL_SetCursor(env->cursor);
+                onGrid = true;
+                break;
+               }
+        if (onGrid) break;
+      }
+
       // When button restart is hover the hover attribute is set to true
       if ((e->button.x > env->btnRestart.rect.x &&
            e->button.y > env->btnRestart.rect.y &&
@@ -403,8 +521,15 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
           (e->tfinger.x > env->btnRestart.rect.x &&
            e->tfinger.y > env->btnRestart.rect.y &&
            e->tfinger.x < env->btnRestart.rect.x + env->btnRestart.rect.w &&
-           e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h))
+           e->tfinger.y < env->btnRestart.rect.y + env->btnRestart.rect.h)) {
+        if (env->allowCursor) {
+          SDL_FreeCursor(env->cursor);
+          env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+          SDL_SetCursor(env->cursor);
+        }
         env->btnRestart.hover = true;
+        break;
+      }
 
       // When button quit is hover the hover attribute is set to true
       if ((e->button.x > env->btnQuit.rect.x &&
@@ -414,8 +539,21 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
           (e->tfinger.x > env->btnQuit.rect.x &&
            e->tfinger.y > env->btnQuit.rect.y &&
            e->tfinger.x < env->btnQuit.rect.x + env->btnQuit.rect.w &&
-           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h))
+           e->tfinger.y < env->btnQuit.rect.y + env->btnQuit.rect.h)) {
+        if (env->allowCursor) {
+          SDL_FreeCursor(env->cursor);
+          env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+          SDL_SetCursor(env->cursor);
+        }
         env->btnQuit.hover = true;
+        break;
+      }
+
+      if (env->allowCursor) {
+        SDL_FreeCursor(env->cursor);
+        env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+        SDL_SetCursor(env->cursor);
+      }
       break;
     case SDL_MOUSEBUTTONUP:
     case SDL_FINGERUP:
@@ -515,8 +653,10 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
 }
 
 void clean(SDL_Window* win, SDL_Renderer* ren, Env* env) {
-  SDL_DestroyTexture(env->background);
+  if (env->allowBackground) SDL_DestroyTexture(env->background);
+  if (env->allowCursor) SDL_FreeCursor(env->cursor);
   SDL_FreeSurface(env->icon);
+  SDL_DestroyTexture(env->button);
   TTF_CloseFont(env->font);
   SDL_FreeSurface(env->sShadowBox0);
   SDL_FreeSurface(env->sShadowBox1);
