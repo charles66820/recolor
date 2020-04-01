@@ -40,6 +40,17 @@ set(EXECUTABLE_OUTPUT_PATH "generated")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${EXECUTABLE_OUTPUT_PATH})
 
+# uninstall target
+if(NOT TARGET uninstall)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+  add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+endif()
+
 ### Implementation of all executable
 # Creation of the library game
 add_library (game lib/game.c lib/game_io.c)
@@ -80,6 +91,12 @@ target_link_libraries (test_game_vandrault game)
 
 add_executable(test_solution_arblondeau tests/test_solution_arblondeau.c)
 target_link_libraries (test_solution_arblondeau game sol)
+
+### Install
+install(TARGETS recolor_text recolor_solve recolor_sdl CONFIGURATIONS Release RUNTIME DESTINATION bin)
+install(DIRECTORY assets/ DESTINATION bin/assets)
+
+### Uninstall
 
 ### Tests
 include(CTest)
