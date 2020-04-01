@@ -85,88 +85,47 @@ static SDL_Color getColorFromGameColor(color c) {
   }
 }
 
-/* XPM */
-static const char *paintBucket[] = {
-  /* width height num_colors chars_per_pixel */
-  "    32    32        3            1",
-  /* colors */
-  "X c #000000",
-  ". c #ffffff",
-  "  c None",
-  /* pixels */
-  "X                               ",
-  "XX                              ",
-  "X.X                             ",
-  "X.......X                       ",
-  "X.......X                       ",
-  "X.......X                       ",
-  "X.......X                       ",
-  "X.......X                       ",
-  "X.......X                       ",
-  "X........X                      ",
-  "X.....XXXXX                     ",
-  "X..X..X                         ",
-  "X.X X..X                        ",
-  "XX  X..X                        ",
-  "X    X..X                       ",
-  "     X..X                       ",
-  "      X..X                      ",
-  "      X..X                      ",
-  "       XX                       ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "                                ",
-  "0,0"
-};
-
-static SDL_Cursor* createCursor(const char* image[]) {
-  int i, row, col;
-  Uint8 data[4 * 32];
-  Uint8 mask[4 * 32];
-  int hot_x, hot_y;
-
-  i = -1;
-  for (row = 0; row < 32; ++row) {
-    for (col = 0; col < 32; ++col) {
-      if (col % 8) {
-        data[i] <<= 1;
-        mask[i] <<= 1;
-      } else {
-        ++i;
-        data[i] = mask[i] = 0;
-      }
-      switch (image[4 + row][col]) {
-        case 'X':
-          data[i] |= 0x01;
-          mask[i] |= 0x01;
-          break;
-        case '.':
-          mask[i] |= 0x01;
-          break;
-        case ' ':
-          break;
-      }
-    }
-  }
-  sscanf(image[4 + row], "%d,%d", &hot_x, &hot_y);
-  return SDL_CreateCursor(data, mask, 32, 32, hot_x, hot_y);
-}
-
 static SDL_Cursor* createPaintBucket(color c) {
-  //SDL_Color rgbColor = getColorFromGameColor(c);
-  // Change color of cursor
+  // SDL_Color rgbColor = getColorFromGameColor(c);
+  // TODO: Change color of cursor
 
-  return createCursor(paintBucket);
+  // Create paint bucket cursor
+  Uint32 data[32] = {
+      0b00000000000000000000000000000000, 0b00000000000000000000000000000000,
+      0b00000000111110000000000000000000, 0b00000000000001000000000100000000,
+      0b00000000000000100000001000000000, 0b00000000100000100000001000000000,
+      0b00000000010000100000001100000000, 0b00000000001000100000001000000000,
+      0b00000000000100100000011000000000, 0b00000000000010100000101000000000,
+      0b00000000000001100001001000000000, 0b00000000000000100010001000000000,
+      0b00000000000000010100001000000000, 0b10000000000000001000001000000000,
+      0b01000000000000000000001000000001, 0b00100000000000000000001000000010,
+      0b00010000000000000000010100001110, 0b00001000000000000000001000111111,
+      0b00000100000000001000000000111111, 0b00001000000000001100000000111111,
+      0b00010000000000000010000000111110, 0b00100000000000000001000000011110,
+      0b01000000000000000000100000011110, 0b10000000000000000000010000001110,
+      0b00000000000000010000001000000110, 0b00000000000000100000000100000010,
+      0b00000000100001000000000000000000, 0b00000000001110000000000000000000,
+      0b00000000000100000000000000000000, 0b00000000000000000000000000000000,
+      0b00000000000000000000000000000000, 0b00000000000000000000000000000000};
+  Uint32 mask[32] = {
+      0b00000000000000000000000000000000, 0b00000000000000000000000000000000,
+      0b00000000111110000000000000000000, 0b00000000000001000000000100000000,
+      0b00000000000000100000001000000000, 0b00000000100000100000001000000000,
+      0b00000000110000100000001100000000, 0b00000000111000100000001100000000,
+      0b00000000111100100000011100000000, 0b00000000111110100000111100000000,
+      0b00000000111111100001111100000000, 0b00000000111111100011111100000000,
+      0b00000000111111110111111100000000, 0b10000000111111111111111100000000,
+      0b11000000111111111111111100000001, 0b11100000111111111111111100000011,
+      0b11110000111111111111111100001111, 0b11111000111111111111111100111111,
+      0b11111100111111111111111100111111, 0b11111000111111111111111100111111,
+      0b11110000111111110011111100111110, 0b11100000111111110001111100011110,
+      0b11000000111111110000111100011110, 0b10000000111111110000011100001110,
+      0b00000000111111110000001100000110, 0b00000000111111100000000100000010,
+      0b00000000111111000000000000000000, 0b00000000001110000000000000000000,
+      0b00000000000100000000000000000000, 0b00000000000000000000000000000000,
+      0b00000000000000000000000000000000, 0b00000000000000000000000000000000};
+
+  return SDL_CreateCursor(&data, &mask, 32, 32, 6, 25);  // 2,17
 }
 
 typedef struct button {
@@ -182,6 +141,7 @@ struct Env_t {
   bool allowTransparency;
   SDL_Texture* background;
   SDL_Cursor* cursor;
+  SDL_Cursor* tempCursor;
   SDL_Surface* icon;
   SDL_Texture* button;
   TTF_Font* font;
@@ -302,7 +262,11 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   env->cells =
       calloc(game_height(env->g) * game_width(env->g), sizeof(COLOR_Cell));
 
+  // Init cursors
   if (env->allowCursor) {
+    env->tempCursor = createPaintBucket(0);
+    if (!env->tempCursor)
+      ERROR("SDL error", "Error: createPaintBucket (%s)\n", SDL_GetError());
     env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
     SDL_SetCursor(env->cursor);
   }
@@ -498,18 +462,19 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
         bool onGrid = false;
         for (uint i = 0; i < game_height(env->g) * game_width(env->g); i++)
           if (e->button.x > env->cells[i].rect.x &&
-               e->button.y > env->cells[i].rect.y &&
-               e->button.x < env->cells[i].rect.x + env->cells[i].rect.w &&
-               e->button.y < env->cells[i].rect.y + env->cells[i].rect.h) {
-                SDL_FreeCursor(env->cursor);
-                env->cursor = createPaintBucket(env->cells[i].color);
-                if (!env->cursor)
-                  ERROR("SDL error", "Error: createPaintBucket (%s)\n",
-                        SDL_GetError());
-                SDL_SetCursor(env->cursor);
-                onGrid = true;
-                break;
-               }
+              e->button.y > env->cells[i].rect.y &&
+              e->button.x <= env->cells[i].rect.x + env->cells[i].rect.w &&
+              e->button.y <= env->cells[i].rect.y + env->cells[i].rect.h) {
+            SDL_SetCursor(env->tempCursor);
+            SDL_FreeCursor(env->cursor);
+            env->cursor = createPaintBucket(env->cells[i].color);
+            if (!env->cursor)
+              ERROR("SDL error", "Error: createPaintBucket (%s)\n",
+                    SDL_GetError());
+            SDL_SetCursor(env->cursor);
+            onGrid = true;
+            break;
+          }
         if (onGrid) break;
       }
 
@@ -562,12 +527,12 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
         if ((e->button.button == SDL_BUTTON_LEFT &&
              e->button.x > env->cells[i].rect.x &&
              e->button.y > env->cells[i].rect.y &&
-             e->button.x < env->cells[i].rect.x + env->cells[i].rect.w &&
-             e->button.y < env->cells[i].rect.y + env->cells[i].rect.h) ||
+             e->button.x <= env->cells[i].rect.x + env->cells[i].rect.w &&
+             e->button.y <= env->cells[i].rect.y + env->cells[i].rect.h) ||
             (e->tfinger.x > env->cells[i].rect.x &&
              e->tfinger.y > env->cells[i].rect.y &&
-             e->tfinger.x < env->cells[i].rect.x + env->cells[i].rect.w &&
-             e->tfinger.y < env->cells[i].rect.y + env->cells[i].rect.h))
+             e->tfinger.x <= env->cells[i].rect.x + env->cells[i].rect.w &&
+             e->tfinger.y <= env->cells[i].rect.y + env->cells[i].rect.h))
           if (env->cells[0].color != env->cells[i].color)
             game_play_one_move(env->g, env->cells[i].color);
 
@@ -633,12 +598,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
           return true;
           break;
         case SDLK_s:
-          // char fileName[251];
-          // printf("Saisiser le nom du fichier où sera enregistré le jeu : ");
-          // scanf("%250s", fileName);
-          // strcat(fileName, ".rec");
-          game_save(env->g, "data/defaultName.rec");
-          // printf("Partie enregistré dans le fichier %s!\n", fileName);
+          game_save(env->g, "data/quickSave.rec");
           break;
         default:
           break;
@@ -655,6 +615,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
 void clean(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   if (env->allowBackground) SDL_DestroyTexture(env->background);
   if (env->allowCursor) SDL_FreeCursor(env->cursor);
+  if (env->allowCursor) SDL_FreeCursor(env->tempCursor);
   SDL_FreeSurface(env->icon);
   SDL_DestroyTexture(env->button);
   TTF_CloseFont(env->font);
