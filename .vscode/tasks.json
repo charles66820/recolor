@@ -26,7 +26,7 @@
         {
             "label": "cppcheck",
             "type": "shell",
-            "command": "cppcheck --enable=all --xml-version=2 -I ../include *.c 2> report.xml && cppcheck-htmlreport --source-dir=. --report-dir=report --file=report.xml && google-chrome report/index.html",
+            "command": "cppcheck --check-config --project=Recolor --enable=all --suppress=missingIncludeSystem --xml-version=2 -Iinclude *.c lib/*.c tests/*.c 2> report.xml && cppcheck-htmlreport --source-dir=. --report-dir=report --file=report.xml --title=Recolor && google-chrome report/index.html",
             "options": {
                 "cwd": "${workspaceRoot}"
             },
