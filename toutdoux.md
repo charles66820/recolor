@@ -4,17 +4,15 @@
 
 > Victor ANDRAULT
 
-- Modifier recolor_text pour qu'il support game_rand
-
-- Modifier recolor_SDL pour qu'il support game_rand
+- Tester la demo pour le portage sous Android & Integration Android
 
 > Arthur BLONDEAU
 
-- Tester la demo pour le portage sous Android
+- Tester la demo pour le portage sous Android & Integration Android
 
 > Charles GOEDEFROIT
 
-- Integration Android (je pense que je m'en occuperer `charles`)
+- Integration Android
 
 ## Tests
 
