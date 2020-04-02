@@ -51,7 +51,7 @@ int charToInt(char c) { return c - '0'; }
 
 int main(int argc, char* argv[]) {
   // Init game vars
-  bool pl = true; // lose
+  bool pl = true;  // lose
   game g = NULL;
 
   if (argc == 2 || argc == 3 || argc > 6) {
@@ -59,52 +59,51 @@ int main(int argc, char* argv[]) {
     if (g == NULL) printf("Error on game load : The default game as load\n");
   }
 
-  
-
-  if (argc == 4){
+  if (argc == 4) {
     int width = atoi(argv[1]);
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
-    if (width > 0 && height > 0 && nb_moves_max > 0){
+    if (width > 0 && height > 0 && nb_moves_max > 0) {
       g = game_random_ext(width, height, nb_moves_max, 4, false);
-    }
-    else fprintf(stderr, "Invalid parameters. Loading default game");
+    } else
+      fprintf(stderr, "Invalid parameters. Loading default game");
   }
-  if (argc == 5){
+  if (argc == 5) {
     int width = atoi(argv[1]);
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
     char wrapping = argv[5][0];
-    if (width > 0 && height > 0 && nb_moves_max > 0){
-      if (wrapping == 'N'){
+    if (width > 0 && height > 0 && nb_moves_max > 0) {
+      if (wrapping == 'N') {
         g = game_random_ext(width, height, nb_moves_max, 4, false);
-      }
-      else if (wrapping == 'S'){
+      } else if (wrapping == 'S') {
         g = game_random_ext(width, height, nb_moves_max, 4, true);
-      }
-      else if (atoi(argv[4]) >= 2 && atoi(argv[4]) < 17){
+      } else if (atoi(argv[4]) >= 2 && atoi(argv[4]) < 17) {
         int nb_colors = atoi(argv[4]);
         g = game_random_ext(width, height, nb_moves_max, nb_colors, false);
-      }
-      else fprintf(stderr, "Invalid parameters. Loading default game");
-    }
-    else fprintf(stderr, "Invalid parameters. Loading default game");
+      } else
+        fprintf(stderr, "Invalid parameters. Loading default game");
+    } else
+      fprintf(stderr, "Invalid parameters. Loading default game");
   }
-  if (argc == 6){
+  if (argc == 6) {
     int width = atoi(argv[1]);
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
     int nb_colors = atoi(argv[4]);
     char wrapping = argv[5][0];
-    if (width > 0 && height > 0 && nb_moves_max > 0 && nb_colors >= 2 && nb_colors < 17 && (wrapping =='N' || wrapping == 'S')){ //if the parameters are invalid, we load te default game
-      if (wrapping == 'S'){
+    if (width > 0 && height > 0 && nb_moves_max > 0 && nb_colors >= 2 &&
+        nb_colors < 17 &&
+        (wrapping == 'N' ||
+         wrapping ==
+             'S')) {  // if the parameters are invalid, we load te default game
+      if (wrapping == 'S') {
         g = game_random_ext(width, height, nb_moves_max, nb_colors, false);
-      }
-      else {
+      } else {
         g = game_random_ext(width, height, nb_moves_max, nb_colors, true);
       }
-    }
-    else fprintf(stderr, "Invalid parameters. Loading default game");
+    } else
+      fprintf(stderr, "Invalid parameters. Loading default game");
   }
 
   if (argc == 1 || g == NULL) {  // if game is launch without arguments or if

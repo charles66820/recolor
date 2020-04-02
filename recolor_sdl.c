@@ -391,28 +391,28 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
     int width = atoi(argv[1]);
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
-    if (width > 0 && height > 0 && nb_moves_max > 0){
+    if (width > 0 && height > 0 && nb_moves_max > 0) {
       env->g = game_random_ext(width, height, nb_moves_max, 4, false);
-    }
-    else fprintf(stderr, "Invalid parameters. Loading default game");
+    } else
+      fprintf(stderr, "Invalid parameters. Loading default game");
   }
   if (argc == 5) {
     int width = atoi(argv[1]);
     int height = atoi(argv[2]);
     int nb_moves_max = atoi(argv[3]);
     char wrapping = argv[4][0];
-    if (width > 0 && height > 0 && nb_moves_max > 0){
+    if (width > 0 && height > 0 && nb_moves_max > 0) {
       if (wrapping == 'N') {
         env->g = game_random_ext(width, height, nb_moves_max, 4, false);
       } else if (wrapping == 'S') {
         env->g = game_random_ext(width, height, nb_moves_max, 4, true);
-      } else if (atoi(argv[4]) >= 2 && atoi(argv[4]) < 17){
+      } else if (atoi(argv[4]) >= 2 && atoi(argv[4]) < 17) {
         int nb_colors = atoi(argv[4]);
         env->g = game_random_ext(width, height, nb_moves_max, nb_colors, false);
-      }
-      else fprintf(stderr, "Invalid parameters. Loading default game");
-    }
-    else fprintf(stderr, "Invalid parameters. Loading default game");
+      } else
+        fprintf(stderr, "Invalid parameters. Loading default game");
+    } else
+      fprintf(stderr, "Invalid parameters. Loading default game");
   }
   if (argc == 6) {
     int width = atoi(argv[1]);
@@ -420,14 +420,15 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
     int nb_moves_max = atoi(argv[3]);
     int nb_colors = atoi(argv[4]);
     char wrapping = argv[5][0];
-    if (width > 0 && height > 0 && nb_moves_max > 0 && nb_colors >= 2 && nb_colors < 17 && (wrapping =='N' || wrapping == 'S')){
+    if (width > 0 && height > 0 && nb_moves_max > 0 && nb_colors >= 2 &&
+        nb_colors < 17 && (wrapping == 'N' || wrapping == 'S')) {
       if (wrapping == 'N') {
         env->g = game_random_ext(width, height, nb_moves_max, nb_colors, false);
       } else {
         env->g = game_random_ext(width, height, nb_moves_max, nb_colors, true);
       }
-    }
-    else fprintf(stderr, "Invalid parameters. Loading default game");
+    } else
+      fprintf(stderr, "Invalid parameters. Loading default game");
   }
 
   if (argc == 1 || !env->g) {  // if game is launch without arguments or
