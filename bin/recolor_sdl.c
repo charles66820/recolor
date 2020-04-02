@@ -307,6 +307,7 @@ static SDL_Cursor* createPaintBucket(color c) {
 
 typedef struct button {
   SDL_Rect rect;
+  SDL_Texture* text;
   bool hover;
   bool pressed;
 } BUTTON;
@@ -361,6 +362,8 @@ struct Env_t {
   SDL_Surface* icon;
   SDL_Texture* button;
   TTF_Font* font;
+  SDL_Texture* textWin;
+  SDL_Texture* textLose;
   SDL_Texture* shadowBox1;
   game g;
   COLOR_Cell* cells;
@@ -388,7 +391,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
       fprintf(stderr, "Error on game load : The default game as load\n");
   }
 
-  if (argc == 3)
+  if (argc == 3 || argc > 6)
     fprintf(stderr, "Invalid parameters. Loading default game...\n");
 
   if (argc >= 4 && argc <= 6) {
@@ -468,6 +471,33 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   env->shadowBox1 = IMG_LoadTexture(ren, SHADOWBOX1);
   if (!env->shadowBox1)
     ERROR("SDL error", "Error: IMG_Load (%s)\n", SDL_GetError());
+
+  // Init text texture for win and lose
+  TTF_SetFontStyle(env->font, TTF_STYLE_BOLD);
+  SDL_Surface* s = TTF_RenderUTF8_Blended(
+      env->font, "DOMMAGE", (SDL_Color){255, 0, 0, SDL_ALPHA_OPAQUE});
+  env->textLose = SDL_CreateTextureFromSurface(ren, s);
+  SDL_FreeSurface(s);
+
+  s = TTF_RenderUTF8_Blended(env->font, "BRAVO",
+                             (SDL_Color){0, 255, 0, SDL_ALPHA_OPAQUE});
+  env->textWin = SDL_CreateTextureFromSurface(ren, s);
+  SDL_FreeSurface(s);
+
+  // Init button size and texts textures
+  env->btnQuit.rect.w = 150;
+  env->btnQuit.rect.h = 40;
+  env->btnRestart.rect.w = 150;
+  env->btnRestart.rect.h = 40;
+  s = TTF_RenderUTF8_Blended(env->font, "Quit",
+                             (SDL_Color){230, 92, 0, SDL_ALPHA_OPAQUE});
+  env->btnQuit.text = SDL_CreateTextureFromSurface(ren, s);
+  SDL_FreeSurface(s);
+
+  s = TTF_RenderUTF8_Blended(env->font, "Restart",
+                             (SDL_Color){153, 51, 255, SDL_ALPHA_OPAQUE});
+  env->btnRestart.text = SDL_CreateTextureFromSurface(ren, s);
+  SDL_FreeSurface(s);
 
   // Set icon
   SDL_SetWindowIcon(win, env->icon);
@@ -577,7 +607,6 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
                      winH - yWinPadding * 3);
 
   // Draw game stats
-  TTF_SetFontStyle(env->font, TTF_STYLE_BOLD);
   char* msg = malloc((50 + 78 * 2) * sizeof(char));
   if (!msg) ERROR("Game error", "Error: malloc (Not enought memory)\n");
   // 50 char in format + max char in uint * 2 uint
@@ -598,21 +627,16 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   // Draw when game is lose or win
   if (game_nb_moves_cur(env->g) >= game_nb_moves_max(env->g) &&
       !game_is_over(env->g)) {
-    s = TTF_RenderUTF8_Blended(env->font, "DOMMAGE",
-                               (SDL_Color){255, 0, 0, SDL_ALPHA_OPAQUE});
-    goto prinLoseWin;
-  }
-  if (game_is_over(env->g)) {
-    s = TTF_RenderUTF8_Blended(env->font, "BRAVO",
-                               (SDL_Color){0, 255, 0, SDL_ALPHA_OPAQUE});
-  prinLoseWin:
-    text = SDL_CreateTextureFromSurface(ren, s);
-    SDL_FreeSurface(s);
     rect.x = xWinPadding / 2;
     rect.y = winH - yWinPadding * 3 + rect.h;
-    SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
-    SDL_RenderCopy(ren, text, NULL, &rect);
-    SDL_DestroyTexture(text);
+    SDL_QueryTexture(env->textLose, NULL, NULL, &rect.w, &rect.h);
+    SDL_RenderCopy(ren, env->textLose, NULL, &rect);
+  }
+  if (game_is_over(env->g)) {
+    rect.x = xWinPadding / 2;
+    rect.y = winH - yWinPadding * 3 + rect.h;
+    SDL_QueryTexture(env->textWin, NULL, NULL, &rect.w, &rect.h);
+    SDL_RenderCopy(ren, env->textWin, NULL, &rect);
   }
 
   // Draw buttons
@@ -621,27 +645,18 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   rs.h = rs.h / 3;
 
   // Draw quit button
-  env->btnQuit.rect.w = 150;
-  env->btnQuit.rect.h = 40;
   env->btnQuit.rect.x = winW - xWinPadding / 2 - env->btnQuit.rect.w;
   env->btnQuit.rect.y = winH - yWinPadding * 3 + rect.h;
   // Select btn sprite state
   rs.y = env->btnQuit.pressed ? rs.h * 2 : env->btnQuit.hover ? rs.h : 0;
   SDL_RenderCopy(ren, env->button, &rs, &env->btnQuit.rect);
   // Daw button text
-  s = TTF_RenderUTF8_Blended(env->font, "Quit",
-                             (SDL_Color){230, 92, 0, SDL_ALPHA_OPAQUE});
-  text = SDL_CreateTextureFromSurface(ren, s);
-  SDL_FreeSurface(s);
-  SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
+  SDL_QueryTexture(env->btnQuit.text, NULL, NULL, &rect.w, &rect.h);
   rect.x = env->btnQuit.rect.x + ((env->btnQuit.rect.w - rect.w) / 2);
   rect.y = env->btnQuit.rect.y + ((env->btnQuit.rect.h - rect.h) / 2);
-  SDL_RenderCopy(ren, text, NULL, &rect);
-  SDL_DestroyTexture(text);
+  SDL_RenderCopy(ren, env->btnQuit.text, NULL, &rect);
 
   // Draw restart button
-  env->btnRestart.rect.w = 150;
-  env->btnRestart.rect.h = 40;
   env->btnRestart.rect.x =
       winW - xWinPadding / 2 - env->btnRestart.rect.w - env->btnQuit.rect.w;
   env->btnRestart.rect.y = winH - yWinPadding * 3 + rect.h;
@@ -649,15 +664,10 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   rs.y = env->btnRestart.pressed ? rs.h * 2 : env->btnRestart.hover ? rs.h : 0;
   SDL_RenderCopy(ren, env->button, &rs, &env->btnRestart.rect);
   // Daw button text
-  s = TTF_RenderUTF8_Blended(env->font, "Restart",
-                             (SDL_Color){153, 51, 255, SDL_ALPHA_OPAQUE});
-  text = SDL_CreateTextureFromSurface(ren, s);
-  SDL_FreeSurface(s);
-  SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
+  SDL_QueryTexture(env->btnRestart.text, NULL, NULL, &rect.w, &rect.h);
   rect.x = env->btnRestart.rect.x + ((env->btnRestart.rect.w - rect.w) / 2);
   rect.y = env->btnRestart.rect.y + ((env->btnRestart.rect.h - rect.h) / 2);
-  SDL_RenderCopy(ren, text, NULL, &rect);
-  SDL_DestroyTexture(text);
+  SDL_RenderCopy(ren, env->btnRestart.text, NULL, &rect);
 }
 
 bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
@@ -789,7 +799,11 @@ void clean(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   if (env->allowCursor) SDL_FreeCursor(env->tempCursor);
   SDL_FreeSurface(env->icon);
   SDL_DestroyTexture(env->button);
+  SDL_DestroyTexture(env->btnQuit.text);
+  SDL_DestroyTexture(env->btnRestart.text);
   TTF_CloseFont(env->font);
+  SDL_DestroyTexture(env->textWin);
+  SDL_DestroyTexture(env->textLose);
   SDL_DestroyTexture(env->shadowBox1);
   free(env->cells);
   game_delete(env->g);
