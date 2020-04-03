@@ -5,5 +5,17 @@
 
 /build/
 
-report.xml
-report/
+/report.xml
+/report/
+
+/android/bin
+/android/gen
+/android/SDL*
+/android/libs
+/android/obj
+
+/android/jni/src/*.o
+/android/jni/src/*.a
+/android/jni/src/*.gcno
+/android/jni/src/*.gcda
+/android/jni/src/recolor_sdl

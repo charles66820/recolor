@@ -24,9 +24,20 @@
             }
         },
         {
-            "label": "run Android",
+            "label": "build & run for Android",
             "type": "shell",
-            "command": "~/Android/Sdk/emulator/emulator -avd Nexus_5X_API_28 -netdelay none -netspeed full",
+            "command": "./download.sh && ndk-gdb && ant debug install && adb shell am start 'org.libsdl.app/.SDLActivity'",
+            "options": {
+                "cwd": "${workspaceRoot}/android"
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "run Android emulator",
+            "type": "shell",
+            "command": "emulator -avd Nexus_5X_API_28 -netdelay none -netspeed full",
             "options": {
                 "cwd": "${workspaceRoot}"
             },

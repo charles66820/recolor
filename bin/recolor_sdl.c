@@ -13,15 +13,15 @@
 #include "game_rand.h"
 
 // Games assets
-#ifdef __WINDOWS__
-// See for install dir
-#endif
-#ifdef __LINUX__
-// See for install dir
+#ifdef __ANDROID__
+#define FONT_ROBOTO "Roboto-Regular.ttf"
+#define FONT_OPENDYSLEXIC "OpenDyslexic-Regular.otf"
+#define FONTSIZE 12
+#define BACKGROUND "background.png"
+#define BUTTON_SPRITE "button.png"
+#define ICON "icon.png"
+#define SHADOWBOX1 "shadowBox1.png"
 #else
-// Default dir
-#endif
-
 #define FONT_ROBOTO "assets/Roboto-Regular.ttf"
 #define FONT_OPENDYSLEXIC "assets/OpenDyslexic-Regular.otf"
 #define FONTSIZE 12
@@ -29,6 +29,7 @@
 #define BUTTON_SPRITE "assets/button.png"
 #define ICON "assets/icon.png"
 #define SHADOWBOX1 "assets/shadowBox1.png"
+#endif
 
 typedef struct color_cell {
   SDL_Rect rect;
