@@ -56,8 +56,7 @@ int main(int argc, char* argv[]) {
 
   if (argc == 2) {
     g = game_load(argv[1]);
-    if (!g)
-      fprintf(stderr, "Error on game load : The default game as load\n");
+    if (!g) fprintf(stderr, "Error on game load : The default game as load\n");
   }
 
   if (argc == 3 || argc > 6)
@@ -73,8 +72,7 @@ int main(int argc, char* argv[]) {
     if (width <= 0 || height <= 0 || nb_moves_max <= 0)
       fprintf(stderr, "Invalid parameters. Loading default game...\n");
     else if (argc == 4)
-      g =
-          game_random_ext(width, height, nb_moves_max, nb_colors, wrapping);
+      g = game_random_ext(width, height, nb_moves_max, nb_colors, wrapping);
     else if (argc == 5) {
       if (argv[4][0] == 'N')
         wrapping = false;
@@ -83,8 +81,7 @@ int main(int argc, char* argv[]) {
       else
         nb_colors = atoi(argv[4]);
       if (nb_colors >= 2 && nb_colors < 17)
-        g =
-            game_random_ext(width, height, nb_moves_max, nb_colors, wrapping);
+        g = game_random_ext(width, height, nb_moves_max, nb_colors, wrapping);
       else
         fprintf(stderr, "Invalid parameters. Loading default game...\n");
     } else if (argc == 6) {
@@ -92,7 +89,7 @@ int main(int argc, char* argv[]) {
       if (nb_colors >= 2 && nb_colors < 17 &&
           (argv[5][0] == 'N' || argv[5][0] == 'S'))
         g = game_random_ext(width, height, nb_moves_max, nb_colors,
-                                 argv[5][0] == 'S');
+                            argv[5][0] == 'S');
       else
         fprintf(stderr, "Invalid parameters. Loading default game...\n");
     }
