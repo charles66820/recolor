@@ -10,10 +10,10 @@
 
 /android/bin
 /android/gen
-/android/SDL*
 /android/libs
 /android/obj
 
+/android/jni/SDL*
 /android/jni/src/*.o
 /android/jni/src/*.a
 /android/jni/src/*.gcno

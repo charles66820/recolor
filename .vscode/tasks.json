@@ -24,18 +24,44 @@
             }
         },
         {
-            "label": "build & run for Android",
+            "label": "clean Android",
             "type": "shell",
-            "command": "./download.sh && ndk-gdb && ant debug install && adb shell am start 'org.libsdl.app/.SDLActivity'",
+            "command": "rm -rf bin gen obj libs jni/SDL* jni/SDL_image* jni/SDL_ttf* jni/*.zip",
             "options": {
                 "cwd": "${workspaceRoot}/android"
             },
             "presentation": {
-                "reveal": "silent"
+                "reveal": "always"
             }
         },
         {
-            "label": "run Android emulator",
+            "label": "build & run Recolor for Android",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceRoot}/android"
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "dependsOn":[
+                "start Android emulator",
+                "build and run in Android"
+            ],
+            "dependsOrder": "parallel"
+        },
+        {
+            "label": "build and run in Android",
+            "type": "shell",
+            "command": "./download.sh && ndk-build && ant debug install && adb shell am start 'fr.toutdoux.recolor/.SDLActivity' && adb logcat -s 'SDL'",
+            "options": {
+                "cwd": "${workspaceRoot}/android"
+            },
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "start Android emulator",
             "type": "shell",
             "command": "emulator -avd Nexus_5X_API_28 -netdelay none -netspeed full",
             "options": {
