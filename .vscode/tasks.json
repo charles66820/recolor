@@ -52,7 +52,7 @@
         {
             "label": "build and run in Android",
             "type": "shell",
-            "command": "./download.sh && ndk-build && ant debug install && adb shell am start 'fr.toutdoux.recolor/.SDLActivity' && adb logcat -s 'SDL'",
+            "command": "./download.sh && ndk-build && ant debug install && adb shell am start 'fr.toudoux.recolor/.RecolorActivity' && adb logcat -s 'SDL'",
             "options": {
                 "cwd": "${workspaceRoot}/android"
             },

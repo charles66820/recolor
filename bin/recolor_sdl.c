@@ -377,7 +377,11 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
   // Settings
   env->allowBackground = true;
+  #ifdef __ANDROID__
+  env->allowCursor = false;
+  #else
   env->allowCursor = true;
+  #endif
   env->allowDyslexic = false;
   env->allowTransparency = true;
 
