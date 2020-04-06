@@ -18,7 +18,7 @@
 #define FONTSIZE 42
 #define BACKGROUND "background.png"
 #define BUTTON_SPRITE "button.png"
-#define ICON "icon.png"
+#define ICON "recolor.png"
 #define SHADOWBOX1 "shadowBox1.png"
 #else
 #define FONT_ROBOTO "assets/Roboto-Regular.ttf"
@@ -26,7 +26,7 @@
 #define FONTSIZE 12
 #define BACKGROUND "assets/background.png"
 #define BUTTON_SPRITE "assets/button.png"
-#define ICON "assets/icon.png"
+#define ICON "assets/recolor.png"
 #define SHADOWBOX1 "assets/shadowBox1.png"
 #endif
 

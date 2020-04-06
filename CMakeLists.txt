@@ -40,17 +40,6 @@ set(EXECUTABLE_OUTPUT_PATH "generated")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${EXECUTABLE_OUTPUT_PATH})
 
-# uninstall target
-if(NOT TARGET uninstall)
-  configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
-
-  add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
-endif()
-
 ### Implementation of all executable
 # Creation of the library game
 add_library (game lib/game.c lib/game_io.c lib/game_rand.c)
@@ -91,9 +80,22 @@ target_link_libraries (test_solution_arblondeau game sol)
 
 ### Install
 install(TARGETS recolor_text recolor_solve recolor_sdl CONFIGURATIONS Release RUNTIME DESTINATION bin)
-install(DIRECTORY assets/ DESTINATION bin/assets)
+install(DIRECTORY assets/ CONFIGURATIONS Release DESTINATION bin/assets)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install(FILES assets/Recolor.desktop CONFIGURATIONS Release DESTINATION /usr/share/applications )
+    install(FILES assets/recolor.svg CONFIGURATIONS Release DESTINATION /usr/share/icons/hicolor/scalable/apps)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 ### Uninstall
+if(NOT TARGET uninstall)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+  add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+endif()
 
 ### Tests
 include(CTest)
