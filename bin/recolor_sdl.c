@@ -15,7 +15,7 @@
 #ifdef __ANDROID__
 #define FONT_ROBOTO "Roboto-Regular.ttf"
 #define FONT_OPENDYSLEXIC "OpenDyslexic-Regular.otf"
-#define FONTSIZE 12
+#define FONTSIZE 42
 #define BACKGROUND "background.png"
 #define BUTTON_SPRITE "button.png"
 #define ICON "icon.png"
@@ -92,6 +92,7 @@ static SDL_Color getColorFromGameColor(color c) {
   }
 }
 
+#if !defined(__ANDROID__)
 static SDL_Cursor* createPaintBucket(color c) {
   SDL_Color rgbaColor = getColorFromGameColor(c);
 
@@ -304,7 +305,7 @@ static SDL_Cursor* createPaintBucket(color c) {
   SDL_FreeSurface(surface);
   return cs;
 }
-
+#endif
 typedef struct button {
   SDL_Rect rect;
   SDL_Texture* text;
@@ -335,7 +336,7 @@ bool requestQuit(SDL_Window* win) {
       SDL_MESSAGEBOX_WARNING,
       win,
       "Quitter ?",
-      "Vous êtes sur de vouloirs quitté, notre super jeu recolor ? :'(",
+      "Vous êtes sur de vouloir quitter, notre super jeu recolor ? :'(",
       SDL_arraysize(buttons),
       buttons,
       &colorScheme};
@@ -357,8 +358,10 @@ struct Env_t {
   bool allowDyslexic;
   bool allowTransparency;
   SDL_Texture* background;
+#if !defined(__ANDROID__)
   SDL_Cursor* cursor;
   SDL_Cursor* tempCursor;
+#endif
   SDL_Surface* icon;
   SDL_Texture* button;
   TTF_Font* font;
@@ -377,11 +380,9 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
   // Settings
   env->allowBackground = true;
-  #ifdef __ANDROID__
-  env->allowCursor = false;
-  #else
+#if !defined(__ANDROID__)
   env->allowCursor = true;
-  #endif
+#endif
   env->allowDyslexic = false;
   env->allowTransparency = true;
 
@@ -489,10 +490,17 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   SDL_FreeSurface(s);
 
   // Init button size and texts textures
+#ifdef __ANDROID__
+  env->btnQuit.rect.w = 375;
+  env->btnQuit.rect.h = 100;
+  env->btnRestart.rect.w = 375;
+  env->btnRestart.rect.h = 100;
+#else
   env->btnQuit.rect.w = 150;
   env->btnQuit.rect.h = 40;
   env->btnRestart.rect.w = 150;
   env->btnRestart.rect.h = 40;
+#endif
   s = TTF_RenderUTF8_Blended(env->font, "Quit",
                              (SDL_Color){230, 92, 0, SDL_ALPHA_OPAQUE});
   env->btnQuit.text = SDL_CreateTextureFromSurface(ren, s);
@@ -510,6 +518,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   env->cells =
       calloc(game_height(env->g) * game_width(env->g), sizeof(COLOR_Cell));
 
+#if !defined(__ANDROID__)
   // Init cursors
   if (env->allowCursor) {
     env->tempCursor = createPaintBucket(0);
@@ -518,6 +527,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
     env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
     SDL_SetCursor(env->cursor);
   }
+#endif
 
   // Set buttons attribute to default value
   env->btnRestart.pressed = false;
@@ -685,6 +695,7 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       break;
     case SDL_MOUSEMOTION:
     case SDL_FINGERMOTION:
+#if !defined(__ANDROID__)
       // When color cell is hover change cursor to this color
       if (env->allowCursor) {
         bool onGrid = false;
@@ -702,15 +713,18 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
           }
         if (onGrid) break;
       }
+#endif
 
       // When button restart is hover the hover attribute is set to true
       if (btnIsMouseHover(e, env->btnRestart.rect) ||
           btnIsFingerHover(e, env->btnRestart.rect)) {
+#if !defined(__ANDROID__)
         if (env->allowCursor) {
           SDL_FreeCursor(env->cursor);
           env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
           SDL_SetCursor(env->cursor);
         }
+#endif
         env->btnRestart.hover = true;
         break;
       }
@@ -718,20 +732,23 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       // When button quit is hover the hover attribute is set to true
       if (btnIsMouseHover(e, env->btnQuit.rect) ||
           btnIsFingerHover(e, env->btnQuit.rect)) {
+#if !defined(__ANDROID__)
         if (env->allowCursor) {
           SDL_FreeCursor(env->cursor);
           env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
           SDL_SetCursor(env->cursor);
         }
+#endif
         env->btnQuit.hover = true;
         break;
       }
-
+#if !defined(__ANDROID__)
       if (env->allowCursor) {
         SDL_FreeCursor(env->cursor);
         env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
         SDL_SetCursor(env->cursor);
       }
+#endif
       break;
     case SDL_MOUSEBUTTONUP:
     case SDL_FINGERUP:
@@ -799,8 +816,10 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
 
 void clean(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   if (env->allowBackground) SDL_DestroyTexture(env->background);
+#if !defined(__ANDROID__)
   if (env->allowCursor) SDL_FreeCursor(env->cursor);
   if (env->allowCursor) SDL_FreeCursor(env->tempCursor);
+#endif
   SDL_FreeSurface(env->icon);
   SDL_DestroyTexture(env->button);
   SDL_DestroyTexture(env->btnQuit.text);
