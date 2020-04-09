@@ -557,11 +557,20 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 
   SDL_GetWindowSize(win, &winW, &winH);
 
-  int xWinPadding = winW * 4 / 100;
-  int yWinPadding = winH * 4 / 100;
+  int xWinPadding =
+      winW * 4 / 100;  // Window x padding is defind to 4% of window width
+  int yWinPadding =
+      winH * 4 / 100;  // Window y padding is defind to 4% of window height
 
-  int gridMaxW = winW - xWinPadding * 2;
-  int gridMaxH = winH - yWinPadding * 4;
+  int buttonSpace = xWinPadding * 2;  // 2 * y padding for height of the botton space
+
+  int gridMaxW =
+      winW - xWinPadding * 2;  // Grid size is defind by window width -
+                               // window padding left and right so * 2
+  int gridMaxH =
+      winH - (yWinPadding * 2 +
+              buttonSpace);  // Grid size is defind by window height - window
+                             // padding tob and bottom so * 2 + the botton space
 
   int cellSize =
       gridMaxW / gameW > gridMaxH / gameH ? gridMaxH / gameH : gridMaxW / gameW;
@@ -584,7 +593,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
     rect.x = 0;
     rect.y = 0;
     rect.w = winW;
-    rect.h = winH - yWinPadding * 3;
+    rect.h = winH - (yWinPadding + buttonSpace);
     SDL_RenderCopy(ren, env->background, NULL, &rect);
   }
 
@@ -632,7 +641,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   text = SDL_CreateTextureFromSurface(ren, s);
   SDL_FreeSurface(s);
   rect.x = xWinPadding / 2;
-  rect.y = winH - yWinPadding * 3;
+  rect.y = winH - (yWinPadding + buttonSpace);
   SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
   SDL_RenderCopy(ren, text, NULL, &rect);
   SDL_DestroyTexture(text);
@@ -642,13 +651,13 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   if (game_nb_moves_cur(env->g) >= game_nb_moves_max(env->g) &&
       !game_is_over(env->g)) {
     rect.x = xWinPadding / 2;
-    rect.y = winH - yWinPadding * 3 + rect.h;
+    rect.y = winH - (yWinPadding + buttonSpace) + rect.h;
     SDL_QueryTexture(env->textLose, NULL, NULL, &rect.w, &rect.h);
     SDL_RenderCopy(ren, env->textLose, NULL, &rect);
   }
   if (game_is_over(env->g)) {
     rect.x = xWinPadding / 2;
-    rect.y = winH - yWinPadding * 3 + rect.h;
+    rect.y = winH - (yWinPadding + buttonSpace) + rect.h;
     SDL_QueryTexture(env->textWin, NULL, NULL, &rect.w, &rect.h);
     SDL_RenderCopy(ren, env->textWin, NULL, &rect);
   }
@@ -660,7 +669,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 
   // Draw quit button
   env->btnQuit.rect.x = winW - xWinPadding / 2 - env->btnQuit.rect.w;
-  env->btnQuit.rect.y = winH - yWinPadding * 3 + rect.h;
+  env->btnQuit.rect.y = winH - (yWinPadding + buttonSpace) + rect.h;
   // Select btn sprite state
   rs.y = env->btnQuit.pressed ? rs.h * 2 : env->btnQuit.hover ? rs.h : 0;
   SDL_RenderCopy(ren, env->button, &rs, &env->btnQuit.rect);
@@ -673,7 +682,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   // Draw restart button
   env->btnRestart.rect.x =
       winW - xWinPadding / 2 - env->btnRestart.rect.w - env->btnQuit.rect.w;
-  env->btnRestart.rect.y = winH - yWinPadding * 3 + rect.h;
+  env->btnRestart.rect.y = winH - (yWinPadding + buttonSpace) + rect.h;
   // Select btn sprite state
   rs.y = env->btnRestart.pressed ? rs.h * 2 : env->btnRestart.hover ? rs.h : 0;
   SDL_RenderCopy(ren, env->button, &rs, &env->btnRestart.rect);
