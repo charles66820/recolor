@@ -562,7 +562,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   int yWinPadding =
       winH * 4 / 100;  // Window y padding is defind to 4% of window height
 
-  int buttonSpace = xWinPadding * 2;  // 2 * y padding for height of the botton space
+  int buttonSpace = yWinPadding * 2;  // 2 * y padding for height of the botton space
 
   int gridMaxW =
       winW - xWinPadding * 2;  // Grid size is defind by window width -
@@ -626,8 +626,8 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 
   // Draw line
   SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
-  SDL_RenderDrawLine(ren, 0, winH - yWinPadding * 3, winW,
-                     winH - yWinPadding * 3);
+  SDL_RenderDrawLine(ren, 0, winH - (yWinPadding + buttonSpace), winW,
+                     winH - (yWinPadding + buttonSpace));
 
   // Draw game stats
   char* msg = malloc((50 + 78 * 2) * sizeof(char));
@@ -640,9 +640,9 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
                              (SDL_Color){61, 133, 198, SDL_ALPHA_OPAQUE});
   text = SDL_CreateTextureFromSurface(ren, s);
   SDL_FreeSurface(s);
+  SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
   rect.x = xWinPadding / 2;
   rect.y = winH - (yWinPadding + buttonSpace);
-  SDL_QueryTexture(text, NULL, NULL, &rect.w, &rect.h);
   SDL_RenderCopy(ren, text, NULL, &rect);
   SDL_DestroyTexture(text);
   free(msg);
