@@ -51,17 +51,17 @@ ENDIF()
 add_library (sol lib/solution.c)
 
 # executable of the game
-add_executable (recolor_text bin/recolor_text.c)
+add_executable (recolor_text src/recolor_text.c)
 target_link_libraries (recolor_text game)
 
-add_executable(recolor_solve bin/recolor_solve.c)
+add_executable(recolor_solve src/recolor_solve.c)
 target_link_libraries (recolor_solve pthread game m sol)
 
 IF(WIN32)
-    add_executable(recolor_sdl WIN32 bin/main_sdl.c bin/recolor_sdl.c assets/ressourses.rc)
+    add_executable(recolor_sdl WIN32 src/main_sdl.c src/recolor_sdl.c assets/ressourses.rc)
     target_compile_options(recolor_sdl INTERFACE "-mwindows")
 ELSE()
-    add_executable(recolor_sdl bin/main_sdl.c bin/recolor_sdl.c assets/ressourses.rc)
+    add_executable(recolor_sdl src/main_sdl.c src/recolor_sdl.c assets/ressourses.rc)
 ENDIF()
 target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m)
 
