@@ -5,10 +5,10 @@ LDFLAGS=-rdynamic -lm -lSDL2 -lSDL2_ttf -lSDL2_image
 .PHONY : all
 all : recolor_sdl
 
-libgame.a : game.o game_io.o game_rand.o
+libgame.a : game.o game_io.o
 	ar -cr $@ $^
 
-recolor_sdl : recolor_sdl.o main_sdl.o libgame.a
+recolor_sdl : recolor_sdl.o main_sdl.o fun_sdl.o game_rand.o libgame.a
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
 
 .PHONY : clean

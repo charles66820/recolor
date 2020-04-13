@@ -1,1 +1,1 @@
-../../../lib/game_rand.c
+../../../src/game_rand.c

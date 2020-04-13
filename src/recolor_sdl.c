@@ -7,350 +7,34 @@
 #include <string.h>
 #include <time.h>
 #include "SDL_model.h"
+#include "fun_sdl.h"
 #include "game.h"
 #include "game_io.h"
 #include "game_rand.h"
 
-// Games assets
+// Games assets and attributes
+#define TRANSPARENCY 175 /* nuber between 0 and 255*/
 #ifdef __ANDROID__
 #define FONT_ROBOTO "Roboto-Regular.ttf"
 #define FONT_OPENDYSLEXIC "OpenDyslexic-Regular.otf"
-#define FONTSIZE 42
 #define BACKGROUND "background.png"
 #define BUTTON_SPRITE "button.png"
 #define ICON "recolor.png"
 #define SHADOWBOX1 "shadowBox1.png"
+#define FONTSIZE 42
+#define BTNWIDTH 375
+#define BTNHEIGHT 100
 #else
 #define FONT_ROBOTO "assets/Roboto-Regular.ttf"
 #define FONT_OPENDYSLEXIC "assets/OpenDyslexic-Regular.otf"
-#define FONTSIZE 12
 #define BACKGROUND "assets/background.png"
 #define BUTTON_SPRITE "assets/button.png"
 #define ICON "assets/recolor.png"
 #define SHADOWBOX1 "assets/shadowBox1.png"
+#define FONTSIZE 12
+#define BTNWIDTH 150
+#define BTNHEIGHT 40
 #endif
-
-typedef struct color_cell {
-  SDL_Rect rect;
-  color color;
-} COLOR_Cell;
-
-static SDL_Color getColorFromGameColor(color c) {
-  switch (c) {
-    case 0:
-      return (SDL_Color){255, 0, 0, SDL_ALPHA_OPAQUE};
-      break;
-    case 1:
-      return (SDL_Color){0, 255, 0, SDL_ALPHA_OPAQUE};
-      break;
-    case 2:
-      return (SDL_Color){0, 0, 255, SDL_ALPHA_OPAQUE};
-      break;
-    case 3:
-      return (SDL_Color){255, 255, 0, SDL_ALPHA_OPAQUE};
-      break;
-    case 4:
-      return (SDL_Color){255, 0, 255, SDL_ALPHA_OPAQUE};
-      break;
-    case 5:
-      return (SDL_Color){0, 255, 255, SDL_ALPHA_OPAQUE};
-      break;
-    case 6:
-      return (SDL_Color){255, 153, 0, SDL_ALPHA_OPAQUE};
-      break;
-    case 7:
-      return (SDL_Color){153, 51, 0, SDL_ALPHA_OPAQUE};
-      break;
-    case 8:
-      return (SDL_Color){153, 204, 0, SDL_ALPHA_OPAQUE};
-      break;
-    case 9:
-      return (SDL_Color){153, 0, 255, SDL_ALPHA_OPAQUE};
-      break;
-    case 10:
-      return (SDL_Color){0, 153, 255, SDL_ALPHA_OPAQUE};
-      break;
-    case 11:
-      return (SDL_Color){0, 255, 153, SDL_ALPHA_OPAQUE};
-      break;
-    case 12:
-      return (SDL_Color){153, 255, 153, SDL_ALPHA_OPAQUE};
-      break;
-    case 13:
-      return (SDL_Color){255, 153, 153, SDL_ALPHA_OPAQUE};
-      break;
-    case 14:
-      return (SDL_Color){153, 153, 255, SDL_ALPHA_OPAQUE};
-      break;
-    case 15:
-      return (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE};
-      break;
-
-    default:
-      return (SDL_Color){0, 0, 0, SDL_ALPHA_OPAQUE};
-      break;
-  }
-}
-
-#if !defined(__ANDROID__)
-static SDL_Cursor* createPaintBucket(color c) {
-  SDL_Color rgbaColor = getColorFromGameColor(c);
-
-  // Define paint color
-  Uint32 pxRgbColor = (rgbaColor.r << 24) + (rgbaColor.g << 16) +
-                      (rgbaColor.b << 8) + (rgbaColor.a << 0);
-
-  // Create painting bucket cursor with paint color
-  Uint32 pixels[32 * 32] = {
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 1
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 2
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0x000000FF,
-      0x000000FF, 0x000000FF, 0x000000FF, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 3
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 4
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x000000FF, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 5
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x000000FF, 0x00000000, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 6
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x000000FF, 0x000000FF, 0xFFFFFFFF, 0x000000FF,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 7
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 8
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x000000FF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0x000000FF, 0x00000000, 0x00000000, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 9
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x000000FF, 0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 10
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0x000000FF, 0x000000FF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 11
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x000000FF, 0x000000FF, pxRgbColor, 0x000000FF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 12
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x000000FF, pxRgbColor, pxRgbColor, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 13
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0x000000FF,
-      pxRgbColor, pxRgbColor, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 14
-      0x00000000, 0x00000000, 0x00000000, 0x000000FF, pxRgbColor, pxRgbColor,
-      pxRgbColor, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 15
-      0x00000000, 0x00000000, 0x00000000, 0x000000FF, pxRgbColor, pxRgbColor,
-      0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 16
-      0x00000000, 0x00000000, 0x000000FF, pxRgbColor, pxRgbColor, pxRgbColor,
-      0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 17
-      0x00000000, 0x00000000, 0x000000FF, pxRgbColor, pxRgbColor, pxRgbColor,
-      0x000000FF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000,  // Row 18
-      0x00000000, 0x00000000, 0x000000FF, pxRgbColor, pxRgbColor, pxRgbColor,
-      pxRgbColor, pxRgbColor, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF,
-      0x00000000, 0x00000000,  // Row 19
-      0x00000000, 0x00000000, 0x000000FF, pxRgbColor, pxRgbColor, pxRgbColor,
-      pxRgbColor, 0x000000FF, 0x000000FF, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000,  // Row 20
-      0x00000000, 0x00000000, 0x000000FF, pxRgbColor, pxRgbColor, pxRgbColor,
-      0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 21
-      0x00000000, 0x00000000, 0x00000000, 0x000000FF, pxRgbColor, pxRgbColor,
-      0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000000FF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 22
-      0x00000000, 0x00000000, 0x00000000, 0x000000FF, pxRgbColor, pxRgbColor,
-      0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 23
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000000FF, pxRgbColor,
-      0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 24
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000000FF,
-      0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 25
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 26
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x000000FF, 0xFFFFFFFF,
-      0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 27
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x000000FF, 0x000000FF, 0x000000FF, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 28
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x000000FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 29
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 30
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 31
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-      0x00000000, 0x00000000,  // Row 32
-  };
-
-  // Create rgb surface with format rgba
-  SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(
-      pixels, 32, 32, 32, 32 * 4, SDL_PIXELFORMAT_RGBA8888);
-
-  // Create cursot with this format
-  SDL_Cursor* cs = SDL_CreateColorCursor(surface, 6, 25);  // 2,17
-  SDL_FreeSurface(surface);
-  return cs;
-}
-#endif
-typedef struct button {
-  SDL_Rect rect;
-  SDL_Texture* text;
-  bool hover;
-  bool pressed;
-} BUTTON;
-
-bool btnIsMouseHover(SDL_Event* e, SDL_Rect r) {
-  return e->button.x >= r.x && e->button.y >= r.y && e->button.x < r.x + r.w &&
-         e->button.y < r.y + r.h;
-}
-
-bool btnIsFingerHover(SDL_Event* e, SDL_Rect r) {
-  return e->tfinger.x >= r.x && e->tfinger.y >= r.y &&
-         e->tfinger.x < r.x + r.w && e->tfinger.y < r.y + r.h;
-}
-
-bool requestQuit(SDL_Window* win) {
-  const SDL_MessageBoxButtonData buttons[] = {
-      {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Quitter"},
-      {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 2, "Annuler"},
-  };
-
-  const SDL_MessageBoxColorScheme colorScheme = {
-      {{250, 250, 250}, {40, 40, 40}, {0, 0, 0}, {255, 255, 255}, {0, 0, 0}}};
-
-  const SDL_MessageBoxData messageboxdata = {
-      SDL_MESSAGEBOX_WARNING,
-      win,
-      "Quitter ?",
-      "Vous êtes sur de vouloir quitter, notre super jeu recolor ? :'(",
-      SDL_arraysize(buttons),
-      buttons,
-      &colorScheme};
-
-  int buttonid;
-  if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0)
-    ERROR("SDL error", "Error: SDL_ShowMessageBox (%s)\n", SDL_GetError());
-
-  if (buttonid == -1 || buttonid == 2) {
-    return false;
-  } else {
-    return true;
-  }
-}
 
 struct Env_t {
   bool allowBackground;
@@ -490,17 +174,10 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
   SDL_FreeSurface(s);
 
   // Init button size and texts textures
-#ifdef __ANDROID__
-  env->btnQuit.rect.w = 375;
-  env->btnQuit.rect.h = 100;
-  env->btnRestart.rect.w = 375;
-  env->btnRestart.rect.h = 100;
-#else
-  env->btnQuit.rect.w = 150;
-  env->btnQuit.rect.h = 40;
-  env->btnRestart.rect.w = 150;
-  env->btnRestart.rect.h = 40;
-#endif
+  env->btnQuit.rect.w = BTNWIDTH;
+  env->btnQuit.rect.h = BTNHEIGHT;
+  env->btnRestart.rect.w = BTNWIDTH;
+  env->btnRestart.rect.h = BTNHEIGHT;
   s = TTF_RenderUTF8_Blended(env->font, "Quit",
                              (SDL_Color){230, 92, 0, SDL_ALPHA_OPAQUE});
   env->btnQuit.text = SDL_CreateTextureFromSurface(ren, s);
@@ -562,7 +239,11 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   int yWinPadding =
       winH * 4 / 100;  // Window y padding is defind to 4% of window height
 
-  int buttonSpace = yWinPadding * 2;  // 2 * y padding for height of the botton space
+  // Defined botton space
+  int textheight = 0;
+  SDL_QueryTexture(env->textWin, NULL, NULL, NULL,
+                   &textheight);  // Get text height
+  int buttonSpace = BTNHEIGHT + textheight;
 
   int gridMaxW =
       winW - xWinPadding * 2;  // Grid size is defind by window width -
@@ -586,7 +267,7 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
                  : (gridMaxW - gridXPadding * 2) / gameW;
 
   int gridX = (winW - gridW) / 2;
-  int gridY = (winH - yWinPadding * 3 - gridH) / 2;
+  int gridY = (winH - (yWinPadding + buttonSpace) - gridH) / 2;
 
   // Draw background image
   if (env->allowBackground) {
@@ -598,7 +279,8 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
   }
 
   // Draw rounded surface for the color grid
-  if (env->allowTransparency) SDL_SetTextureAlphaMod(env->shadowBox1, 175);
+  if (env->allowTransparency)
+    SDL_SetTextureAlphaMod(env->shadowBox1, TRANSPARENCY);
   rect.x = gridX;
   rect.y = gridY;
   rect.w = gridW;
@@ -619,8 +301,9 @@ void render(SDL_Window* win, SDL_Renderer* ren, Env* env) {
 
       SDL_Color c = getColorFromGameColor(cell.color);
 
-      SDL_SetRenderDrawColor(ren, c.r, c.g, c.b,
-                             env->allowTransparency ? 175 : SDL_ALPHA_OPAQUE);
+      SDL_SetRenderDrawColor(
+          ren, c.r, c.g, c.b,
+          env->allowTransparency ? TRANSPARENCY : SDL_ALPHA_OPAQUE);
       SDL_RenderFillRect(ren, &rect);
     }
 

@@ -42,7 +42,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${EXECUTABLE_OUTPUT_PAT
 
 ### Implementation of all executable
 # Creation of the library game
-add_library (game lib/game.c lib/game_io.c lib/game_rand.c)
+add_library (game lib/game.c lib/game_io.c)
 IF (WIN32)
   add_library (gl lib/getline.c)
   target_link_libraries(game gl)
@@ -51,17 +51,17 @@ ENDIF()
 add_library (sol lib/solution.c)
 
 # executable of the game
-add_executable (recolor_text src/recolor_text.c)
+add_executable (recolor_text src/recolor_text.c src/game_rand.c)
 target_link_libraries (recolor_text game)
 
 add_executable(recolor_solve src/recolor_solve.c)
 target_link_libraries (recolor_solve pthread game m sol)
 
 IF(WIN32)
-    add_executable(recolor_sdl WIN32 src/main_sdl.c src/recolor_sdl.c assets/ressourses.rc)
+    add_executable(recolor_sdl WIN32 src/main_sdl.c src/fun_sdl.c src/game_rand.c src/recolor_sdl.c assets/ressourses.rc)
     target_compile_options(recolor_sdl INTERFACE "-mwindows")
 ELSE()
-    add_executable(recolor_sdl src/main_sdl.c src/recolor_sdl.c assets/ressourses.rc)
+    add_executable(recolor_sdl src/main_sdl.c src/fun_sdl.c src/game_rand.c src/recolor_sdl.c assets/ressourses.rc)
 ENDIF()
 target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m)
 
