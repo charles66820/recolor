@@ -225,7 +225,12 @@ void save_sol_in_file(char* filename, char* responce) {
       exit(EXIT_FAILURE);
     }
     sprintf(mkcmd, "mkdir -p %s", dir);
-    system(mkcmd);
+    if (system(mkcmd) == -1) {
+      fprintf(stderr, "The folder (%s) can not be create.\n", dir);
+      free(mkcmd);
+      free(dir);
+      exit(EXIT_FAILURE);
+    }
     free(mkcmd);
   }
   free(dir);
