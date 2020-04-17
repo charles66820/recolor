@@ -11,7 +11,7 @@
 #include "game.h"
 #include "game_io.h"
 #include "game_rand.h"
-#include "create_rand_game.h"
+#include "load_game.h"
 
 // Games assets and attributes
 #define TRANSPARENCY 175 /* nuber between 0 and 255*/
@@ -75,34 +75,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
 
   // Init game
   env->g = NULL;
-  if (argc == 2) {
-    env->g = game_load(argv[1]);
-    if (!env->g)
-      PRINT("Game error", "Error on game load : The default game as load\n");
-  }
-
-  if (argc == 3 || argc > 6)
-    PRINT("Game error", "Invalid parameters. Loading default game...\n");
-
-  if (argc >= 4 && argc <= 6) {
-    env->g = create_rand_game(argc, argv);
-  }
-
-  if (argc == 1 || !env->g) {  // if game is launch without arguments or
-                               // if game is null we create new game
-    int nbMaxHit = 12;
-
-    color cells[SIZE * SIZE] = {
-        0, 0, 0, 2, 0, 2, 1, 0, 1, 0, 3, 0, 0, 3, 3, 1, 1, 1, 1, 3, 2, 0, 1, 0,
-        1, 0, 1, 2, 3, 2, 3, 2, 0, 3, 3, 2, 2, 3, 1, 0, 3, 2, 1, 1, 1, 2, 2, 0,
-        2, 1, 2, 3, 3, 3, 3, 2, 0, 1, 0, 0, 0, 3, 3, 0, 1, 1, 2, 3, 3, 2, 1, 3,
-        1, 1, 2, 2, 2, 0, 0, 1, 3, 1, 1, 2, 1, 3, 1, 3, 1, 0, 1, 0, 1, 3, 3, 3,
-        0, 3, 0, 1, 0, 0, 2, 1, 1, 1, 3, 0, 1, 3, 1, 0, 0, 0, 3, 2, 3, 1, 0, 0,
-        1, 3, 3, 1, 1, 2, 2, 3, 2, 0, 0, 2, 2, 0, 2, 3, 0, 1, 1, 1, 2, 3, 0, 1};
-
-    // Create new game
-    env->g = game_new(cells, nbMaxHit);
-  }
+  env->g = load_game(argc, argv);
 
   // Load background texture
   if (env->allowBackground) {
