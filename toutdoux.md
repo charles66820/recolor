@@ -4,15 +4,15 @@
 
 > Victor ANDRAULT
 
-- Tester la demo pour le portage sous Android & Integration Android
+- nothing
 
 > Arthur BLONDEAU
 
-- Tester la demo pour le portage sous Android & Integration Android
+- nothing
 
 > Charles GOEDEFROIT
 
-- Integration Android
+- nothing
 
 ## Tests
 
