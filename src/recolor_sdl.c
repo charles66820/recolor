@@ -11,6 +11,7 @@
 #include "game.h"
 #include "game_io.h"
 #include "game_rand.h"
+#include "create_rand_game.h"
 
 // Games assets and attributes
 #define TRANSPARENCY 175 /* nuber between 0 and 255*/
@@ -84,38 +85,7 @@ Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]) {
     PRINT("Game error", "Invalid parameters. Loading default game...\n");
 
   if (argc >= 4 && argc <= 6) {
-    int width = atoi(argv[1]);
-    int height = atoi(argv[2]);
-    int nb_moves_max = atoi(argv[3]);
-    int nb_colors = 4;
-    bool wrapping = false;
-
-    if (width <= 0 || height <= 0 || nb_moves_max <= 0)
-      PRINT("Game error", "Invalid parameters. Loading default game...\n");
-    else if (argc == 4)
-      env->g =
-          game_random_ext(width, height, nb_moves_max, nb_colors, wrapping);
-    else if (argc == 5) {
-      if (argv[4][0] == 'N')
-        wrapping = false;
-      else if (argv[4][0] == 'S')
-        wrapping = true;
-      else
-        nb_colors = atoi(argv[4]);
-      if (nb_colors >= 2 && nb_colors < 17)
-        env->g =
-            game_random_ext(width, height, nb_moves_max, nb_colors, wrapping);
-      else
-        PRINT("Game error", "Invalid parameters. Loading default game...\n");
-    } else if (argc == 6) {
-      nb_colors = atoi(argv[4]);
-      if (nb_colors >= 2 && nb_colors < 17 &&
-          (argv[5][0] == 'N' || argv[5][0] == 'S'))
-        env->g = game_random_ext(width, height, nb_moves_max, nb_colors,
-                                 argv[5][0] == 'S');
-      else
-        PRINT("Game error", "Invalid parameters. Loading default game...\n");
-    }
+    env->g = create_rand_game(argc, argv);
   }
 
   if (argc == 1 || !env->g) {  // if game is launch without arguments or

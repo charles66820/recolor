@@ -42,7 +42,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${EXECUTABLE_OUTPUT_PAT
 
 ### Implementation of all executable
 # Creation of the library game
-add_library (game lib/game.c lib/game_io.c)
+add_library (game lib/game.c lib/game_io.c lib/create_rand_game.c)
 IF (WIN32)
   add_library (gl lib/getline.c)
   target_link_libraries(game gl)
