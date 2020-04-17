@@ -9,8 +9,8 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := recolor
-LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c recolor_sdl.c main_sdl.c fun_sdl.c game_rand.c
-LOCAL_CFLAGS += -std=c99 -Wall -g
+LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c recolor_sdl.c main_sdl.c fun_sdl.c game_rand.c load_game.c
+LOCAL_CFLAGS += -std=c99 -Wall -g -DSDL
 LOCAL_STATIC_LIBRARIES := game
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_ttf SDL2_image

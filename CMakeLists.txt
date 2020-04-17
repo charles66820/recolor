@@ -59,10 +59,10 @@ target_link_libraries (recolor_solve pthread game m sol)
 
 IF(WIN32)
   add_executable(recolor_sdl WIN32 src/main_sdl.c src/fun_sdl.c src/game_rand.c src/load_game.c src/recolor_sdl.c assets/ressourses.rc)
-  target_compile_options(recolor_sdl INTERFACE "-mwindows -SDL")
+  target_compile_options(recolor_sdl INTERFACE "-mwindows -DSDL")
 ELSE()
-  add_executable(recolor_sdl src/main_sdl.c src/fun_sdl.c src/game_rand.c src/recolor_sdl.c src/load_game.c assets/ressourses.rc)
-  target_compile_options(recolor_sdl INTERFACE "-SDL")
+  add_executable(recolor_sdl src/main_sdl.c src/fun_sdl.c src/game_rand.c src/load_game.c src/recolor_sdl.c assets/ressourses.rc)
+  target_compile_options(recolor_sdl INTERFACE "-DSDL")
 ENDIF()
 target_link_libraries(recolor_sdl ${SDL2_ALL_LIBS} game m)
 
