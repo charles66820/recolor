@@ -353,28 +353,25 @@ bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e) {
       // When button restart is hover the hover attribute is set to true
       if (btnIsMouseHover(e, env->btnRestart.rect) ||
           btnIsFingerHover(e, env->btnRestart.rect)) {
-#if !defined(__ANDROID__)
-        if (env->allowCursor) {
-          SDL_FreeCursor(env->cursor);
-          env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
-          SDL_SetCursor(env->cursor);
-        }
-#endif
         env->btnRestart.hover = true;
+#if !defined(__ANDROID__)
+        goto cursor;
+#endif
         break;
       }
 
       // When button quit is hover the hover attribute is set to true
       if (btnIsMouseHover(e, env->btnQuit.rect) ||
           btnIsFingerHover(e, env->btnQuit.rect)) {
+        env->btnQuit.hover = true;
 #if !defined(__ANDROID__)
+      cursor:
         if (env->allowCursor) {
           SDL_FreeCursor(env->cursor);
           env->cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
           SDL_SetCursor(env->cursor);
         }
 #endif
-        env->btnQuit.hover = true;
         break;
       }
 #if !defined(__ANDROID__)
