@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".RecolorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextArgWidth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_text_width"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/editTextArgNbMaxMove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_text_max_move"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextArgHeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_text_height"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/editTextArgNbMaxColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_text_max_color"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/switchIsWrapping"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/switch_is_wrapping" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="startRandGame"
+                android:text="@string/button_start" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/background_dark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonLoadSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="chooseFile"
+                android:text="@string/button_load_save" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/file_path"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="startLoadGame"
+                android:text="@string/button_start" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -1,5 +1,7 @@
 package org.libsdl.app;
 
+import fr.toutdoux.recolor.RecolorActivity;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -61,6 +63,8 @@ public class SDLActivity extends Activity {
     protected static AudioTrack mAudioTrack;
     protected static AudioRecord mAudioRecord;
 
+    protected static String[] arguments;
+
     /**
      * This method is called by SDL before loading the native shared libraries.
      * It can be overridden to provide names of shared libraries to be loaded.
@@ -94,7 +98,11 @@ public class SDLActivity extends Activity {
      * @return arguments for the native application.
      */
     protected String[] getArguments() {
-        return new String[0];
+        return arguments; // new String[0];
+    }
+
+    protected void setArguments(String[] args) {
+        arguments = args;
     }
 
     public static void initialize() {
@@ -180,6 +188,9 @@ public class SDLActivity extends Activity {
 
         // Get filename from "Open with" of another application
         Intent intent = getIntent();
+
+        String message = intent.getStringExtra(RecolorActivity.EXTRA_MESSAGE);
+        setArguments((message == null)? new String[0] : message.split(" "));
 
         if (intent != null && intent.getData() != null) {
             String filename = intent.getData().getPath();

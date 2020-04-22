@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Recolor</string>
+    <string name="tab_new_game">Nouvelle partie</string>
+    <string name="tab_load_game">Charger une parie</string>
+    <string name="button_load_save">Charger une partie</string>
+    <string name="edit_text_width">Largeur</string>
+    <string name="edit_text_height">Hauteur</string>
+    <string name="edit_text_max_move">Coup max</string>
+    <string name="edit_text_max_color">Nombre de couleurs</string>
+    <string name="switch_is_wrapping">Game wrapping</string>
+    <string name="button_start">Lancer le jeu</string>
+</resources>
