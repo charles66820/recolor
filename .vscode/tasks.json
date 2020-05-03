@@ -85,7 +85,7 @@
         {
             "label": "simaian",
             "type": "shell",
-            "command": "java -jar /opt/simian/bin/simian-2.5.10.jar ${input:srcFiles}",
+            "command": "java -jar /opt/simian/bin/simian-2.5.10.jar -formatter=yaml -defaultLanguage=c -language=c ${input:srcFiles}",
             "options": {
                 "cwd": "${workspaceRoot}"
             },
